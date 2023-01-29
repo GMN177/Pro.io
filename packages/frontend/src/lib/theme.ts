@@ -17,30 +17,23 @@ const components = {
   },
   Link: {
     baseStyle: (props: any) => ({
-      color: mode("#3d7aed", "#ff63c3")(props),
+      color: mode("#444CF7", "#E45858")(props),
       textUnderlineOffset: 3,
     }),
   },
 };
 
 const fonts = {
-  heading: "'Titillium Web'",
-  body: "'Titillium Web'",
+  heading: `'Maven Pro', sans-serif`,
+  body: `'Maven Pro', sans-serif`,
 };
 
 const colors = {
-  yellow: {
-    600: "#FEBB2C",
-    800: "#E4AB2D",
+  red: {
+    theme: "#E45858",
   },
   blue: {
-    400: "#0073E6",
-  },
-  brown: {
-    300: "#6A4E12",
-  },
-  gray: {
-    300: "#5C6F82",
+    theme: "#444CF7",
   },
 };
 
