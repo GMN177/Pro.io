@@ -1,8 +1,17 @@
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
 import "./App.css";
+import { Button } from "@chakra-ui/button";
 import { Text } from "@chakra-ui/layout";
-import { Link } from "@chakra-ui/layout";
+import { useDispatch, useSelector } from "react-redux";
+import { testSelectors } from "./store/testStore/testStore.selector";
+import { testActions } from "./store/testStore/testStore.action";
 
 function App() {
+  const visible = useSelector(testSelectors.getVisible);
+  console.log("visible", visible);
+  const dispatch = useDispatch();
+
   return (
     <div className="App">
       <Text fontSize="6xl" as="b">
@@ -11,7 +20,14 @@ function App() {
       <Text fontSize="2xl" color="blue.theme">
         Homepage
       </Text>
-      <Link>Chakra UI</Link>
+      <button
+        onClick={() => {
+          dispatch(testActions.testAction(!visible));
+        }}
+      >
+        Cliccami
+      </button>
+      {visible ? <h1> ciao sono visibile</h1> : null}
     </div>
   );
 }
