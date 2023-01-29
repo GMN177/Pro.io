@@ -8,9 +8,10 @@ const userSchema = new mongoose.Schema({
     email: String,
     password: String,
     salt: String,
-    totMacthes: Number,
+    totMatches: Number,
     totWins: Number,
-    friends: [mongoose.Types.ObjectId]
+    friends: [mongoose.Types.ObjectId],
+    status: String
 
 }, {timestamps: true})
 

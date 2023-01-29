@@ -7,18 +7,31 @@ const router = express.Router()
 
 router.use(express.json());
 
-router.post('/signup', (req,res) => {
-    
-    a = userController.signup(req.body.username, req.body.email, req.body.password)
-    a.then((data) => {
-        res.status(200).send(jsend.success({message: data}))
-    }).catch((err) => {
-        if(err.code == 11000){
-            res.status(409).send(jsend.error({message: err.message}))
+router.post('/signup', async (req,res) => {
+    try{
+        const a = await userController.signup(req.body.username, req.body.email, req.body.password)
+        return res.status(200).send(jsend.success({message: a}))
+    }catch (err) {
+        if(Number(err.message) == 11000){
+            return res.status(409).send(jsend.error({message: "duplicate key error"}))
         }else{
-            res.status(500).send(jsend.error({message: err.message}))
-        } 
-    }) 
+            return res.status(500).send(jsend.error({message: err.message}))
+        }
+    }
+})
+
+router.post('/login', async (req, res) => {
+    try {
+        const a  = await userController.login(req.body.username, req.body.password)
+        if(!a.status) {
+            return res.status(200).send(jsend.success({message: a.userId}))
+        }else{
+            return res.status(403).send(jsend.fail({message: a.message}))
+        }
+    }catch (err) {
+        return res.status(500).send(jsend.error({message: err.message}))
+    }
+    
 })
 
 module.exports = router
