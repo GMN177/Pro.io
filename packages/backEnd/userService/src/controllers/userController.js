@@ -48,7 +48,50 @@ async function login(username, password){
     }
 }
 
-module.exports = {signup, login}
+async function searchUserById(id) {
+    try {
+        const u = await User.findById(id)
+        if(u == null) {
+            return {
+                status: 1,
+                message: "invalid user id"
+            }
+        }
+        return {
+            status: 0,
+            data: {
+                id: u._id,
+                username: u.username,
+                email: u.email,
+                totMatches: u.totMatches,
+                totWins: u.totWins,
+                friends: u.friends,
+                status: u.status
+            }
+        }
+    }catch (err) {
+        console.log(err.message)
+        throw new Error(err.message)
+    }
+}
+
+async function getAllUsers() {
+    try {
+        const l = await User.find().select({
+            password: 0,
+            salt: 0,
+            createdAt: 0,
+            updatedAt: 0,
+            __v: 0
+        })
+        return l
+    } catch (err) {
+        console.log(err.message)
+        throw new Error(err.message)
+    }
+}
+
+module.exports = {signup, login, searchUserById, getAllUsers}
 
 
 
