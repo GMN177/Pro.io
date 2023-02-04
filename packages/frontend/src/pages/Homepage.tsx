@@ -1,3 +1,5 @@
-export const Homepage = () => {
+const Homepage = () => {
   return <div></div>;
 };
+
+export default Homepage;
