@@ -55,4 +55,47 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+router.patch('/:id', async (req, res) => {
+    if(req.body.newUsername == null) {
+        console.log("newUsername", req.body.newUsername)
+        try{
+            const ret = userController.updatePassword(req.body.oldPassword, req.body.newPassword, req.params.id)
+            if(!ret.status){
+                return res.status(406).send(jsend.fail({message: ret.message}))
+            }else{
+                return res.status(200).send(jsend.success({message: ret.message}))
+            }
+        }catch(err) {
+            return res.status(500).send(jsend.error({message: err,message}))
+        }
+    }
+    else if(req.body.newPassword == null){
+        console.log("newUsername", req.body.newUsername)
+        try{
+            const ret = userController.updateUsername(req.body.newUsername, req.body.oldPassword, req.params.id)
+            if(!ret.status){
+                return res.status(406).send(jsend.fail({message: ret.message}))
+            }else{
+                return res.status(200).send(jsend.success({message: ret.message}))
+            }
+        }catch(err) {
+            return res.status(500).send(jsend.error({message: err,message}))
+        }
+    }else{
+        console.log("no null values")
+        try{
+            const ret = userController.updatePassword(req.body.oldPassword, req.body.newPassword, req.params.id)
+            const ret2 = userController.updateUsername(req.body.newUsername, req.body.oldPassword, req.params.id)
+            if(!ret.status || !ret2.status){
+                return res.status(406).send(jsend.fail({message: {fail1: ret.message, fail2: ret2.message}}))
+            }else{
+                return res.status(200).send(jsend.success({message: ret.message}))
+            }
+        }catch(err) {
+            return res.status(500).send(jsend.error({message: err,message}))
+        }
+        
+    }
+})
+
 module.exports = router

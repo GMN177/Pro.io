@@ -1,5 +1,13 @@
 const User = require('../models/user')
 const crypto = require('crypto')
+const { default: mongoose } = require('mongoose')
+
+function checkUserPw(pwToCheck, hash, salt) {
+    if(crypto.createHash('sha256').update(pwToCheck + salt).digest('base64') == hash){
+        return true
+    }
+    return false
+}
 
 async function signup(username, email, password) {
     salt = crypto.randomBytes(12).toString('base64')
@@ -34,7 +42,7 @@ async function login(username, password){
             }
         }
         const userSalt = u.salt
-        if(crypto.createHash('sha256').update(password + userSalt).digest('base64') == u.password){
+        if(checkUserPw(password, u.password, userSalt)){
             return {status: 0, userId: u._id}
         }else{
             return {
@@ -91,7 +99,57 @@ async function getAllUsers() {
     }
 }
 
-module.exports = {signup, login, searchUserById, getAllUsers}
+async function getUserPassword(id) {
+    try {
+        const u = await User.findById(id)
+        if(u == null) { return null }
+        return {hash: u.password, salt: u.salt}
+    }catch (err) {
+        console.log(err.message)
+        throw new Error(err.message)
+    }
+}
 
+async function updateUsername(newUsername, oldPassword, id){
+    try {
+        const data = await getUserPassword(id)
+        if(data == null || !checkUserPw(oldPassword, data.hash, data.salt)){
+            return {
+                status: 1,
+                message: "something went wrong,"
+            }
+        }
+        let ret = await User.findOneAndUpdate({_id: id}, {username: newUsername}, {new: true})
+        console.log(ret)
+        return {
+            status: 0,
+            message: "record updated"
+        }
+    }catch(err){
+        throw new Error(err.message)
+    }
+}
 
+// SHULD BE TESTED! IT MAY STILL HAS SOME BUGS
+async function updatePassword(oldPassword, newPassword, id){
+    try {
+        const data = await getUserPassword(id)
+        if(data == null || !checkUserPw(oldPassword, data.hash, data.salt)) { 
+            return {
+                status: 1,
+                message: "something went wrong."
+            }
+        }
+        let update = {password: crypto.createHash('sha256').update(newPassword + data.salt).digest('base64')}
+        let ret = await User.findOneAndUpdate({_id: id}, update, {new: true})
+        console.log(ret)
+        return {
+            status: 0,
+            message: "record updated"
+        }
+    }catch(err) {
+        throw new Error(err.message)
+    }
+}
 
+module.exports = {signup, login, searchUserById, getAllUsers, updatePassword, updateUsername}
