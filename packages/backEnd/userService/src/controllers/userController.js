@@ -57,12 +57,20 @@ async function login(username, password){
 }
 
 async function searchUserById(id) {
+
+    if(!mongoose.isValidObjectId(id)){
+        return {
+            status: 1,
+            message: 'invalid userId'
+        }
+    }
+
     try {
         const u = await User.findById(id)
         if(u == null) {
             return {
                 status: 1,
-                message: "invalid user id"
+                message: "invalid userId"
             }
         }
         return {
@@ -100,6 +108,11 @@ async function getAllUsers() {
 }
 
 async function getUserPassword(id) {
+
+    if(!mongoose.isValidObjectId(id)){
+        return null
+    }
+
     try {
         const u = await User.findById(id)
         if(u == null) { return null }
@@ -111,6 +124,14 @@ async function getUserPassword(id) {
 }
 
 async function updateUsername(newUsername, oldPassword, id){
+
+    if(!mongoose.isValidObjectId(id)){
+        return {
+            status: 1,
+            message: 'invalid userId'
+        }
+    }
+
     try {
         const data = await getUserPassword(id)
         if(data == null || !checkUserPw(oldPassword, data.hash, data.salt)){
@@ -132,6 +153,14 @@ async function updateUsername(newUsername, oldPassword, id){
 
 // SHULD BE TESTED! IT MAY STILL HAS SOME BUGS
 async function updatePassword(oldPassword, newPassword, id){
+
+    if(!mongoose.isValidObjectId(id)){
+        return {
+            status: 1,
+            message: 'invalid userId'
+        }
+    }
+
     try {
         const data = await getUserPassword(id)
         if(data == null || !checkUserPw(oldPassword, data.hash, data.salt)) { 
@@ -152,4 +181,120 @@ async function updatePassword(oldPassword, newPassword, id){
     }
 }
 
-module.exports = {signup, login, searchUserById, getAllUsers, updatePassword, updateUsername}
+// delete account version 1 (deletes entire user record)
+async function deleteAccountV1(id) {
+    if(!mongoose.isValidObjectId(id)){
+        return {
+            status: 1,
+            message: 'invalid userId'
+        }
+    }
+
+    try{
+        let u = await User.deleteOne({_id: id})
+        console.log(u)
+        if(u.deletedCount == 0) {
+            return {
+                status: 1,
+                message: 'invalid userId'
+            }
+        }
+        return {
+            status: 0,
+            message: 'account deleted successfully'
+        }
+    }catch(err){
+        console.log(err.message)
+        throw new Error(err.message)
+    }
+}
+
+// delete account version 2 (sets account status to DELETED)
+async function deleteAccountV2(id) {
+    if(!mongoose.isValidObjectId(id)){
+        return {
+            status: 1,
+            message: 'invalid userId'
+        }
+    }
+    try{
+        let ret = await User.findOneAndUpdate({_id: id}, {status: 'DELETED'})
+        if(ret == null){
+            return {
+                status: 1,
+                message: 'invalid userId'
+            }
+        }
+        return {
+            status: 0,
+            message: 'account deleted successfully'
+        }
+    }catch(err){
+        throw new Error(err.message)
+    }
+}
+
+// adds both friends
+// maybe we should implements notifications for friend requests (both users should accept the request to become friends )
+async function addFriend(id1, id2) {
+    if(!mongoose.isValidObjectId(id1) || !mongoose.isValidObjectId(id2)){
+        return {
+            status: 2,
+            message: 'invalid userId or friendId'
+        }
+    }
+    try{
+        let ret = await User.findOne({_id: id1}).exec()
+        if(!ret.friends.includes(id2)){
+            ret.friends.push(id2)
+            ret.save()
+        }else{
+            return {
+                status: 1,
+                message: 'something went wrong'
+            }
+        }
+        ret = await User.findOne({_id: id2}).exec()
+        if(!ret.friends.includes(id1)){
+            ret.friends.push(id1)
+            ret.save()
+        }else{
+            return {
+                status: 1,
+                message: 'something went wrong'
+            }
+        }
+        return {
+            status: 0,
+            message: 'friends added'
+        }
+    }catch(err){
+        throw new Error(err.message)
+    }
+}
+
+async function getUserFriends(id){
+    if(!mongoose.isValidObjectId(id)){
+        return {
+            status: 2,
+            message: 'invalid userId or friendId'
+        }
+    }
+    try{
+        let ret = await User.findById(id)
+        if(ret==null) {
+            return {
+                status: 1,
+                message: 'user not found'
+            }
+        }
+        return {
+            status: 0,
+            friends: ret.friends
+        }
+    }catch(err){
+        throw new Error(err.message)
+    }
+}
+
+module.exports = {signup, login, searchUserById, getAllUsers, updatePassword, updateUsername, deleteAccountV1, deleteAccountV2, addFriend, getUserFriends}

@@ -3,9 +3,12 @@ const jsend = require('jsend')
 const userController = require('../controllers/userController')
 const router = express.Router()
 const {generateTokens} = require('../controllers/authController')
+const { response } = require('express')
+
 
 router.use(express.json());
 
+// user registration.
 router.post('/signup', async (req,res) => {
     try{
         const a = await userController.signup(req.body.username, req.body.email, req.body.password)
@@ -19,6 +22,7 @@ router.post('/signup', async (req,res) => {
     }
 })
 
+// user login.
 router.post('/login', async (req, res) => {
     if(req.body.username == null || req.body.password == null) res.status(400).send(jsend.fail({message: "Bad Request"}))
     try {
@@ -34,6 +38,7 @@ router.post('/login', async (req, res) => {
     }
 })
 
+// get all users from database
 router.get('/', async (req, res) => {
     try {
         let l = await userController.getAllUsers()
@@ -43,6 +48,7 @@ router.get('/', async (req, res) => {
     }
 })
 
+// get single user from database.
 router.get('/:id', async (req, res) => {
     try {
         let u = await userController.searchUserById(req.params.id)
@@ -55,6 +61,7 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+// modify username and/or password.
 router.patch('/:id', async (req, res) => {
     if(req.body.newUsername == null) {
         console.log("newUsername", req.body.newUsername)
@@ -93,8 +100,63 @@ router.patch('/:id', async (req, res) => {
             }
         }catch(err) {
             return res.status(500).send(jsend.error({message: err,message}))
+        } 
+    }
+})
+
+// delete user. (2 ways: remove it form the database or set his status to deleted).
+// if the second option is adopted, some changes to the login route should be made.
+router.delete('/:id', async (req, res) => {
+    // DELETE ACCOUNT VERSION 1
+    try{
+        let ret = await userController.deleteAccountV1(req.params.id)
+        if(!ret.status){
+            return res.status(200).send(jsend.success({message: ret.message}))
         }
-        
+        return res.status(404).send(jsend.fail({message: ret.message}))
+    }catch(err){
+        return response.status(500).send(jsend.error({message: err.message}))
+    }
+
+    // DELETE ACCOUNT VERISION 2
+    // try{
+    //     let ret = await userController.deleteAccountV2(req.params.id)
+    //     if(!ret.status){
+    //         return res.status(200).send(jsend.success({message: ret.message}))
+    //     }
+    //     return res.status(404).send(jsend.fail({message: ret.message}))
+    // }catch(err){
+    //     return res.status(500).send(jsend.error({message: err.message}))
+    // }
+})
+
+// add friend to user profile and to friend profile.
+router.post('/friends', async (req, res) => {
+    try{
+        let ret = await userController.addFriend(req.body.userId, req.body.friendId)
+        if(!ret.status) {
+            return res.status(200).send(jsend.success({message: ret.message}))
+        }
+        else if(ret.status==2) {
+            return res.status(404).send(jsend.fail({message: ret.message}))
+        }
+        return res.status(500).send(jsend.error({message: ret.message}))
+    }catch(err){
+        return res.status(500).send(jsend.error({message: err.message}))
+    }
+})
+
+router.get('/:id/friends', async (req, res) => {
+    try{
+        let ret = await userController.getUserFriends(req.params.id)
+        if(!ret.status){
+            return res.status(200).send(jsend.success({message: ret.friends}))
+        }else if(ret.status == 2){
+            return res.status(404).send(jsend.fail({message: ret.message}))
+        }
+        return res.status(404).send(jsend.error({message: ret.message}))
+    }catch(err){
+        return res.status(500).send(jsend.error({message: err.message}))
     }
 })
 
