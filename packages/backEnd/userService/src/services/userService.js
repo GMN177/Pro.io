@@ -64,11 +64,13 @@ router.get('/:id', async (req, res) => {
 // modify username and/or password.
 router.patch('/:id', async (req, res) => {
     if(req.body.newUsername == null) {
-        console.log("newUsername", req.body.newUsername)
+        console.log("newUsername is null")
         try{
-            const ret = userController.updatePassword(req.body.oldPassword, req.body.newPassword, req.params.id)
+            const ret = await userController.updatePassword(req.body.oldPassword, req.body.newPassword, req.params.id)
             if(!ret.status){
                 return res.status(406).send(jsend.fail({message: ret.message}))
+            }else if(ret.status == 2){
+                return res.status(404).send(jsend.fail({message: ret.message}))
             }else{
                 return res.status(200).send(jsend.success({message: ret.message}))
             }
@@ -77,11 +79,13 @@ router.patch('/:id', async (req, res) => {
         }
     }
     else if(req.body.newPassword == null){
-        console.log("newUsername", req.body.newUsername)
         try{
-            const ret = userController.updateUsername(req.body.newUsername, req.body.oldPassword, req.params.id)
-            if(!ret.status){
-                return res.status(406).send(jsend.fail({message: ret.message}))
+            const ret = await userController.updateUsername(req.body.newUsername, req.body.oldPassword, req.params.id)
+            console.log(ret)
+            if(ret.status == 1){
+                return res.status(500).send(jsend.error({message: ret.message}))
+            }else if(ret.status == 2){
+                return res.status(404).send(jsend.fail({message: ret.message}))
             }else{
                 return res.status(200).send(jsend.success({message: ret.message}))
             }
@@ -89,14 +93,15 @@ router.patch('/:id', async (req, res) => {
             return res.status(500).send(jsend.error({message: err,message}))
         }
     }else{
-        console.log("no null values")
         try{
-            const ret = userController.updatePassword(req.body.oldPassword, req.body.newPassword, req.params.id)
-            const ret2 = userController.updateUsername(req.body.newUsername, req.body.oldPassword, req.params.id)
+            const ret2 = await userController.updateUsername(req.body.newUsername, req.body.oldPassword, req.params.id)
+            const ret = await userController.updatePassword(req.body.oldPassword, req.body.newPassword, req.params.id)
             if(!ret.status || !ret2.status){
-                return res.status(406).send(jsend.fail({message: {fail1: ret.message, fail2: ret2.message}}))
-            }else{
                 return res.status(200).send(jsend.success({message: ret.message}))
+            }else if(ret.status == 2 || ret2.status == 2){
+                return res.status(404).send(jsend.fail({message: ret.message}))
+            }else {
+                return res.status(500).send(jsend.error({message: {fail1: ret.message, fail2: ret2.message}}))
             }
         }catch(err) {
             return res.status(500).send(jsend.error({message: err,message}))
@@ -107,7 +112,7 @@ router.patch('/:id', async (req, res) => {
 // delete user. (2 ways: remove it form the database or set his status to deleted).
 // if the second option is adopted, some changes to the login route should be made.
 router.delete('/:id', async (req, res) => {
-    // DELETE ACCOUNT VERSION 1
+    // DELETE ACCOUNT VERSION 1 (removes entire record)
     try{
         let ret = await userController.deleteAccountV1(req.params.id)
         if(!ret.status){
@@ -118,7 +123,7 @@ router.delete('/:id', async (req, res) => {
         return response.status(500).send(jsend.error({message: err.message}))
     }
 
-    // DELETE ACCOUNT VERISION 2
+    // DELETE ACCOUNT VERISION 2 (updates record status)
     // try{
     //     let ret = await userController.deleteAccountV2(req.params.id)
     //     if(!ret.status){
@@ -146,6 +151,7 @@ router.post('/friends', async (req, res) => {
     }
 })
 
+// get user's friends
 router.get('/:id/friends', async (req, res) => {
     try{
         let ret = await userController.getUserFriends(req.params.id)

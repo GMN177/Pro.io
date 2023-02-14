@@ -124,14 +124,12 @@ async function getUserPassword(id) {
 }
 
 async function updateUsername(newUsername, oldPassword, id){
-
     if(!mongoose.isValidObjectId(id)){
         return {
-            status: 1,
+            status: 2,
             message: 'invalid userId'
         }
     }
-
     try {
         const data = await getUserPassword(id)
         if(data == null || !checkUserPw(oldPassword, data.hash, data.salt)){
@@ -141,7 +139,6 @@ async function updateUsername(newUsername, oldPassword, id){
             }
         }
         let ret = await User.findOneAndUpdate({_id: id}, {username: newUsername}, {new: true})
-        console.log(ret)
         return {
             status: 0,
             message: "record updated"
@@ -151,16 +148,13 @@ async function updateUsername(newUsername, oldPassword, id){
     }
 }
 
-// SHULD BE TESTED! IT MAY STILL HAS SOME BUGS
 async function updatePassword(oldPassword, newPassword, id){
-
     if(!mongoose.isValidObjectId(id)){
         return {
-            status: 1,
+            status: 2,
             message: 'invalid userId'
         }
     }
-
     try {
         const data = await getUserPassword(id)
         if(data == null || !checkUserPw(oldPassword, data.hash, data.salt)) { 
@@ -171,7 +165,6 @@ async function updatePassword(oldPassword, newPassword, id){
         }
         let update = {password: crypto.createHash('sha256').update(newPassword + data.salt).digest('base64')}
         let ret = await User.findOneAndUpdate({_id: id}, update, {new: true})
-        console.log(ret)
         return {
             status: 0,
             message: "record updated"
@@ -189,7 +182,6 @@ async function deleteAccountV1(id) {
             message: 'invalid userId'
         }
     }
-
     try{
         let u = await User.deleteOne({_id: id})
         console.log(u)
