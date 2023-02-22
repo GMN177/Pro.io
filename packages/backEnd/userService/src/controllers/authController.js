@@ -8,4 +8,4 @@ function generateTokens(data) {
     }
 }
 
-module.exports = {generateTokens, authenticateToken, logger}
+module.exports = {generateTokens}

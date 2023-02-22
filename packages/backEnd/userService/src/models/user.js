@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema({
     totMatches: Number,
     totWins: Number,
     friends: [mongoose.Types.ObjectId],
+    pending: [mongoose.Types.ObjectId],
+    sent: [mongoose.Types.ObjectId],
     status: String
 
 }, {timestamps: true})
