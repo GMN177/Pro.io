@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { testSelectors } from "./store/testStore/testStore.selector";
 import { testActions } from "./store/testStore/testStore.action";
 import Navbar from "./components/Navbar";
+import Homepage from "./pages/Homepage";
 
 function App() {
   const visible = useSelector(testSelectors.getVisible);
@@ -16,9 +17,9 @@ function App() {
   return (
     <>
       <Navbar />
-
+      <Homepage />
       <div className="App">
-        <Text fontSize="6xl" as="b">
+        {/*   <Text fontSize="6xl" as="b">
           Pro.io
         </Text>
         <Text fontSize="2xl" color="blue.theme">
@@ -31,7 +32,7 @@ function App() {
         >
           Cliccami
         </button>
-        {visible ? <h1> ciao sono visibile</h1> : null}
+        {visible ? <h1> ciao sono visibile</h1> : null}  */}
       </div>
     </>
   );
