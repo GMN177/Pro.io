@@ -33,20 +33,7 @@ function App() {
                     }}
                     isLogged={true}
                   />
-                  <Text fontSize="6xl" as="b">
-                    Pro.io
-                  </Text>
-                  <Text fontSize="2xl" color="blue.theme">
-                    Homepage
-                  </Text>
-                  <button
-                    onClick={() => {
-                      dispatch(testActions.testAction(!visible));
-                    }}
-                  >
-                    Cliccami
-                  </button>
-                  {visible ? <h1> ciao sono visibile</h1> : null}
+                  <Homepage />
                 </div>
               </>
             }
