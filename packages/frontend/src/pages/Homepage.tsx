@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Flex, Box, Spacer, VStack, Button, Image } from "@chakra-ui/react";
-import background from "/backgroundImage.png";
+import background from "@/assets/backgroundImage.png";
 
 const Homepage = () => {
   const getRandomPosition = () => {
