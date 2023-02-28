@@ -1,9 +1,11 @@
 import {combineReducers} from 'redux'
 import {AppAction} from './types';
 import {testReducer} from './testStore/testStore.reducer';
+import {loginReducer} from '@/store/login/login.reducer';
 
 const appReducer = combineReducers({
-    ...testReducer
+    ...testReducer,
+    ...loginReducer
 });
 
 

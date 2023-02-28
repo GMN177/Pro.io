@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from 'react';
 import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
 import { testSelectors } from "./store/testStore/testStore.selector";
@@ -7,14 +7,33 @@ import Homepage from "./pages/Homepage";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import React from "react";
 import { LoginPage } from "./pages/LoginPage";
+import {loginSelectors} from '@/store/login/login.selector';
+import {loginActions} from '@/store/login/login.action';
+import {useAppDispatch} from '@/store/store.config';
+let tokenAutoRefresh = null;
 
 function App() {
-  const [isLogged, setIsLogged] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch()
+  const accessToken = useSelector(loginSelectors.getAccessToken)
+  const refreshToken = useSelector(loginSelectors.getRefreshToken)
+
+  useEffect(() => {
+    if(!accessToken) {
+      clearInterval(tokenAutoRefresh)
+      tokenAutoRefresh = null;
+    }
+
+    if(refreshToken) {
+      tokenAutoRefresh = setInterval(() => {
+        dispatch(loginActions.userTokenRefresh({refreshToken}))
+      }, 840000) // 14 minutes refresh for a 15 minutes access token
+    }
+
+  }, [accessToken, refreshToken])
 
   return (
     <>
-      {isLogged ? (
+      {accessToken ? (
         <Routes>
           <Route
             path={"/*"}
@@ -22,17 +41,13 @@ function App() {
               <>
                 <div className="App">
                   <Navbar
-                    logOut={() => {
-                      setIsLogged(false);
-                      navigate("/");
-                    }}
                     isLogged={true}
                   />
                   <Homepage />
                 </div>
               </>
             }
-          ></Route>
+          />
         </Routes>
       ) : (
         <>
@@ -41,7 +56,7 @@ function App() {
             <Route path={"/"} element={<>HOMEPAGE PER UTENTE NON LOGGATO</>} />
             <Route
               path={"/login"}
-              element={<LoginPage onLogin={() => setIsLogged(true)} />}
+              element={<LoginPage />}
             />
           </Routes>
         </>

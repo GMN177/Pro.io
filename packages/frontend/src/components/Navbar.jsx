@@ -2,9 +2,13 @@ import { Flex, Image, Spacer, Text, Link, Box, Icon } from "@chakra-ui/react";
 import proLogo from "/logo.svg";
 import React from "react";
 import { Button } from "@chakra-ui/button";
-import { Link as ReachLink } from "react-router-dom";
+import {Link as ReachLink, useNavigate} from "react-router-dom";
+import {useAppDispatch} from "@/store/store.config";
+import {loginActions} from "@/store/login/login.action";
 
 const Navbar = (props) => {
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   return (
     <Flex
       as="nav"
@@ -24,7 +28,10 @@ const Navbar = (props) => {
       <Flex gap={10}>
         {props.isLogged ? (
           <>
-            <Link fontWeight={700} to={"#"} onClick={props.logOut}>
+            <Link fontWeight={700} to={"#"} onClick={() => {
+              dispatch(loginActions.userLogout({username: 'test'}))
+              navigate('/')
+            }}>
               Log out
             </Link>
             <Link href="#" w="120px" fontWeight={700}>
