@@ -38,6 +38,9 @@ const colors = {
   grey: {
     theme: "#F2F2F2",
   },
+  black: {
+    theme: "#2B2C34",
+  },
 };
 
 const theme = extendTheme({ components, fonts, colors }) as any;

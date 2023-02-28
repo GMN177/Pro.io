@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import Homepage from "./pages/Homepage";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import React from "react";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   const visible = useSelector(testSelectors.getVisible);
@@ -44,14 +45,7 @@ function App() {
           <Navbar isLogged={false} />
           <Routes>
             <Route path={"/"} element={<>HOMEPAGE PER UTENTE NON LOGGATO</>} />
-            <Route
-              path={"/login"}
-              element={
-                <>
-                  <Button onClick={() => setIsLogged(true)}>LOGGATI</Button>
-                </>
-              }
-            />
+            <Route path={"/login"} element={<LoginPage />} />
           </Routes>
         </>
       )}
