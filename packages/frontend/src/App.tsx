@@ -1,20 +1,14 @@
-import { Fragment, useState } from "react";
-import reactLogo from "./assets/react.svg";
+import { useState } from "react";
 import "./App.css";
-import { Button } from "@chakra-ui/button";
-import { Text } from "@chakra-ui/layout";
 import { useDispatch, useSelector } from "react-redux";
 import { testSelectors } from "./store/testStore/testStore.selector";
-import { testActions } from "./store/testStore/testStore.action";
 import Navbar from "./components/Navbar";
 import Homepage from "./pages/Homepage";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import React from "react";
-import LoginPage from "./pages/LoginPage";
+import { LoginPage } from "./pages/LoginPage";
 
 function App() {
-  const visible = useSelector(testSelectors.getVisible);
-  const dispatch = useDispatch();
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -45,7 +39,10 @@ function App() {
           <Navbar isLogged={false} />
           <Routes>
             <Route path={"/"} element={<>HOMEPAGE PER UTENTE NON LOGGATO</>} />
-            <Route path={"/login"} element={<LoginPage />} />
+            <Route
+              path={"/login"}
+              element={<LoginPage onLogin={() => setIsLogged(true)} />}
+            />
           </Routes>
         </>
       )}
