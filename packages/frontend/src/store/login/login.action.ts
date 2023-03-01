@@ -1,6 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {mocks} from '@/mocks';
 import axios from 'axios';
+import {NavigateFunction} from 'react-router-dom';
 
 
 const enum LOGIN_ACTIONS {
@@ -9,12 +10,13 @@ const enum LOGIN_ACTIONS {
     userLogout = 'userLogout/'
 }
 
-const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{username:string, password:string}, thunkAPI) => {
+const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{username:string, password:string, navigate: NavigateFunction}, thunkAPI) => {
     try {
         const {accessToken, refreshToken} = await mocks.mockAPI({accessToken: 'test', refreshToken: 'test'})
         if(accessToken) {
             axios.defaults.headers['Authorization'] = 'Bearer ' + accessToken;
         }
+        bean.navigate('/')
         return {
             accessToken, refreshToken
         }
@@ -34,10 +36,11 @@ const userTokenRefresh = createAsyncThunk(LOGIN_ACTIONS.userTokenRefresh, async 
     }
 });
 
-const userLogout = createAsyncThunk(LOGIN_ACTIONS.userLogout, async (params: {username: string}, thunkAPI) => {
+const userLogout = createAsyncThunk(LOGIN_ACTIONS.userLogout, async (params: {username: string, navigate: NavigateFunction}, thunkAPI) => {
     try {
         const {username} = params
         await mocks.mockAPI({username})
+        params.navigate('/')
         return ;
     } catch(e) {
         console.log('Logout request failed')

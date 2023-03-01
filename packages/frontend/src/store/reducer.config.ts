@@ -2,10 +2,12 @@ import {combineReducers} from 'redux'
 import {AppAction} from './types';
 import {testReducer} from './testStore/testStore.reducer';
 import {loginReducer} from '@/store/login/login.reducer';
+import {registerReducer} from '@/store/register/register.reducer';
 
 const appReducer = combineReducers({
     ...testReducer,
-    ...loginReducer
+    ...loginReducer,
+    ...registerReducer
 });
 
 

@@ -10,6 +10,7 @@ import { LoginPage } from "./pages/LoginPage";
 import {loginSelectors} from '@/store/login/login.selector';
 import {loginActions} from '@/store/login/login.action';
 import {useAppDispatch} from '@/store/store.config';
+import {RegisterPage} from '@/pages/RegisterPage';
 let tokenAutoRefresh = null;
 
 function App() {
@@ -57,6 +58,10 @@ function App() {
             <Route
               path={"/login"}
               element={<LoginPage />}
+            />
+            <Route
+              path={"/signUp"}
+              element={<RegisterPage />}
             />
           </Routes>
         </>

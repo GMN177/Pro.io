@@ -8,20 +8,25 @@ import {
   VStack,
   Text,
   FormControl,
-  Heading,
+  Heading, Link,
 } from "@chakra-ui/react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {loginActions} from "@/store/login/login.action";
+import {loginSelectors} from "@/store/login/login.selector";
+import {Link as ReachLink} from "react-router-dom";
 
 export const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const isLoading = useSelector(loginSelectors.getIsLoading)
+  const isError = useSelector(loginSelectors.getIsError)
+
   const dispatch = useDispatch()
   const onSubmit = (e) => {
     e.preventDefault()
     if(username && password) {
-      dispatch(loginActions.userLogin({username, password}))
+      dispatch(loginActions.userLogin({username, password, navigate}))
     }
   }
 
@@ -54,17 +59,28 @@ export const LoginPage = () => {
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
               />
+              {
+                isError && (
+                    <Text fontSize={'sm'} color={'red.600'}>Username and password don't match!</Text>
+                )
+              }
               <Button
                   type={'submit'}
                   width="40"
                   bg="red.theme"
                   colorScheme="messenger"
+                  isLoading={isLoading}
               >
                 Login
               </Button>
-            </form>
 
+              <Text as="b" color="black.theme" size="md">
+                Don't have an account? <Link color={'#444CF7'} as={ReachLink} to={"/signUp"} fontWeight={700}> Sign up</Link>
+              </Text>
+            </form>
           </FormControl>
+
+
         </VStack>
       </Center>
   );
