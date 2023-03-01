@@ -13,7 +13,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {loginActions} from "@/store/login/login.action";
 import {loginSelectors} from "@/store/login/login.selector";
-import {Link as ReachLink} from "react-router-dom";
+import {Link as ReachLink, useNavigate} from "react-router-dom";
 
 export const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -21,6 +21,7 @@ export const LoginPage = () => {
 
   const isLoading = useSelector(loginSelectors.getIsLoading)
   const isError = useSelector(loginSelectors.getIsError)
+  const navigate = useNavigate();
 
   const dispatch = useDispatch()
   const onSubmit = (e) => {
