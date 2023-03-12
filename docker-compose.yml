@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+    mongodb:
+        container_name: 'Pro.IO_Mongo'
+        image: mongo
+        ports:
+            - 27017:27017 
+        restart: unless-stopped
+    user-service:
+        container_name: 'Pro.IO'
+        build:
+            context: ./packages/backEnd/userService
+        ports:
+            - "4000:4000"
+        restart: unless-stopped
+        depends_on:
+            - mongodb
+        command: "npm run dev"

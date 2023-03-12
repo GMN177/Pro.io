@@ -4,27 +4,15 @@ const responses =  require('../models/responses')
 
 async function getUserFriends(id){
     if(!mongoose.isValidObjectId(id)){
-        return responses.INVALID_ID 
-        // {
-        //     status: 2,
-        //     message: 'invalid userId or friendId'
-        // }
+        return responses.INVALID_ID
     }
     try{
         let ret = await User.findById(id).where('status').equals('ACTIVE')
         if(ret==null) {
-            return responses.USER_NOT_FOUND 
-            // {
-            //     status: 1,
-            //     message: 'user not found'
-            // }
+            return responses.USER_NOT_FOUND
         }
         let response = responses.genericSuccessResponse(200, ret.friends)
         return response
-        // {
-        //     status: 0,
-        //     friends: ret.friends
-        // }
     }catch(err){
         throw new Error(err.message)
     }
@@ -35,10 +23,6 @@ async function getUserFriends(id){
 async function addFriend(id1, id2) {
     if(!mongoose.isValidObjectId(id1) || !mongoose.isValidObjectId(id2)){
         return responses.INVALID_ID 
-        // {
-        //     status: 2,
-        //     message: 'invalid userId or friendId'
-        // }
     }
     try{
         let ret1 = await User.findOne({_id: id1}).where('status').equals('ACTIVE').exec()
@@ -53,16 +37,8 @@ async function addFriend(id1, id2) {
             ret2.save()
         }else{
             return responses.GENERIC_ERROR 
-            // {
-            //     status: 1,
-            //     message: 'something went wrong'
-            // }
         }
         return responses.SENT_REQUEST_SUCCESS 
-        // {
-        //     status: 0,
-        //     message: 'request sent'
-        // }
     }catch(err){
         throw new Error(err.message)
     }
@@ -71,10 +47,6 @@ async function addFriend(id1, id2) {
 async function acceptFriend(personalId, idToAccept){
     if(!mongoose.isValidObjectId(personalId) || !mongoose.isValidObjectId(idToAccept)){
         return responses.INVALID_ID 
-        // {
-        //     status: 2,
-        //     message: 'invalid userId or friendId'
-        // }
     }
     try{
         let ret1 = await User.findOne({_id: personalId}).where('status').equals('ACTIVE').exec()
@@ -90,16 +62,8 @@ async function acceptFriend(personalId, idToAccept){
                 ret2.save()
         }else{
             return responses.GENERIC_ERROR
-            // {
-            //     status: 1,
-            //     message: 'something went wrong'
-            // }
         }
         return responses.ACCEPT_REQUEST_SUCCESS 
-        // {
-        //     status: 0,
-        //     message: 'request accepted'
-        // }
     }catch(err){
         throw new Error(err.message)
     }
@@ -108,10 +72,6 @@ async function acceptFriend(personalId, idToAccept){
 async function refuseFriend(personalId, friendId) {
     if(!mongoose.isValidObjectId(personalId) || !mongoose.isValidObjectId(friendId)){
         return responses.INVALID_ID 
-        // {
-        //     status: 2,
-        //     message: 'invalid userId or friendId'
-        // }
     }
     try{
         let ret1 = await User.findOne({_id: personalId}).where('status').equals('ACTIVE').exec()
@@ -127,16 +87,8 @@ async function refuseFriend(personalId, friendId) {
             }
         else{
             return responses.GENERIC_ERROR 
-            // {
-            //     status: 1,
-            //     message: 'something went wrong'
-            // }
         }
         return responses.REJECT_REQUEST_SUCCESS
-        // {
-        //     status: 0,
-        //     message: 'request refused'
-        // }
     }catch(err) {
         throw new Error(err.message)
     }

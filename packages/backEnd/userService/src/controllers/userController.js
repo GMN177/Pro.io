@@ -59,9 +59,7 @@ async function login(username, password){
         if(checkUserPw(password, u.password, userSalt)){
             let response = responses.genericSuccessResponse(200,u._id)
             return response
-            // return {status: 0, userId: u._id}
         }else{
-            console.log(responses.INVALID_USERNAME_OR_PW)
             return responses.INVALID_USERNAME_OR_PW
         }
     }catch (err) {
@@ -105,7 +103,6 @@ async function getAllUsers() {
             __v: 0
         })
         let response = responses.genericSuccessResponse(200, l)
-        console.log(response.data)
         return response
     } catch (err) {
         throw new Error(err.message)
