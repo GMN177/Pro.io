@@ -9,10 +9,10 @@ services:
     user-service:
         container_name: 'Pro.IO'
         environment:
-            - SERVER_PORT=${SERVER_PORT}
-            - DB_URI=${DB_URI}
-            - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
-            - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+            SERVER_PORT: ${SERVER_PORT}
+            DB_URI: ${DB_URI}
+            ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+            REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
         build:
             context: ./packages/backEnd/userService
         ports:
