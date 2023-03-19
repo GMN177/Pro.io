@@ -15,11 +15,11 @@ jobs:
 
   # This workflow contains a single job called "build"
   build:
-    env:
-      SERVER_PORT: ${{ secrets.SERVER_PORT }}
-      DB_URI: ${{ secrets.DB_URI }}
-      ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-      REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+    # env:
+    #   SERVER_PORT: ${{ secrets.SERVER_PORT }}
+    #   DB_URI: ${{ secrets.DB_URI }}
+    #   ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+    #   REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
     # The type of runner that the job will run on
     runs-on: self-hosted
 
@@ -38,11 +38,11 @@ jobs:
 
       - name: Create a docker image
         env:
-          SERVER_PORT: ${{ secrets.SERVER_PORT }}
-          DB_URI: ${{ secrets.DB_URI }}
-          ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-          REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
-        run: docker-compose build
+          sp: ${{ secrets.SERVER_PORT }}
+          dburi: ${{ secrets.DB_URI }}
+          ats: ${{ secrets.ACCESS_TOKEN_SECRET }}
+          rts: ${{ secrets.REFRESH_TOKEN_SECRET }}
+        run: SERVER_PORT=$sp DB_URI=$dburi ACCESS_TOKEN_SECRET=$ats REFRESH_TOKEN_SECRET=$rtf docker-compose build
           #  docker build -t rpi-cd-tutorial:${{ steps.set_tag_name.outputs.tag_name }} .
   deploy:
     runs-on: self-hosted
