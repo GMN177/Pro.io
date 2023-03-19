@@ -37,12 +37,11 @@ jobs:
         #  run: echo ${{ secrets.SERVER_PORT }}
 
       - name: Create a docker image
-        with:
-          secrets: |
-            "SERVER_PORT: ${{ secrets.SERVER_PORT }}"
-            "DB_URI: ${{ secrets.DB_URI }}"
-            "ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}"
-            "REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}"
+        env:
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          DB_URI: ${{ secrets.DB_URI }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+          REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
         run: docker-compose build
           #  docker build -t rpi-cd-tutorial:${{ steps.set_tag_name.outputs.tag_name }} .
   deploy:
