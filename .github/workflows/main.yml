@@ -32,9 +32,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set TAG_NAME
+      # - name: Set TAG_NAME
       #   id: set_tag_name
-         run: echo ${{ secrets.SERVER_PORT }}
+        #  run: echo ${{ secrets.SERVER_PORT }}
 
       - name: Create a docker image
         with:
