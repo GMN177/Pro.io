@@ -20,4 +20,4 @@ services:
         restart: unless-stopped
         depends_on:
             - mongodb
-        command: "npm run dev"
+        command: "echo $SERVER_PORT"
