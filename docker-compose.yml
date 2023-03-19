@@ -20,4 +20,4 @@ services:
         restart: unless-stopped
         depends_on:
             - mongodb
-        command: "echo $SERVER_PORT"
+        command: "echo $DB_URI $SERVER_PORT"
