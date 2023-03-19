@@ -42,6 +42,7 @@ jobs:
           dburi: ${{ secrets.DB_URI }}
           ats: ${{ secrets.ACCESS_TOKEN_SECRET }}
           rts: ${{ secrets.REFRESH_TOKEN_SECRET }}
+        if: ${{ secrets.SERVER_PORT != '' }}
         run: SERVER_PORT=$sp DB_URI=$dburi ACCESS_TOKEN_SECRET=$ats REFRESH_TOKEN_SECRET=$rtf docker-compose build
           #  docker build -t rpi-cd-tutorial:${{ steps.set_tag_name.outputs.tag_name }} .
   deploy:
