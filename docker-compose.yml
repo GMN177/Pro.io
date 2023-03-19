@@ -2,12 +2,17 @@ version: "3.8"
 services:
     mongodb:
         container_name: 'Pro.IO_Mongo'
-        image: mongo
+        image: 'mongo:4.4.18'
         ports:
             - 27017:27017 
         restart: unless-stopped
     user-service:
         container_name: 'Pro.IO'
+        environment:
+            - SERVER_PORT
+            - DB_URI
+            - ACCESS_TOKEN_SECRET
+            - REFRESH_TOKEN_SECRET
         build:
             context: ./packages/backEnd/userService
         ports:
