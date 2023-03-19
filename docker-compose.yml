@@ -8,11 +8,7 @@ services:
         restart: unless-stopped
     user-service:
         container_name: 'Pro.IO'
-        environment:
-            SERVER_PORT: ${SERVER_PORT}
-            DB_URI: ${DB_URI}
-            ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
-            REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+        env_file: ~/.env
         build:
             context: ./packages/backEnd/userService
         ports:
