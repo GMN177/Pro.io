@@ -37,7 +37,7 @@ jobs:
       #   run: echo "::set-output name=tag_name::$(date +%s)"
 
       - name: Create a docker image
-        run: docker-compose build .
+        run: docker-compose build
           #  docker build -t rpi-cd-tutorial:${{ steps.set_tag_name.outputs.tag_name }} .
   deploy:
     runs-on: self-hosted
