@@ -1,5 +1,5 @@
 import { baseURL } from "../api/axiosConfig";
-import axios from "axios";
+import axios, {AxiosResponse} from 'axios';
 
 const enum authenticationEndpoints {
   login = "/api/users/login",
@@ -8,7 +8,7 @@ const enum authenticationEndpoints {
   refreshToken = "/users/token",
 }
 
-const login = async (username: string, password: string) => {
+const login = async (username: string, password: string): Promise<AxiosResponse<any>> => {
   return axios.post(baseURL + authenticationEndpoints.login, {
     username,
     password,
