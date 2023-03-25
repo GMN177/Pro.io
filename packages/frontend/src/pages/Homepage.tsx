@@ -92,6 +92,9 @@ const Homepage = () => {
   return (
     <Flex h="calc(90vh)">
       <VStack flex={1} justify="center" gap="50">
+        <Heading justifySelf="flex-start" size={{ base: "md", xl: "lg" }}>
+          Pro.io is a platform hosting multiple games, try them!
+        </Heading>
         <Button color="white" bg="blue.theme">
           Gioca Online
         </Button>
@@ -100,8 +103,17 @@ const Homepage = () => {
         </Button>
       </VStack>
 
-      <Box flex={1} position="relative" className="background">
-        {count > 6 && <Heading textAlign="center">dammi 30 </Heading>}
+      <Box
+        flex={1}
+        position="relative"
+        className="background"
+        display={{ base: "none", md: "block" }}
+      >
+        {count > 6 && (
+          <Heading textAlign="center" mb={3}>
+            You are ready
+          </Heading>
+        )}
         <Center
           bg="green.400"
           position="absolute"
