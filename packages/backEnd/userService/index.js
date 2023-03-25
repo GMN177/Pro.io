@@ -1,10 +1,12 @@
 const express = require('express');
 const authRouter = require('./src/services/userService');
 const {connectToDatabase} = require('./src/configs/database')
+const cors = require('cors')
 
 const app = express();
 
 app.use('/api/users', authRouter);
+app.use(cors())
 
 connectToDatabase()
 .then(() => {
