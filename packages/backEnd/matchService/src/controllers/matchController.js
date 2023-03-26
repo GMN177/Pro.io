@@ -1,26 +1,23 @@
-const Macth = require("../models/match");
+const Match = require("../models/match");
 const {default: mongoose} = require("mongoose");
 const responses = require("../models/responses");
 
 async function getAllMatches() {
     try {
-        const matches = await Macth.find({});
+        const matches = await Match.find({});
 
-        console.log(matches);
-
-        return response = responses.genericSuccessResponse(200, matches);
+        return responses.genericSuccessResponse(200, matches);
     } catch (err) {
         throw new Error(err.message);
     }
 }
 
 async function getMatch(id) {
-    console.log("ID");
     if (!mongoose.isValidObjectId(id)) {
         return responses.INVALID_ID;
     }
     try {
-        const match = await Macth.findById(id);
+        const match = await Match.findById(id);
         if (match == null) {
             return responses.INVALID_ID;
         }
@@ -33,53 +30,78 @@ async function getMatch(id) {
             status: match.status
         };
 
-        return response = responses.genericSuccessResponse(200, matchToRetrieve);
+        return responses.genericSuccessResponse(200, matchToRetrieve);
     } catch (err) {
         throw new Error(err.message);
     }
 }
 
 async function getMatchesByGame(gameId) {
-    console.log("GAMEID");
     try {
-        const match = await Macth.findOne({game: gameId});
-        if (match == null) {
+        const matches = await Match.find({game: gameId});
+        if (matches == null) {
             return responses.INVALID_GAME;
         }
-        let gameToRetrieve = {
-            id: match._id,
-            game: match.game,
-            duration: match.duration,
-            startTime: match.startTime,
-            endTime: match.endTime,
-            status: match.status
+        let matchToRetrieve = {
+            id: matches._id,
+            game: matches.game,
+            duration: matches.duration,
+            startTime: matches.startTime,
+            endTime: matches.endTime,
+            status: matches.status
         };
 
-        return response = responses.genericSuccessResponse(200, gameToRetrieve);
+        return responses.genericSuccessResponse(200, matchToRetrieve);
     } catch (err) {
         throw new Error(err.message);
     }
 }
 
-/*async function createGame(gameName, gameDescription, gamePlayersNumber) {
+async function createMatch(gameId, duration, startTime, endTime, status) {
     try {
-        const gameToAdd = await Game.create({
-            name: gameName,
-            description: gameDescription,
-            playersNumber: gamePlayersNumber,
+        const matchToAdd = await Match.create({
+            game: gameId,
+            duration: duration,
+            startTime: startTime,
+            endTime: endTime,
+            status: status
         });
-        let response = responses.genericSuccessResponse(200, "Game added");
-        return response;
+        return responses.genericSuccessResponse(200, "Match added");
     } catch (err) {
-        if (err.code == 11000) throw new Error(err.code);
+        if (err.code === 11000) throw new Error(err.code);
         else {
             throw new Error(err.message);
         }
     }
-}*/
+}
+
+
+async function updateMatch(id, gameId, duration, startTime, endTime, status) {
+    if (!mongoose.isValidObjectId(id)) {
+        return responses.INVALID_ID;
+    }
+    try {
+        let matchUpdated = {
+            game: gameId,
+            duration: duration,
+            startTime: startTime,
+            endTime: endTime,
+            status: status
+        };
+        let ret = await Match.findByIdAndUpdate({ _id: id }, matchUpdated, {
+            new: true,
+            overwrite: true,
+        });
+        return responses.UPDATE_SUCCESS;
+    } catch (err) {
+        throw new Error(err.message);
+    }
+}
 
 module.exports = {
     getAllMatches,
     getMatch,
     getMatchesByGame,
+    createMatch,
+    updateMatch
 };

@@ -1,75 +1,86 @@
 const express = require("express");
 const jsend = require("jsend");
-const gameController = require("../controllers/matchController");
+const matchController = require("../controllers/matchController");
+const playController = require("../controllers/playController");
 const router = express.Router();
 
 router.use(express.json());
 
 // get all games from database
 router.get("/", async (req, res) => {
-  try {
-    let games = await gameController.getAllGames();
-    return res.status(games.status).send(games.response);
-  } catch (err) {
-    return res.status(500).send(jsend.error({ message: err.message }));
-  }
+    try {
+        let matches = await matchController.getAllMatches();
+        return res.status(matches.status).send(matches.response);
+    } catch (err) {
+        return res.status(500).send(jsend.error({message: err.message}));
+    }
 });
 
 // get single game from database.
-router.get("/game/:id", async (req, res) => {
-  try {
-    let game = await gameController.getGame(req.params.id);
-    console.log(game);
-    return res.status(game.status).send(game.response);
-  } catch (err) {
-    return res.status(500).send(jsend.error({ message: err.message }));
-  }
+router.get("/:id", async (req, res) => {
+    try {
+        let match = await matchController.getMatch(req.params.id);
+        return res.status(match.status).send(match.response);
+    } catch (err) {
+        return res.status(500).send(jsend.error({message: err.message}));
+    }
 });
 
 // get single game by name from database.
-router.get("/gameByName/:name", async (req, res) => {
-  try {
-    let game = await gameController.getGameByName(req.params.name);
-    return res.status(game.status).send(game.response);
-  } catch (err) {
-    return res.status(500).send(jsend.error({ message: err.message }));
-  }
+router.get("/matchByGame/:game", async (req, res) => {
+    try {
+        let matches = await matchController.getMatchesByGame(req.params.game);
+        return res.status(matches.status).send(matches.response);
+    } catch (err) {
+        return res.status(500).send(jsend.error({message: err.message}));
+    }
+});
+
+router.get("/matchByUser/:user", async (req, res) => {
+    try {
+        let plays = await playController.getByMatchAndUser(req.params.match, req.params.user);
+        return res.status(plays.status).send(plays.response);
+    } catch (err) {
+        return res.status(500).send(jsend.error({message: err.message}));
+    }
 });
 
 // modify game.
-router.put("/edit/:id", async (req, res) => {
-  try {
-    const gameUpdated = await gameController.updateGame(
-      req.body.gameName,
-      req.body.gameDescription,
-      req.body.gamePlayersNumber,
-      req.params.id
-    );
-    return res.status(gameUpdated.status).send(gameUpdated.response);
-  } catch (err) {
-    return res.status(500).send(jsend.error({ message: err.message }));
-  }
+router.put("/:id", async (req, res) => {
+    try {
+        const matchUpdated = await matchController.updateMatch(
+            req.body.game,
+            req.body.duration,
+            req.body.startTime,
+            req.body.endTime,
+            req.body.status,
+            req.params.id
+        );
+        return res.status(matchUpdated.status).send(matchUpdated.response);
+    } catch (err) {
+        return res.status(500).send(jsend.error({message: err.message}));
+    }
 });
 
-router.post("/game", async (req, res) => {
-  try {
-    const gameToAdd = await gameController.createGame(
-      req.body.gameName,
-      req.body.gameDescription,
-      req.body.gamePlayersNumber
-    );
-    console.log(gameToAdd);
-    return res.status(gameToAdd.status).send(gameToAdd.response);
-  } catch (err) {
-    console.log("errrrr:"+err+"\n"+err.message)
-    if (Number(err.message) === 11000) {
-      return res
-        .status(409)
-        .send(jsend.error({ message: "Duplicate key error" }));
-    } else {
-      return res.status(500).send(jsend.error({ message: err.message }));
+router.post("/", async (req, res) => {
+    try {
+        const matchToAdd = await matchController.createMatch(
+            req.body.game,
+            req.body.duration,
+            req.body.startTime,
+            req.body.endTime,
+            req.body.status
+        );
+        return res.status(matchToAdd.status).send(matchToAdd.response);
+    } catch (err) {
+        if (Number(err.message) === 11000) {
+            return res
+                .status(409)
+                .send(jsend.error({message: "Duplicate key error"}));
+        } else {
+            return res.status(500).send(jsend.error({message: err.message}));
+        }
     }
-  }
 });
 
 module.exports = router;
