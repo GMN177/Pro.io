@@ -9,6 +9,6 @@ const gameSchema = new mongoose.Schema({
   playersNumber: Number,
 });
 
-gameExport = mongoose.model("user", gameSchema)
+gameExport = mongoose.model("game", gameSchema)
 
 module.exports = gameExport

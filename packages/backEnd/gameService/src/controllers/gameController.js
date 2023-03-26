@@ -6,17 +6,13 @@ async function getAllGames() {
   try {
     const games = await Game.find({});
 
-    console.log(games);
-
-    let response = responses.genericSuccessResponse(200, games);
-    return response;
+    return response = responses.genericSuccessResponse(200, games);
   } catch (err) {
     throw new Error(err.message);
   }
 }
 
 async function getGame(id) {
-  console.log("ID");
   if (!mongoose.isValidObjectId(id)) {
     return responses.INVALID_ID;
   }
@@ -28,18 +24,17 @@ async function getGame(id) {
     let gameToRetrieve = {
       id: game._id,
       name: game.name,
-      duration: game.duration,
+      duration: game.description,
+      playersNumber: game.playersNumber
     };
 
-    let response = responses.genericSuccessResponse(200, gameToRetrieve);
-    return response;
+    return response = responses.genericSuccessResponse(200, gameToRetrieve);
   } catch (err) {
     throw new Error(err.message);
   }
 }
 
 async function getGameByName(name) {
-  console.log("NAME");
   try {
     const game = await Game.findOne({ name: name });
     if (game == null) {
@@ -48,18 +43,17 @@ async function getGameByName(name) {
     let gameToRetrieve = {
       id: game._id,
       name: game.name,
-      duration: game.duration,
+      description: game.description,
+      playersNumber: game.playersNumber
     };
 
-    let response = responses.genericSuccessResponse(200, gameToRetrieve);
-    return response;
+    return response = responses.genericSuccessResponse(200, gameToRetrieve);
   } catch (err) {
     throw new Error(err.message);
   }
 }
 
 async function updateGame(gameName, gameDescription, gamePlayersNumber, id) {
-  console.log("D: " + gameDescription);
   if (!mongoose.isValidObjectId(id)) {
     return responses.INVALID_ID;
   }
@@ -86,10 +80,9 @@ async function createGame(gameName, gameDescription, gamePlayersNumber) {
       description: gameDescription,
       playersNumber: gamePlayersNumber,
     });
-    let response = responses.genericSuccessResponse(200, "Game added");
-    return response;
+    return response = responses.genericSuccessResponse(200, "Game added");
   } catch (err) {
-    if (err.code == 11000) throw new Error(err.code);
+    if (err.code === 11000) throw new Error(err.code);
     else {
       throw new Error(err.message);
     }

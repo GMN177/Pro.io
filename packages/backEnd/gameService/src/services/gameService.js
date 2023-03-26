@@ -16,10 +16,9 @@ router.get("/", async (req, res) => {
 });
 
 // get single game from database.
-router.get("/game/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     let game = await gameController.getGame(req.params.id);
-    console.log(game);
     return res.status(game.status).send(game.response);
   } catch (err) {
     return res.status(500).send(jsend.error({ message: err.message }));
@@ -27,7 +26,7 @@ router.get("/game/:id", async (req, res) => {
 });
 
 // get single game by name from database.
-router.get("/gameByName/:name", async (req, res) => {
+router.get("/game/:name", async (req, res) => {
   try {
     let game = await gameController.getGameByName(req.params.name);
     return res.status(game.status).send(game.response);
@@ -37,7 +36,7 @@ router.get("/gameByName/:name", async (req, res) => {
 });
 
 // modify game.
-router.put("/edit/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const gameUpdated = await gameController.updateGame(
       req.body.gameName,
@@ -51,18 +50,16 @@ router.put("/edit/:id", async (req, res) => {
   }
 });
 
-router.post("/game", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const gameToAdd = await gameController.createGame(
       req.body.gameName,
       req.body.gameDescription,
       req.body.gamePlayersNumber
     );
-    console.log(gameToAdd);
     return res.status(gameToAdd.status).send(gameToAdd.response);
   } catch (err) {
-    console.log("errrrr:"+err+"\n"+err.message)
-    if (Number(err.message) == 11000) {
+    if (Number(err.message) === 11000) {
       return res
         .status(409)
         .send(jsend.error({ message: "Duplicate key error" }));
