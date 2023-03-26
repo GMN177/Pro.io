@@ -42,16 +42,8 @@ async function getMatchesByGame(gameId) {
         if (matches == null) {
             return responses.INVALID_GAME;
         }
-        let matchToRetrieve = {
-            id: matches._id,
-            game: matches.game,
-            duration: matches.duration,
-            startTime: matches.startTime,
-            endTime: matches.endTime,
-            status: matches.status
-        };
 
-        return responses.genericSuccessResponse(200, matchToRetrieve);
+        return responses.genericSuccessResponse(200, matches);
     } catch (err) {
         throw new Error(err.message);
     }
@@ -59,7 +51,7 @@ async function getMatchesByGame(gameId) {
 
 async function createMatch(gameId, duration, startTime, endTime, status) {
     try {
-        const matchToAdd = await Match.create({
+        await Match.create({
             game: gameId,
             duration: duration,
             startTime: startTime,
@@ -88,7 +80,7 @@ async function updateMatch(id, gameId, duration, startTime, endTime, status) {
             endTime: endTime,
             status: status
         };
-        let ret = await Match.findByIdAndUpdate({ _id: id }, matchUpdated, {
+        await Match.findByIdAndUpdate({ _id: id }, matchUpdated, {
             new: true,
             overwrite: true,
         });

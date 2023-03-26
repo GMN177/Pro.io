@@ -49,12 +49,12 @@ router.get("/matchByUser/:user", async (req, res) => {
 router.put("/:id", async (req, res) => {
     try {
         const matchUpdated = await matchController.updateMatch(
+            req.params.id,
             req.body.game,
             req.body.duration,
             req.body.startTime,
             req.body.endTime,
             req.body.status,
-            req.params.id
         );
         return res.status(matchUpdated.status).send(matchUpdated.response);
     } catch (err) {
