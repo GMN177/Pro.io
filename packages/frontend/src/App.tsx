@@ -1,51 +1,57 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from "react";
 import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
-import { testSelectors } from "./store/testStore/testStore.selector";
 import Navbar from "./components/Navbar";
-import Homepage from "./pages/Homepage";
+import Homepage from "./pages/HomepagePage/Homepage";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import React from "react";
-import { LoginPage } from "./pages/LoginPage";
-import {loginSelectors} from '@/store/login/login.selector';
-import {loginActions} from '@/store/login/login.action';
-import {useAppDispatch} from '@/store/store.config';
-import {RegisterPage} from '@/pages/RegisterPage';
+import { LoginPage } from "./pages/LoginRegisterPage/LoginPage";
+import { loginSelectors } from "@/store/login/login.selector";
+import { loginActions } from "@/store/login/login.action";
+import { useAppDispatch } from "@/store/store.config";
+import { RegisterPage } from "./pages/LoginRegisterPage/RegisterPage";
+import { GameLibrary } from "./pages/GameLibraryPage/GameLibrary";
+
 let tokenAutoRefresh = null;
 
 function App() {
-  const dispatch = useAppDispatch()
-  const accessToken = useSelector(loginSelectors.getAccessToken)
-  const refreshToken = useSelector(loginSelectors.getRefreshToken)
+  const dispatch = useAppDispatch();
+  const accessToken = useSelector(loginSelectors.getAccessToken);
+  const refreshToken = useSelector(loginSelectors.getRefreshToken);
 
   useEffect(() => {
-    if(!accessToken) {
-      clearInterval(tokenAutoRefresh)
+    if (!accessToken) {
+      clearInterval(tokenAutoRefresh);
       tokenAutoRefresh = null;
     }
 
-    if(refreshToken) {
+    if (refreshToken) {
       tokenAutoRefresh = setInterval(() => {
-        dispatch(loginActions.userTokenRefresh({refreshToken}))
-      }, 840000) // 14 minutes refresh for a 15 minutes access token
+        dispatch(loginActions.userTokenRefresh({ refreshToken }));
+      }, 840000); // 14 minutes refresh for a 15 minutes access token
     }
-
-  }, [accessToken, refreshToken])
+  }, [accessToken, refreshToken]);
 
   return (
     <>
-      {accessToken ? (
+      {!accessToken ? (
         <Routes>
           <Route
             path={"/*"}
             element={
               <>
                 <div className="App">
-                  <Navbar
-                    isLogged={true}
-                  />
+                  <Navbar isLogged={true} />
                   <Homepage />
                 </div>
+              </>
+            }
+          />
+          <Route
+            path={"/games"}
+            element={
+              <>
+                <Navbar isLogged={true} />
+                <GameLibrary />
               </>
             }
           />
@@ -54,15 +60,9 @@ function App() {
         <>
           <Navbar isLogged={false} />
           <Routes>
-            <Route path={"/"} element={<>HOMEPAGE PER UTENTE NON LOGGATO</>} />
-            <Route
-              path={"/login"}
-              element={<LoginPage />}
-            />
-            <Route
-              path={"/signUp"}
-              element={<RegisterPage />}
-            />
+            <Route path={"/"} element={<Homepage />} />
+            <Route path={"/login"} element={<LoginPage />} />
+            <Route path={"/signup"} element={<RegisterPage />} />
           </Routes>
         </>
       )}

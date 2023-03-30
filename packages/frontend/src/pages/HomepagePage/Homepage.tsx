@@ -8,6 +8,7 @@ import {
   Image,
   Center,
   Heading,
+  Link,
 } from "@chakra-ui/react";
 import {
   BsEmojiFrown,
@@ -16,24 +17,17 @@ import {
   BsEmojiLaughing,
 } from "react-icons/bs";
 import "./Homepage.css";
+import { useSelector } from "react-redux";
+import { loginSelectors } from "@/store/login/login.selector";
+import { getRandomPosition } from "@/lib/helperFunctions";
+import { Link as ReachLink, useNavigate } from "react-router-dom";
 
 const Homepage = () => {
-  // function to get a random position within the screen size / 2
-  const getRandomPosition = () => {
-    const minX = 0;
-    const minY = 0;
-    const maxX = window.innerWidth / 2 - 40; // assuming box width of 40px
-    const maxY = window.innerHeight / 2 - 40; // assuming box height of 40px
-    const randomX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
-    const randomY = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
-    return { x: randomX, y: randomY };
-  };
+  const accessToken = useSelector(loginSelectors.getAccessToken);
 
   const [isVisible, setIsVisible] = useState(true);
   const [position, setPosition] = useState(getRandomPosition());
   const [count, setCount] = useState(0);
-
-  console.log(count);
 
   // function to handle the click of the little box, change his position after 200 ms
   const handleBoxClick = () => {
@@ -53,7 +47,7 @@ const Homepage = () => {
       case 2:
         return (
           <BsEmojiDizzy
-            color="#2B2C34"
+            color="white"
             transform="translate(50%, -50%)"
             size="2em"
           />
@@ -62,7 +56,7 @@ const Homepage = () => {
       case 4:
         return (
           <BsEmojiFrown
-            color="#2B2C34"
+            color="white"
             transform="translate(50%, -50%)"
             size="2em"
           />
@@ -72,7 +66,7 @@ const Homepage = () => {
       case 6:
         return (
           <BsEmojiExpressionless
-            color="#2B2C34"
+            color="white"
             transform="translate(50%, -50%)"
             size="2em"
           />
@@ -81,7 +75,7 @@ const Homepage = () => {
       default:
         return (
           <BsEmojiLaughing
-            color="#2B2C34"
+            color="white"
             transform="translate(50%, -50%)"
             size="2em"
           />
@@ -92,12 +86,19 @@ const Homepage = () => {
   return (
     <Flex h="calc(90vh)">
       <VStack flex={1} justify="center" gap="50">
-        <Heading justifySelf="flex-start" size={{ base: "md", xl: "lg" }}>
+        <Heading
+          justifySelf="flex-start"
+          size={{ base: "md", xl: "lg" }}
+          px={10}
+          textAlign="center"
+        >
           Pro.io is a platform hosting multiple games, try them!
         </Heading>
-        <Button color="white" bg="blue.theme">
-          Gioca Online
-        </Button>
+        <Link as={ReachLink} to={"/games"} style={{ textDecoration: "none" }}>
+          <Button color="white" bg="blue.theme">
+            Gioca Online
+          </Button>
+        </Link>
         <Button color="white" bg="blue.theme">
           Gioca da solo
         </Button>
@@ -115,7 +116,7 @@ const Homepage = () => {
           </Heading>
         )}
         <Center
-          bg="green.400"
+          bg="blue.theme"
           position="absolute"
           top={position.y}
           left={position.x}

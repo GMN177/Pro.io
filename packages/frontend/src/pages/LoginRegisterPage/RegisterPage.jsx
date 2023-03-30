@@ -15,6 +15,7 @@ import { useAppDispatch } from "@/store/store.config";
 import { useSelector } from "react-redux";
 import { registerSelectors } from "@/store/register/register.selector";
 import { loginSelectors } from "@/store/login/login.selector";
+import styles from "./LoginPage.module.css";
 
 export const RegisterPage = () => {
   const [username, setUsername] = useState("");
@@ -24,6 +25,7 @@ export const RegisterPage = () => {
   const dispatch = useAppDispatch();
   const isLoadingRegister = useSelector(registerSelectors.getIsLoading);
   const isLoadingLogin = useSelector(loginSelectors.getIsLoading);
+  const isErrorRegister = useSelector(registerSelectors.getIsError);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -33,19 +35,25 @@ export const RegisterPage = () => {
   };
 
   return (
-    <Center className="background" width={"100%"} height={"90vh"}>
+    <Center
+      className={styles.background}
+      width={"100%"}
+      height={"95vh"}
+      shadow="dark-lg"
+    >
       <VStack
-        boxSize="96"
+        borderRadius={10}
+        boxSize="md"
         bg="grey.theme"
         justifyContent="space-around"
-        borderRadius={"11px"}
-        paddingTop={"30px"}
-        boxShadow="lg"
+        pt={"20px"}
+        shadow="lg"
+        px={10}
       >
-        <Heading as="h3" color="black.theme" size="md">
+        <Heading as="h2" color="black.theme" size="lg">
           Welcome to pro.io!
         </Heading>
-        <FormControl p={3} m={30} textAlign="center">
+        <FormControl textAlign="center">
           <form onSubmit={onSubmit} noValidate={true}>
             <Input
               variant="flushed"
@@ -53,6 +61,8 @@ export const RegisterPage = () => {
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               mb={10}
+              borderBottomColor="#D1D1E9"
+              borderBottomWidth={2}
             />
             <Input
               variant="flushed"
@@ -60,19 +70,28 @@ export const RegisterPage = () => {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               mb={10}
+              borderBottomColor="#D1D1E9"
+              borderBottomWidth={2}
             />
             <Input
               variant="flushed"
               type="password"
               placeholder="Password"
               value={password}
+              borderBottomColor="#D1D1E9"
+              borderBottomWidth={2}
               onChange={(event) => setPassword(event.target.value)}
             />
+            {!isErrorRegister && (
+              <Text color="red.theme" mt={2}>
+                error
+              </Text>
+            )}
             <Button
               type={"submit"}
               width="40"
-              bg="red.theme"
-              colorScheme="messenger"
+              color="white"
+              colorScheme="twitter"
               isLoading={isLoadingRegister || isLoadingLogin}
               mt={6}
             >
@@ -81,7 +100,7 @@ export const RegisterPage = () => {
           </form>
         </FormControl>
 
-        <Text as="b" color="black.theme" size="md" pb={2}>
+        <Text as="b" color="black.theme" size="md" pb={2} mb={10}>
           Already have an account?{" "}
           <Link color={"#444CF7"} as={ReachLink} to={"/login"} fontWeight={700}>
             {" "}
