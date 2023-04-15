@@ -15,6 +15,11 @@ const GENERIC_ERROR = {
     response: jsend.fail({message: 'something went wrong'})
 }
 
+const GENERIC_NOT_FOUND = {
+    status: 404,
+    response: jsend.fail({message: 'data not found'})
+}
+
 const USER_NOT_FOUND = {
     status: 404,
     response: jsend.fail({message: 'user not found'})
@@ -45,6 +50,11 @@ const REJECT_REQUEST_SUCCESS = {
     response: jsend.success({message: "request refused"})
 }
 
+const FORBIDDEN_ERROR = {
+    status: 403,
+    response: jsend.fail({message: "no refresh token"})
+}
+
 function genericSuccessResponse(status, data){
     return {
         status: status,
@@ -62,6 +72,8 @@ module.exports = {
     SENT_REQUEST_SUCCESS,
     ACCEPT_REQUEST_SUCCESS, 
     REJECT_REQUEST_SUCCESS,
+    FORBIDDEN_ERROR,
+    GENERIC_NOT_FOUND,
     genericSuccessResponse
 }
 

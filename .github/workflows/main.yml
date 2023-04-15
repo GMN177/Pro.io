@@ -23,8 +23,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: self-hosted
 
-    outputs:
-      tag_name: ${{ steps.set_tag_name.outputs.tag_name }}
+    # outputs:
+    #   tag_name: ${{ steps.set_tag_name.outputs.tag_name }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -37,7 +37,7 @@ jobs:
       #   run: echo "::set-output name=tag_name::$(date +%s)"
 
       - name: Create a docker image
-        run: docker-compose build .
+        run: sudo docker-compose build
           #  docker build -t rpi-cd-tutorial:${{ steps.set_tag_name.outputs.tag_name }} .
   deploy:
     runs-on: self-hosted
@@ -45,7 +45,7 @@ jobs:
 
     steps:
       - name: Kill all running containers
-        run: docker-compose down
+        run: sudo docker-compose down
 
       - name: Run the docker image
-        run: docker-compose up
+        run: sudo docker-compose up

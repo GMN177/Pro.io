@@ -2,41 +2,10 @@ const express = require('express')
 const jsend = require('jsend')
 const userController = require('../controllers/userController')
 const router = express.Router()
-const {generateTokens} = require('../controllers/authController')
 const friendController = require('../controllers/friendController')
+const jwt = require('jsonwebtoken')
 
 router.use(express.json());
-
-// user registration.
-router.post('/signup', async (req,res) => {
-    try{
-        const a = await userController.signup(req.body.username, req.body.email, req.body.password)
-        console.log(a)
-        return res.status(a.status).send(a.response)
-    }catch (err) {
-        if(Number(err.message) == 11000){
-            return res.status(409).send(jsend.error({message: "duplicate key error"}))
-        }else{
-            return res.status(500).send(jsend.error({message: err.message}))
-        }
-    }
-})
-
-// user login.
-router.post('/login', async (req, res) => {
-    if(req.body.username == null || req.body.password == null) res.status(400).send(jsend.fail({message: "Bad Request"}))
-    try {
-        const a  = await userController.login(req.body.username, req.body.password)
-        if(a.status == 200) {
-            let tokens = generateTokens({id: a.response.data.message})
-            return res.status(200).send(jsend.success({accessToken: tokens.accessToken, refreshToken: tokens.refreshToken}))
-        }else{
-            return res.status(a.status).send(a.response)
-        }
-    }catch (err) {
-        return res.status(500).send(jsend.error({message: err.message}))
-    }
-})
 
 // get all users from database
 router.get('/', async (req, res) => {
@@ -131,5 +100,9 @@ router.post('/:id/friends/accept', async (req, res) => {
         return res.status(500).send(jsend.error({message: err.message}))
     }
 })
+
+
+
+
 
 module.exports = router

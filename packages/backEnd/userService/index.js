@@ -1,10 +1,13 @@
 const express = require('express');
-const authRouter = require('./src/services/userService');
+const userServiceRouter = require('./src/services/userService');
+const authServiceRouter =  require('./src/services/authService')
 const {connectToDatabase} = require('./src/configs/database')
+
 
 const app = express();
 
-app.use('/api/users', authRouter);
+app.use('/api/users', userServiceRouter);
+app.use('/api/auth', authServiceRouter)
 
 connectToDatabase()
 .then(() => {
