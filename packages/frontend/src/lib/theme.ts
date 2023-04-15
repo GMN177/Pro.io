@@ -23,6 +23,14 @@ const components = {
   },
 };
 
+const breakpoints = {
+  sm: "320px",
+  md: "768px",
+  lg: "960px",
+  xl: "1200px",
+  "2xl": "1536px",
+};
+
 const fonts = {
   heading: `'Maven Pro', sans-serif`,
   body: `'Maven Pro', sans-serif`,
@@ -43,5 +51,5 @@ const colors = {
   },
 };
 
-const theme = extendTheme({ components, fonts, colors }) as any;
+const theme = extendTheme({ components, fonts, colors, breakpoints }) as any;
 export default theme;
