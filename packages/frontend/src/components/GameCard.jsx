@@ -9,6 +9,7 @@ import {
   Text,
   Heading,
   CardFooter,
+  VStack,
 } from "@chakra-ui/react";
 
 export const GameCard = ({ id, title, image, description }) => {
@@ -22,26 +23,25 @@ export const GameCard = ({ id, title, image, description }) => {
         />
         <Stack mt="6" spacing="3">
           <Heading size="md">{title}</Heading>
-          <Text>
-            This sofa is perfect for modern tropical spaces, baroque inspired
-            spaces, earthy toned spaces and for people who love a chic design
-            with a sprinkle of vintage design.
-          </Text>
-          <Text color="blue.600" fontSize="2xl">
-            $450
+          <Text>{description}</Text>
+          <Text color="blue.600" fontSize="xl">
+            x Players online now
           </Text>
         </Stack>
       </CardBody>
       <Divider />
-      <CardFooter>
-        <ButtonGroup spacing="2">
+      <CardFooter display="flex" flexDir="column-reverse">
+        <VStack spacing="4">
           <Button variant="solid" colorScheme="blue">
-            Buy now
+            Join a Public game
           </Button>
           <Button variant="ghost" colorScheme="blue">
-            Add to cart
+            Create a Private Game
           </Button>
-        </ButtonGroup>
+          <Button variant="solid" colorScheme="green">
+            Join a Private Game
+          </Button>
+        </VStack>
       </CardFooter>
     </Card>
   );

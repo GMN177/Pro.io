@@ -33,7 +33,7 @@ function App() {
 
   return (
     <>
-      {!accessToken ? (
+      {accessToken ? (
         <Routes>
           <Route
             path={"/*"}
