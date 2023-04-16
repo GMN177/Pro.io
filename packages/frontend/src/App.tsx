@@ -27,7 +27,7 @@ function App() {
     if(refreshToken) {
       tokenAutoRefresh = setInterval(() => {
         dispatch(loginActions.userTokenRefresh({refreshToken}))
-      }, 840000) // 14 minutes refresh for a 15 minutes access token
+      }, 5000) // 14 minutes refresh for a 15 minutes access token
     }
 
   }, [accessToken, refreshToken])
