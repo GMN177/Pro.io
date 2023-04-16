@@ -9,7 +9,6 @@ const router = express.Router()
 router.use(express.json());
 router.use(logger)
 
-// check if the refresh token is inside the database. COMPLETED
 router.post('/token', async (req,res) =>{
     let tk = req.body.refreshToken
     try {
@@ -26,13 +25,12 @@ router.post('/token', async (req,res) =>{
     }
 })
 
-// user login. Generate access and refresh token and push the refresh token inside the DB
 router.post('/login', async (req, res) => {
     if(req.body.username == null || req.body.password == null) res.status(400).send(jsend.fail({message: "Bad Request"}))
     try {
         const a  = await userController.login(req.body.username, req.body.password)
         if(a.status == 200) {
-            let tokens = authController.generateTokens({id: a.response.data.message})
+            let tokens = authController.generateTokens({id: a.response.data.id})
             let insertToken =  await authController.insertRefreshToken(tokens.refreshToken, a.response.data.message)
             return res.status(200).send(jsend.success({accessToken: tokens.accessToken, refreshToken: tokens.refreshToken}))
         }else{
@@ -43,11 +41,9 @@ router.post('/login', async (req, res) => {
     }
 })
 
-// user registration. COMPLETED
 router.post('/signup', async (req,res) => {
     try{
         const a = await userController.signup(req.body.username, req.body.email, req.body.password)
-        console.log(a)
         return res.status(a.status).send(a.response)
     }catch (err) {
         if(Number(err.message) == 11000){
@@ -58,9 +54,7 @@ router.post('/signup', async (req,res) => {
     }
 })
 
-// remove the refresh token from the DB
 router.post('/logout', async (req, res) => {
-    // let tk = jwt.sign('this is a test token', process.env.REFRESH_TOKEN_SECRET)
     let tk = req.body.refreshToken
     try {
         let ret =  await authController.removeRefreshToken(tk)

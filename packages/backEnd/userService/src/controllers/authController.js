@@ -11,6 +11,7 @@ function generateTokens(data) {
     }
 }
 
+
 async function insertRefreshToken(tk, userId) {
     try {
         const tkn = await refreshToken.create({
@@ -29,6 +30,7 @@ async function insertRefreshToken(tk, userId) {
 }
 
 async function removeRefreshToken(tk) {
+    
     try {
         let result = await refreshToken.deleteOne({
             refresh_token: tk
@@ -36,7 +38,7 @@ async function removeRefreshToken(tk) {
         if(result.deletedCount === 0){
             return responses.GENERIC_NOT_FOUND
         }
-        let response = responses.genericSuccessResponse(200, result)
+        let response = responses.genericSuccessResponse(200, {})
         return response
     }catch(err) {
         throw new Error(err.message)
@@ -55,5 +57,6 @@ async function findRefreshToken(tk){
         throw new Error(err.message)
     }
 }
+
 
 module.exports = {generateTokens, insertRefreshToken, removeRefreshToken, findRefreshToken}
