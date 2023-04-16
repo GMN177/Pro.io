@@ -3,6 +3,7 @@ import {mocks} from '@/mocks';
 import axios from 'axios';
 import {loginActions} from '@/store/login/login.action';
 import {NavigateFunction} from 'react-router-dom';
+import {authenticationService} from '@/api/authentication.service';
 
 
 const enum REGISTER_ACTIONS {
@@ -12,7 +13,7 @@ const enum REGISTER_ACTIONS {
 const signUp = createAsyncThunk(REGISTER_ACTIONS.signUp, async (bean:{username:string, email: string, password:string, navigate: NavigateFunction}, thunkAPI) => {
     try {
         const {username, email, password, navigate} = bean
-        const {} = await mocks.mockAPI({responseInfo: 'unknown'})
+        await authenticationService.signUp(username, email, password)
         thunkAPI.dispatch(loginActions.userLogin({username, password, navigate}))
         return ;
     } catch(e) {
