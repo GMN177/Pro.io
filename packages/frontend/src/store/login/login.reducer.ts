@@ -22,8 +22,7 @@ export const loginReducer = {
                 isLoading: false,
                 isError: false,
                 accessToken: action.payload.accessToken,
-                refreshToken: action.payload.refreshToken,
-                id: action.payload.id
+                refreshToken: action.payload.refreshToken
             }
         });
         builder.addCase(loginActions.userLogin.rejected, (state): UserLoginState => {
@@ -44,6 +43,12 @@ export const loginReducer = {
                 ...state,
                 accessToken: undefined,
                 refreshToken: undefined
+            }
+        });
+        builder.addCase(loginActions.findLoggedUser.fulfilled, (state, action): UserLoginState => {
+            return {
+                ...state,
+                user: action.payload.user
             }
         });
     })
