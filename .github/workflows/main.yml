@@ -27,7 +27,9 @@ jobs:
         uses: SpicyPizza/create-envfile@v1.3
         with:
           envkey_SERVER_PORT: ${{ secrets.SERVER_PORT }}
-          envkey_DB_URI: ${{ secrets.DB_URI }}
+          envkey_USER_DB_URI: ${{ secrets.USER_DB_URI }}
+          envkey_MATCH_DB_URI: ${{ secrets.MATCH_DB_URI }}
+          envkey_GAME_DB_URI: ${{ secrets.GAME_DB_URI }}
           envkey_ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
           envkey_REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
           fail_on_empty: true
@@ -41,7 +43,7 @@ jobs:
 
     steps:
       - name: Kill all running containers
-        run: sudo docker-compose down
+        run: docker-compose down
 
       - name: Run the docker image
         run: docker-compose up -d
