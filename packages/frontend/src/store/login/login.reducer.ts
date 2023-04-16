@@ -22,7 +22,8 @@ export const loginReducer = {
                 isLoading: false,
                 isError: false,
                 accessToken: action.payload.accessToken,
-                refreshToken: action.payload.refreshToken
+                refreshToken: action.payload.refreshToken,
+                id: action.payload.id
             }
         });
         builder.addCase(loginActions.userLogin.rejected, (state): UserLoginState => {
