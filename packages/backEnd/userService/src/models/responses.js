@@ -2,17 +2,22 @@ const jsend = require('jsend')
 
 const INVALID_ID = {
     status: 404,
-    response: jsend.fail({message: 'invalid userId'})
+    response: jsend.error({message: 'invalid userId'})
 }
 
 const INVALID_USERNAME_OR_PW = {
     status : 403,
-    response: jsend.fail({message: 'invalid username or password'}) 
+    response: jsend.error({message: 'invalid username or password'}) 
 }
 
 const GENERIC_ERROR = {
     status: 400,
-    response: jsend.fail({message: 'something went wrong'})
+    response: jsend.error({message: 'something went wrong'})
+}
+
+const GENERIC_NOT_FOUND = {
+    status: 404,
+    response: jsend.error({message: 'data not found'})
 }
 
 const USER_NOT_FOUND = {
@@ -22,33 +27,38 @@ const USER_NOT_FOUND = {
 
 const DELETE_SUCCESS = {
     status: 200,
-    response: jsend.success({message: 'account deleted successfully'})
+    response: jsend.success({})
 } 
 
 const UPDATE_SUCCESS = {
     status: 200,
-    response: jsend.success({message: "record updated"})
+    response: jsend.success({})
 } 
 
 const SENT_REQUEST_SUCCESS = {
     status: 200,
-    response: jsend.success({message: "request sent"})
+    response: jsend.success({})
 }
 
 const ACCEPT_REQUEST_SUCCESS = {
     status: 200,
-    response: jsend.success({message: "request accepted"})
+    response: jsend.success({})
 }
 
 const REJECT_REQUEST_SUCCESS = {
     status: 200,
-    response: jsend.success({message: "request refused"})
+    response: jsend.success({})
+}
+
+const FORBIDDEN_ERROR = {
+    status: 403,
+    response: jsend.error({message: "no refresh token"})
 }
 
 function genericSuccessResponse(status, data){
     return {
         status: status,
-        response: jsend.success({message: data})
+        response: jsend.success(data)
     }
 }
 
@@ -62,6 +72,8 @@ module.exports = {
     SENT_REQUEST_SUCCESS,
     ACCEPT_REQUEST_SUCCESS, 
     REJECT_REQUEST_SUCCESS,
+    FORBIDDEN_ERROR,
+    GENERIC_NOT_FOUND,
     genericSuccessResponse
 }
 

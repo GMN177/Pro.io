@@ -11,15 +11,13 @@ async function getUserFriends(id){
         if(ret==null) {
             return responses.USER_NOT_FOUND
         }
-        let response = responses.genericSuccessResponse(200, ret.friends)
+        let response = responses.genericSuccessResponse(200, {friends:ret.friends})
         return response
     }catch(err){
         throw new Error(err.message)
     }
 }
 
-// adds both friends
-// maybe we should implements notifications for friend requests (both users should accept the request to become friends )
 async function addFriend(id1, id2) {
     if(!mongoose.isValidObjectId(id1) || !mongoose.isValidObjectId(id2)){
         return responses.INVALID_ID 

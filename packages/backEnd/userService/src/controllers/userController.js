@@ -23,6 +23,7 @@ async function getUserPassword(id) {
     }
 }
 
+
 async function signup(username, email, password) {
     salt = crypto.randomBytes(12).toString('base64')
     hash = crypto.createHash('sha256').update(password + salt).digest('base64')
@@ -39,7 +40,7 @@ async function signup(username, email, password) {
             totWins: 0,
             status: "ACTIVE"
         })
-        let response = responses.genericSuccessResponse(200, 'user added')
+        let response = responses.genericSuccessResponse(200, {})
         return response
     }catch (err) {
         if(err.code == 11000) throw new Error(err.code)
@@ -57,7 +58,7 @@ async function login(username, password){
         }
         const userSalt = u.salt
         if(checkUserPw(password, u.password, userSalt)){
-            let response = responses.genericSuccessResponse(200,u._id)
+            let response = responses.genericSuccessResponse(200,{id:u._id})
             return response
         }else{
             return responses.INVALID_USERNAME_OR_PW
@@ -68,7 +69,6 @@ async function login(username, password){
 }
 
 async function searchUserById(id) {
-
     if(!mongoose.isValidObjectId(id)){
         return responses.INVALID_ID
     }
@@ -86,7 +86,7 @@ async function searchUserById(id) {
             friends: u.friends,
             status: u.status
         }
-        let response = responses.genericSuccessResponse(200, data)
+        let response = responses.genericSuccessResponse(200, {user:data})
         return response
     }catch (err) {
         throw new Error(err.message)
@@ -102,7 +102,7 @@ async function getAllUsers() {
             updatedAt: 0,
             __v: 0
         })
-        let response = responses.genericSuccessResponse(200, l)
+        let response = responses.genericSuccessResponse(200, {users:l})
         return response
     } catch (err) {
         throw new Error(err.message)
@@ -142,7 +142,6 @@ async function updatePassword(oldPassword, newPassword, id){
     }
 }
 
-// delete account version 2 (sets account status to DELETED)
 async function deleteAccountV2(id) {
     if(!mongoose.isValidObjectId(id)){
         return responses.INVALID_ID
