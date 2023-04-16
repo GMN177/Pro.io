@@ -45,7 +45,7 @@ jobs:
 
     steps:
       - name: Kill all running containers
-        run: sudo docker-compose down
+        run: docker-compose down
 
       - name: Run the docker image
         run: sudo docker-compose up
