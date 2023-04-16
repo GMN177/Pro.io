@@ -10,6 +10,7 @@ import { loginActions } from "@/store/login/login.action";
 import { useAppDispatch } from "@/store/store.config";
 import { RegisterPage } from "./pages/LoginRegisterPage/RegisterPage";
 import { GameLibrary } from "./pages/GameLibraryPage/GameLibrary";
+import {SettingsPage} from "./pages/SettingsPage";
 
 let tokenAutoRefresh = null;
 
@@ -33,7 +34,7 @@ function App() {
 
   return (
     <>
-      {accessToken ? (
+      {!accessToken ? (
         <Routes>
           <Route
             path={"/*"}
@@ -52,6 +53,15 @@ function App() {
               <>
                 <Navbar isLogged={true} />
                 <GameLibrary />
+              </>
+            }
+          />
+          <Route
+            path={"/settings"}
+            element={
+              <>
+                <Navbar isLogged={true} />
+                <SettingsPage />
               </>
             }
           />
