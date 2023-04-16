@@ -11,6 +11,7 @@ app.use('/api/auth', authServiceRouter)
 
 connectToDatabase()
 .then(() => {
-    app.listen(process.env.SERVER_PORT, () => console.log(`SYSTEM UP AND RUNNING ON PORT ${process.env.SERVER_PORT}!`))
+    let port = process.env.SERVER_PORT || 4000
+    app.listen(port, () => console.log(`SYSTEM UP AND RUNNING ON PORT ${port}!`))
 })
 .catch((err) => console.log(err))
