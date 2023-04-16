@@ -16,9 +16,14 @@ const getIsLoading = (state: RootState) => {
     return state.login.isLoading;
 }
 
+const getUserId = (state: RootState) => {
+    return state.login.id
+}
+
 export const loginSelectors = {
     getAccessToken,
     getRefreshToken,
     getIsError,
-    getIsLoading
+    getIsLoading,
+    getUserId
 }

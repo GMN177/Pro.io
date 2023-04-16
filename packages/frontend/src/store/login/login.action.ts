@@ -3,8 +3,7 @@ import {mocks} from '@/mocks';
 import axios from 'axios';
 import {NavigateFunction} from 'react-router-dom';
 import {authenticationService} from '@/api/authentication.service';
-
-
+import jwt_decode from "jwt-decode";
 const enum LOGIN_ACTIONS {
     userLogin = 'userLogin/',
     userTokenRefresh = 'userTokenRefresh/',
@@ -19,9 +18,14 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
         if(accessToken) {
             axios.defaults.headers['Authorization'] = 'Bearer ' + accessToken;
         }
+        const id = jwt_decode<{id: string}>(accessToken).id
+
         bean.navigate('/')
+
         return {
-            accessToken, refreshToken
+            id,
+            accessToken,
+            refreshToken
         }
     } catch(e) {
         console.log('Login request failed')
