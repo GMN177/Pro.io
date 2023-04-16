@@ -14,7 +14,6 @@ import { useDisclosure } from '@chakra-ui/hooks'
 export const CustomModal = (props) => {
   // declare state for the modals
   const { isOpen, onOpen, onClose } = useDisclosure()
-    console.log("variant",props.variantButtons)
   //dispatch action to select the category to the parent and open modal
   const openModal = () => {
     onOpen()

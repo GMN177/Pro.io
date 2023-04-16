@@ -53,21 +53,28 @@ const findLoggedUser = createAsyncThunk(LOGIN_ACTIONS.findLoggedUser, async (id:
 const changeUsernameUser = createAsyncThunk(LOGIN_ACTIONS.changeUsernameUser, async (params: {password: string, username: string, id: string} ,thunkAPI) => {
     try {
         const {password, username, id} = params
-        console.log(await usersService.changeUsernameUser(username, password,id))
-        
+        const resp = await usersService.changeUsernameUser(username, password,id)
+        const data = await resp.data
+        return {
+            data
+        }
     } catch(e) {
+        console.log("error", e.response.data)
         console.log('changeUsernameUser request failed')
-        throw e;
+        const data = e.response.data
+        return {data};
     }
 });
 
-const changeUsernamePassword = createAsyncThunk(LOGIN_ACTIONS.changeUsernameUser, async (params: {oldPassword: string, newPassword: string, id: string} ,thunkAPI) => {
+const changeUsernamePassword = createAsyncThunk(LOGIN_ACTIONS.changeUsernameUser, async (params: {password: string, newPassword: string, id: string} ,thunkAPI) => {
     try {
-        const {oldPassword, newPassword, id} = params
-        console.log(await usersService.changeUsernameUser(oldPassword, newPassword,id))
+
+        console.log("params", params)
+        const {password, newPassword, id} = params
+        console.log(await usersService.changeUsernamePassword(password, newPassword,id))
         
     } catch(e) {
-        console.log('changeUsernameUser request failed')
+        console.log('changeUsernamePassword request failed')
         throw e;
     }
 });
@@ -101,5 +108,6 @@ export const loginActions = {
     userTokenRefresh,
     userLogout,
     findLoggedUser,
-    changeUsernameUser
+    changeUsernameUser,
+    changeUsernamePassword
 }

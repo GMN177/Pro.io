@@ -5,15 +5,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { loginSelectors } from '@/store/login/login.selector'
 import { CustomModal } from '../components/Utils/CustomModal'
 import { loginActions } from '@/store/login/login.action'
+import {CustomAlert} from '../components/Utils/CustomAlert'
 
 export const ProfilePage = () => {
     const dispatch = useDispatch();
     const user = useSelector(loginSelectors.getUser)
-
+    const isLoading = useSelector(loginSelectors.getIsLoading)
+    const isError = useSelector(loginSelectors.getIsError)
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     const [newPassword, setNewPassword] = useState("");
+
+    console.log("isLoading", isLoading)
 
     // submit function to change username
     const changeUsername = () => {
@@ -30,8 +34,9 @@ export const ProfilePage = () => {
         const id = user.id
 
         // dispatch action to change username
-        dispatch(loginActions.changeUsernamePassword({oldPassword, newPassword, id}))
+        dispatch(loginActions.changeUsernamePassword({password, newPassword, id}))
         setPassword("");
+        setNewPassword("")
     }
 
 
@@ -53,6 +58,8 @@ export const ProfilePage = () => {
                         isIcon={false}
                     >
                         <VStack>
+                        <CustomAlert status="success" message=""/>
+
                         <Input
                                 variant="flushed"
                                 placeholder="Password"
@@ -71,7 +78,7 @@ export const ProfilePage = () => {
                                 value={username}
                                 onChange={(event) => setUsername(event.target.value)}
                             />
-                            <Button colorScheme="twitter" onClick={changeUsername} disabled={username === "" || password === ""}>Change Username</Button>
+                            <Button colorScheme="twitter" onClick={changeUsername} disabled={username === "" || password === ""} isLoading={isLoading}>Change Username</Button>
                         </VStack>
 
                     </CustomModal>    
