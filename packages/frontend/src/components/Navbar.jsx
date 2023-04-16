@@ -1,4 +1,13 @@
-import { Flex, Image, Spacer, Text, Link, Box, Icon } from "@chakra-ui/react";
+import {
+  Flex,
+  Image,
+  Spacer,
+  Text,
+  Link,
+  Box,
+  Icon,
+  Circle,
+} from "@chakra-ui/react";
 import proLogo from "/logo.svg";
 import React from "react";
 import { Button } from "@chakra-ui/button";
@@ -16,7 +25,6 @@ import {
   PopoverCloseButton,
   PopoverAnchor,
 } from "@chakra-ui/react";
-import { FaUserNinja } from "react-icons/fa";
 
 const Navbar = (props) => {
   const navigate = useNavigate();
@@ -45,19 +53,28 @@ const Navbar = (props) => {
 
           <Popover>
             <PopoverTrigger>
+              {/* profile icon */}
               <Button>
-                <FaUserNinja
-                  color="#2B2C34"
-                  transform="translate(50%, -50%)"
-                  size="1.7em"
-                />
+                <Circle bg="blue.theme" size="40px">
+                  <Text color="white">AL</Text>
+                </Circle>
               </Button>
+              {/* profile icon */}
             </PopoverTrigger>
             <PopoverContent>
               <PopoverArrow />
               <PopoverCloseButton />
               <PopoverHeader> Nome utente</PopoverHeader>
               <PopoverBody>
+
+              </PopoverBody>
+              <Link as={ReachLink} to={"/settings"} style={{ textDecoration: "none" }}>
+                <Button color="white" bg="blue.theme">
+                  Gioca Online
+                </Button>
+              </Link>
+              <PopoverFooter>
+
                 <Link
                   fontWeight={700}
                   to={"#"}
@@ -69,7 +86,7 @@ const Navbar = (props) => {
                 >
                   Log out
                 </Link>
-              </PopoverBody>
+              </PopoverFooter>
             </PopoverContent>
           </Popover>
         </>
