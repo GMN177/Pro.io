@@ -10,7 +10,7 @@ import { loginActions } from "@/store/login/login.action";
 import { useAppDispatch } from "@/store/store.config";
 import { RegisterPage } from "./pages/LoginRegisterPage/RegisterPage";
 import { GameLibrary } from "./pages/GameLibraryPage/GameLibrary";
-import {SettingsPage} from "./pages/SettingsPage";
+import {ProfilePage} from "./pages/ProfilePage";
 
 let tokenAutoRefresh = null;
 
@@ -63,7 +63,7 @@ function App() {
             element={
               <>
                 <Navbar isLogged={true} />
-                <SettingsPage />
+                <ProfilePage />
               </>
             }
           />
