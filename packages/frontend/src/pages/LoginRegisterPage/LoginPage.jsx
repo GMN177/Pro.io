@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -18,12 +18,6 @@ import { Link as ReachLink, useNavigate } from "react-router-dom";
 import styles from "./LoginPage.module.css";
 
 export const LoginPage = () => {
-
-  useEffect( () => {
-    console.log('start effect')
-
-    dispatch(loginActions.getUsers())
-  } )
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -80,7 +74,7 @@ export const LoginPage = () => {
               borderBottomColor="#D1D1E9"
               borderBottomWidth={2}
             />
-            {!isError && (
+            {isError && (
               <Text color="red.theme" mt={4}>
                 Username and password don't match!
               </Text>

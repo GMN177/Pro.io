@@ -66,6 +66,15 @@ const Navbar = (props) => {
               <PopoverCloseButton />
               <PopoverHeader> Nome utente</PopoverHeader>
               <PopoverBody>
+
+              </PopoverBody>
+              <Link as={ReachLink} to={"/settings"} style={{ textDecoration: "none" }}>
+                <Button color="white" bg="blue.theme">
+                  Gioca Online
+                </Button>
+              </Link>
+              <PopoverFooter>
+
                 <Link
                   fontWeight={700}
                   to={"#"}
@@ -77,7 +86,7 @@ const Navbar = (props) => {
                 >
                   Log out
                 </Link>
-              </PopoverBody>
+              </PopoverFooter>
             </PopoverContent>
           </Popover>
         </>
