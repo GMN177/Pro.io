@@ -8,14 +8,49 @@ services:
         volumes: 
             - '${HOME}/data:/data/db'
         restart: unless-stopped
-    user-service:
+    userservice:
         container_name: 'UserService'
         env_file: .env
         build:
             context: ./packages/backEnd/userService
         ports:
-            - "4000:4000"
+            - "4001:4000"
         restart: unless-stopped
         depends_on:
             - mongodb
         command: "npm run start"
+    matchservice:
+        container_name: 'MatchService'
+        env_file: .env
+        build:
+            context: ./packages/backEnd/matchService
+        ports:
+            - "4002:4000"
+        restart: unless-stopped
+        depends_on:
+            - mongodb
+        command: "npm run start"
+    gameservice:
+        container_name: 'GameService'
+        env_file: .env
+        build:
+            context: ./packages/backEnd/gameService
+        ports:
+            - "4003:4000"
+        restart: unless-stopped
+        depends_on:
+            - mongodb
+        command: "npm run start"
+    nginx:
+        container_name: 'nginx'
+        build:
+            context: ./packages/backEnd/nginx
+        volumes:
+            - "./packages/backEnd/nginx:/www/data"
+        ports:
+            - "80:80"
+        restart: unless-stopped
+        depends_on:
+            - userservice
+            - matchservice
+            - gameservice
