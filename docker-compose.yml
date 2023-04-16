@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+    mongodb:
+        container_name: 'MongoDb'
+        image: 'mongo:4.4.18'
+        ports:
+            - 27017:27017
+        volumes: 
+            - '${HOME}/data:/data/db'
+        restart: unless-stopped
+    user-service:
+        container_name: 'UserService'
+        env_file: .env
+        build:
+            context: ./packages/backEnd/userService
+        ports:
+            - "4000:4000"
+        restart: unless-stopped
+        depends_on:
+            - mongodb
+        command: "npm run start"
