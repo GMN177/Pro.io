@@ -1,4 +1,5 @@
 import {RootState} from '../reducer.config';
+import {User} from '@/models/user';
 
 const getAccessToken = (state: RootState) => {
     return state.login.accessToken;
@@ -16,8 +17,8 @@ const getIsLoading = (state: RootState) => {
     return state.login.isLoading;
 }
 
-const getUserId = (state: RootState) => {
-    return state.login.id
+const getUser = (state: RootState): User => {
+    return state.login.user
 }
 
 export const loginSelectors = {
@@ -25,5 +26,5 @@ export const loginSelectors = {
     getRefreshToken,
     getIsError,
     getIsLoading,
-    getUserId
+    getUser
 }

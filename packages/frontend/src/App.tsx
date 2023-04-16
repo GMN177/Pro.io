@@ -18,7 +18,9 @@ function App() {
   const dispatch = useAppDispatch();
   const accessToken = useSelector(loginSelectors.getAccessToken);
   const refreshToken = useSelector(loginSelectors.getRefreshToken);
+  const user = useSelector(loginSelectors.getUser)
 
+  console.log('user', user)
   useEffect(() => {
     if (!accessToken) {
       clearInterval(tokenAutoRefresh);

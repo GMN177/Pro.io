@@ -4,10 +4,13 @@ import axios from 'axios';
 import {NavigateFunction} from 'react-router-dom';
 import {authenticationService} from '@/api/authentication.service';
 import jwt_decode from "jwt-decode";
+import {usersService} from '@/api/users.service';
+import {User} from '@/models/user';
 const enum LOGIN_ACTIONS {
     userLogin = 'userLogin/',
     userTokenRefresh = 'userTokenRefresh/',
-    userLogout = 'userLogout/'
+    userLogout = 'userLogout/',
+    findLoggedUser = 'findLoggedUser/'
 }
 
 const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{username:string, password:string, navigate: NavigateFunction}, thunkAPI) => {
@@ -19,7 +22,7 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
             axios.defaults.headers['Authorization'] = 'Bearer ' + accessToken;
         }
         const id = jwt_decode<{id: string}>(accessToken).id
-
+        thunkAPI.dispatch(findLoggedUser(id))
         bean.navigate('/')
 
         return {
@@ -29,6 +32,19 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
         }
     } catch(e) {
         console.log('Login request failed')
+        throw e;
+    }
+});
+
+
+const findLoggedUser = createAsyncThunk(LOGIN_ACTIONS.findLoggedUser, async (id: string, thunkAPI) => {
+    try {
+        const user: User = (await usersService.findSingleUser(id)).data.data.message
+        return {
+            user
+        }
+    } catch(e) {
+        console.log('findLoggedUser request failed')
         throw e;
     }
 });
@@ -60,5 +76,6 @@ const userLogout = createAsyncThunk(LOGIN_ACTIONS.userLogout, async (params: {us
 export const loginActions = {
     userLogin,
     userTokenRefresh,
-    userLogout
+    userLogout,
+    findLoggedUser
 }
