@@ -4,7 +4,9 @@ import {UserLoginState} from '@/store/login/types';
 
 const initialState: UserLoginState = {
     isError: false,
-    isLoading: false
+    isLoading: false,
+    errorMessage: '',
+    isSuccess: false
 }
 
 export const loginReducer = {
@@ -25,11 +27,13 @@ export const loginReducer = {
                 refreshToken: action.payload.refreshToken
             }
         });
-        builder.addCase(loginActions.userLogin.rejected, (state): UserLoginState => {
+        builder.addCase(loginActions.userLogin.rejected, (state, action): UserLoginState => {
+            console.log("action", action)
             return {
                 ...state,
                 isLoading: false,
-                isError: true
+                isError: true,
+
             }
         });
         builder.addCase(loginActions.userTokenRefresh.fulfilled, (state, action): UserLoginState => {
@@ -43,6 +47,30 @@ export const loginReducer = {
                 ...state,
                 accessToken: undefined,
                 refreshToken: undefined
+            }
+        });
+        builder.addCase(loginActions.changeUsernameUser.pending, (state): UserLoginState => {
+            return {
+                ...state,
+                isLoading: true,
+                isError: false
+            }
+        });
+        builder.addCase(loginActions.changeUsernameUser.fulfilled, (state, action): UserLoginState => {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+                isSuccess: true,
+            }
+        });
+        builder.addCase(loginActions.changeUsernameUser.rejected, (state, action): UserLoginState => {
+            console.log("action", action)
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+
             }
         });
     })

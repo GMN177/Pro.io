@@ -5,4 +5,6 @@ export interface UserLoginState {
     isError: boolean
     accessToken?: string
     refreshToken?: string,
+    errorMessage: string,
+    isSuccess: boolean
 }
