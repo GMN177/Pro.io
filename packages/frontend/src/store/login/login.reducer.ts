@@ -45,11 +45,5 @@ export const loginReducer = {
                 refreshToken: undefined
             }
         });
-        builder.addCase(loginActions.findLoggedUser.fulfilled, (state, action): UserLoginState => {
-            return {
-                ...state,
-                user: action.payload.user
-            }
-        });
     })
 }

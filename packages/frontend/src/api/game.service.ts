@@ -1,11 +1,11 @@
-import axios from 'axios';
-import {baseURL} from '@/api/axiosConfig';
+import axios, {AxiosResponse} from 'axios';
+import {baseURL, EndpointResponseBaseInterface} from '@/api/axiosConfig';
 
 const enum gamesEndpoints {
     games = "games/"
 }
 
-const getAllGames = () => {
+const getAllGames = (): Promise<AxiosResponse<EndpointResponseBaseInterface<any, any>>> => {
     return axios.get(baseURL + gamesEndpoints.games);
 }
 

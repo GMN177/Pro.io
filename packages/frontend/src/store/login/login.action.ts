@@ -1,16 +1,15 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {mocks} from '@/mocks';
 import axios from 'axios';
 import {NavigateFunction} from 'react-router-dom';
 import {authenticationService} from '@/api/authentication.service';
 import jwt_decode from "jwt-decode";
 import {usersService} from '@/api/users.service';
 import {User} from '@/models/user';
+import {loggedUserActions} from '@/store/loggedUser/loggedUser.action';
 const enum LOGIN_ACTIONS {
     userLogin = 'userLogin/',
     userTokenRefresh = 'userTokenRefresh/',
     userLogout = 'userLogout/',
-    findLoggedUser = 'findLoggedUser/',
     changeUsernameUser = 'changeUsernameUser/'
 }
 
@@ -23,7 +22,7 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
             axios.defaults.headers['Authorization'] = 'Bearer ' + accessToken;
         }
         const id = jwt_decode<{id: string}>(accessToken).id
-        thunkAPI.dispatch(findLoggedUser(id))
+        thunkAPI.dispatch(loggedUserActions.findLoggedUser(id))
         bean.navigate('/')
 
         return {
@@ -37,26 +36,13 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
     }
 });
 
-
-const findLoggedUser = createAsyncThunk(LOGIN_ACTIONS.findLoggedUser, async (id: string, thunkAPI) => {
-    try {
-        const user: User = (await usersService.findSingleUser(id)).data.data.message
-        return {
-            user
-        }
-    } catch(e) {
-        console.log('findLoggedUser request failed')
-        throw e;
-    }
-});
-
 const changeUsernameUser = createAsyncThunk(LOGIN_ACTIONS.changeUsernameUser, async (params: {password: string, username: string, id: string} ,thunkAPI) => {
     try {
         const {password, username, id} = params
         console.log(await usersService.changeUsernameUser(username, password,id))
-        
+
     } catch(e) {
-        console.log('changeUsernameUser request failed')
+        console.log('changeUsernameUser request failed', e)
         throw e;
     }
 });
@@ -65,7 +51,7 @@ const changeUsernamePassword = createAsyncThunk(LOGIN_ACTIONS.changeUsernameUser
     try {
         const {oldPassword, newPassword, id} = params
         console.log(await usersService.changeUsernameUser(oldPassword, newPassword,id))
-        
+
     } catch(e) {
         console.log('changeUsernameUser request failed')
         throw e;
@@ -100,6 +86,5 @@ export const loginActions = {
     userLogin,
     userTokenRefresh,
     userLogout,
-    findLoggedUser,
     changeUsernameUser
 }

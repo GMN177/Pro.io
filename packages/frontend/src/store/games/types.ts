@@ -1,5 +1,5 @@
 export interface GamesState {
-    isLoading: false,
-    isError: false,
-    games: []
+    isLoading: boolean,
+    isError: boolean,
+    games?: []
 }

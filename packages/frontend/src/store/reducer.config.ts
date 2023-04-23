@@ -3,11 +3,15 @@ import {AppAction} from './types';
 import {testReducer} from './testStore/testStore.reducer';
 import {loginReducer} from '@/store/login/login.reducer';
 import {registerReducer} from '@/store/register/register.reducer';
+import {gamesReducer} from '@/store/games/games.reducer';
+import {loggedUserReducer} from '@/store/loggedUser/loggedUser.reducer';
 
 const appReducer = combineReducers({
     ...testReducer,
     ...loginReducer,
-    ...registerReducer
+    ...registerReducer,
+    ...gamesReducer,
+    ...loggedUserReducer
 });
 
 

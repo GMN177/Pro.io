@@ -5,5 +5,4 @@ export interface UserLoginState {
     isError: boolean
     accessToken?: string
     refreshToken?: string,
-    user?: User
 }

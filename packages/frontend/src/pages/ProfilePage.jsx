@@ -1,6 +1,6 @@
 import { Divider, HStack, Heading,  VStack, Button, Box, Input, Text } from '@chakra-ui/react'
 import React, {useState} from 'react'
-// import users from reducer store 
+// import users from reducer store
 import { useDispatch, useSelector } from 'react-redux'
 import { loginSelectors } from '@/store/login/login.selector'
 import { CustomModal } from '../components/Utils/CustomModal'
@@ -30,7 +30,7 @@ export const ProfilePage = () => {
         const id = user.id
 
         // dispatch action to change username
-        dispatch(loginActions.changeUsernamePassword({oldPassword, newPassword, id}))
+        dispatch(loginActions.changeUsernamePassword({password, newPassword, id}))
         setPassword("");
     }
 
@@ -74,9 +74,9 @@ export const ProfilePage = () => {
                             <Button colorScheme="twitter" onClick={changeUsername} disabled={username === "" || password === ""}>Change Username</Button>
                         </VStack>
 
-                    </CustomModal>    
+                    </CustomModal>
                 </HStack>
-                
+
                 <HStack p={4}>
                     <Heading as="h5" size='sm' >Email: {user.email}</Heading>
                 </HStack>
@@ -143,7 +143,7 @@ export const ProfilePage = () => {
                             <Button colorScheme="red" >Confirm Delete</Button>
                         </VStack>
 
-                </CustomModal>   
+                </CustomModal>
             </Box>
         </VStack>
     )
