@@ -10,7 +10,8 @@ const enum LOGIN_ACTIONS {
     userLogin = 'userLogin/',
     userTokenRefresh = 'userTokenRefresh/',
     userLogout = 'userLogout/',
-    changeUsernameUser = 'changeUsernameUser/'
+    changeUsernameUser = 'changeUsernameUser/',
+    changeUsernamePassword = 'changeUsernamePassword/'
 }
 
 const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{username:string, password:string, navigate: NavigateFunction}, thunkAPI) => {
@@ -52,7 +53,7 @@ const changeUsernameUser = createAsyncThunk(LOGIN_ACTIONS.changeUsernameUser, as
     }
 });
 
-const changeUsernamePassword = createAsyncThunk(LOGIN_ACTIONS.changeUsernameUser, async (params: {password: string, newPassword: string, id: string} ,thunkAPI) => {
+const changeUsernamePassword = createAsyncThunk(LOGIN_ACTIONS.changeUsernamePassword, async (params: {password: string, newPassword: string, id: string} ,thunkAPI) => {
     try {
 
         console.log("params", params)
