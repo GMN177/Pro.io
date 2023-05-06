@@ -2,14 +2,11 @@ const express = require('express');
 const userServiceRouter = require('./src/services/userService');
 const authServiceRouter =  require('./src/services/authService')
 const {connectToDatabase} = require('./src/configs/database')
-const cors = require('cors')
-
+const cors = require('cors')   
 
 const app = express();
 
-
-app.use(cors());
-
+app.use(cors())
 app.use('/api/users', userServiceRouter);
 app.use('/api/auth', authServiceRouter)
 app.use(cors())
