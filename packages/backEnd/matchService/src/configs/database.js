@@ -3,8 +3,8 @@ const mongoose = require('mongoose')
 
 function connectToDatabase() {
     mongoose.set('strictQuery', true)
-    return mongoose.connect(process.env.USER_DB_URI, { useNewUrlParser: true })
+    console.log(`${process.env.SERVER_PORT}`);
+    return mongoose.connect(process.env.MATCH_DB_URI)
 }
 
 module.exports = {connectToDatabase}
-

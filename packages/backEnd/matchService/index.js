@@ -1,10 +1,10 @@
 const express = require('express');
-const gameRouter = require('./src/services/gameService');
+const gameRouter = require('./src/services/matchService');
 const {connectToDatabase} = require('./src/configs/database')
 
 const app = express();
 
-app.use('/api/games', gameRouter);
+app.use('/api/matches', gameRouter);
 
 connectToDatabase()
   .then(() => {

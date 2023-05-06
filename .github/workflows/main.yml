@@ -15,29 +15,27 @@ jobs:
 
   # This workflow contains a single job called "build"
   build:
-    env:
-      SERVER_PORT: ${{ secrets.SERVER_PORT }}
-      DB_URI: ${{ secrets.DB_URI }}
-      ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-      REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
-    # The type of runner that the job will run on
     runs-on: self-hosted
-
-    # outputs:
-    #   tag_name: ${{ steps.set_tag_name.outputs.tag_name }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      # - name: Set TAG_NAME
-      #   id: set_tag_name
-      #   run: echo "::set-output name=tag_name::$(date +%s)"
-
+      
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          envkey_USER_DB_URI: ${{ secrets.USER_DB_URI }}
+          envkey_MATCH_DB_URI: ${{ secrets.MATCH_DB_URI }}
+          envkey_GAME_DB_URI: ${{ secrets.GAME_DB_URI }}
+          envkey_ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+          envkey_REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+          fail_on_empty: true
+      
       - name: Create a docker image
-        run: sudo docker-compose build
+        run: docker-compose build
           #  docker build -t rpi-cd-tutorial:${{ steps.set_tag_name.outputs.tag_name }} .
   deploy:
     runs-on: self-hosted
@@ -48,4 +46,4 @@ jobs:
         run: docker-compose down
 
       - name: Run the docker image
-        run: sudo docker-compose up
+        run: docker-compose up -d
