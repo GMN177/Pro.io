@@ -12,6 +12,7 @@ app.use(cors());
 
 app.use('/api/users', userServiceRouter);
 app.use('/api/auth', authServiceRouter)
+app.use(cors())
 
 
 connectToDatabase()
