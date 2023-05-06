@@ -10,8 +10,6 @@ const enum LOGIN_ACTIONS {
     userLogin = 'userLogin/',
     userTokenRefresh = 'userTokenRefresh/',
     userLogout = 'userLogout/',
-    changeUsernameUser = 'changeUsernameUser/',
-    changeUsernamePassword = 'changeUsernamePassword/'
 }
 
 const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{username:string, password:string, navigate: NavigateFunction}, thunkAPI) => {
@@ -33,35 +31,6 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
         }
     } catch(e) {
         console.log('Login request failed')
-        throw e;
-    }
-});
-
-const changeUsernameUser = createAsyncThunk(LOGIN_ACTIONS.changeUsernameUser, async (params: {password: string, username: string, id: string} ,thunkAPI) => {
-    try {
-        const {password, username, id} = params
-        const resp = await usersService.changeUsernameUser(username, password,id)
-        const data = await resp.data
-        return {
-            data
-        }
-    } catch(e) {
-        console.log("error", e.response.data)
-        console.log('changeUsernameUser request failed')
-        const data = e.response.data
-        return {data};
-    }
-});
-
-const changeUsernamePassword = createAsyncThunk(LOGIN_ACTIONS.changeUsernamePassword, async (params: {password: string, newPassword: string, id: string} ,thunkAPI) => {
-    try {
-
-        console.log("params", params)
-        const {password, newPassword, id} = params
-        console.log(await usersService.changeUsernamePassword(password, newPassword,id))
-
-    } catch(e) {
-        console.log('changeUsernamePassword request failed')
         throw e;
     }
 });
@@ -93,7 +62,5 @@ const userLogout = createAsyncThunk(LOGIN_ACTIONS.userLogout, async (params: {us
 export const loginActions = {
     userLogin,
     userTokenRefresh,
-    userLogout,
-    changeUsernameUser,
-    changeUsernamePassword
+    userLogout
 }

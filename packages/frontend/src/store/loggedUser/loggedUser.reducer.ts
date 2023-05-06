@@ -4,7 +4,8 @@ import {loggedUserActions} from '@/store/loggedUser/loggedUser.action';
 
 const initialState: LoggedUserState = {
     isError: false,
-    isLoading: false
+    isLoading: false,
+    isSuccess: false
 }
 
 export const loggedUserReducer = {
@@ -29,6 +30,30 @@ export const loggedUserReducer = {
                 ...state,
                 isLoading: false,
                 isError: true
+            }
+        });
+        builder.addCase(loggedUserActions.changeUsernameUser.pending, (state): LoggedUserState => {
+            return {
+                ...state,
+                isLoading: true,
+                isError: false
+            }
+        });
+        builder.addCase(loggedUserActions.changeUsernameUser.fulfilled, (state, action): LoggedUserState => {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+                isSuccess: true,
+            }
+        });
+        builder.addCase(loggedUserActions.changeUsernameUser.rejected, (state, action): LoggedUserState => {
+            console.log("action", action)
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+
             }
         });
     })

@@ -2,10 +2,10 @@ import {baseURL, EndpointResponse} from '../api/axiosConfig';
 import axios from 'axios';
 
 const enum authenticationEndpoints {
-  login = "users/login",
-  signUp = "users/signup",
-  logout = "users/logout",
-  refreshToken = "users/token",
+  login = "auth/login",
+  signUp = "auth/signup",
+  logout = "auth/logout",
+  refreshToken = "auth/token",
 }
 
 const login = async (username: string, password: string): EndpointResponse<{accessToken: string, refreshToken: string}, null> => {

@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 
-export const baseURL = "http://3.95.164.113/";
+export const baseURL = "http://44.212.4.133/api/";
 
 export interface EndpointResponseBaseInterface<T, V> {
     status: string,
