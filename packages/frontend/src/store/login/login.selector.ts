@@ -18,7 +18,7 @@ const getIsLoading = (state: RootState) => {
 }
 
 const getUser = (state: RootState): User => {
-    return state.login.user
+    return state.login.user;
 }
 
 export const loginSelectors = {

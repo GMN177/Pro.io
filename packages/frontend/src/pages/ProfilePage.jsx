@@ -6,25 +6,31 @@ import { loginSelectors } from '@/store/login/login.selector'
 import { CustomModal } from '../components/Utils/CustomModal'
 import { loginActions } from '@/store/login/login.action'
 import {CustomAlert} from '../components/Utils/CustomAlert'
+import { loggedUserSelectors } from '@/store/loggedUser/loggedUser.selector'
+import { loggedUserActions } from '@/store/loggedUser/loggedUser.action'
 
 export const ProfilePage = () => {
     const dispatch = useDispatch();
     const user = useSelector(loginSelectors.getUser)
-    const isLoading = useSelector(loginSelectors.getIsLoading)
-    const isError = useSelector(loginSelectors.getIsError)
+    const isLoading = useSelector(loggedUserSelectors.getIsLoading)
+    const isError = useSelector(loggedUserSelectors.getIsError)
+    const loggedUser = useSelector(loggedUserSelectors.getLoggedUser)
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     const [newPassword, setNewPassword] = useState("");
 
     console.log("isLoading", isLoading)
+    console.log("isError", isError)
+
+    console.log("loggedUser", loggedUser);
 
     // submit function to change username
     const changeUsername = () => {
         const id = user.id
 
         // dispatch action to change username
-        dispatch(loginActions.changeUsernameUser({username, password, id}))
+        dispatch(loggedUserActions.changeUsernameUser({username, password, id}))
         setPassword("");
         setUsername("")
     }
@@ -34,7 +40,7 @@ export const ProfilePage = () => {
         const id = user.id
 
         // dispatch action to change username
-        dispatch(loginActions.changeUsernamePassword({password, newPassword, id}))
+        dispatch(loggedUserActions.changeUsernamePassword({password, newPassword, id}))
         setPassword("");
         setNewPassword("")
     }

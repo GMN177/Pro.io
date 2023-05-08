@@ -49,29 +49,6 @@ export const loginReducer = {
                 refreshToken: undefined
             }
         });
-        builder.addCase(loginActions.changeUsernameUser.pending, (state): UserLoginState => {
-            return {
-                ...state,
-                isLoading: true,
-                isError: false
-            }
-        });
-        builder.addCase(loginActions.changeUsernameUser.fulfilled, (state, action): UserLoginState => {
-            return {
-                ...state,
-                isLoading: false,
-                isError: false,
-                isSuccess: true,
-            }
-        });
-        builder.addCase(loginActions.changeUsernameUser.rejected, (state, action): UserLoginState => {
-            console.log("action", action)
-            return {
-                ...state,
-                isLoading: false,
-                isError: true,
-
-            }
-        });
+        
     })
 }
