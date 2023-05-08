@@ -16,7 +16,13 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
     try {
         const {username, password} = bean
         const resp = (await authenticationService.login(username, password)).data.data
+
         const {accessToken, refreshToken} = resp
+        sessionStorage.setItem('PRO_IO_SESSION', JSON.stringify({
+            accessToken,
+            refreshToken,
+            expiresAt: (Date.now() + 840000)
+        }))
         if(accessToken) {
             axios.defaults.headers['Authorization'] = 'Bearer ' + accessToken;
         }
@@ -40,17 +46,22 @@ const userTokenRefresh = createAsyncThunk(LOGIN_ACTIONS.userTokenRefresh, async 
         const {refreshToken} = params
         const resp = (await authenticationService.refreshToken(refreshToken)).data.data
         const {accessToken} = resp
-        return {accessToken};
+        sessionStorage.setItem('PRO_IO_SESSION', JSON.stringify({
+            accessToken,
+            refreshToken,
+            expiresAt: (Date.now() + 840000)
+        }))
+        return {accessToken, expiresAt: (Date.now() + 840000)};
     } catch(e) {
         console.log('Refresh request failed')
         throw e;
     }
 });
 
-const userLogout = createAsyncThunk(LOGIN_ACTIONS.userLogout, async (params: {username: string, navigate: NavigateFunction}, thunkAPI) => {
+const userLogout = createAsyncThunk(LOGIN_ACTIONS.userLogout, async (params: {refreshToken: string, navigate: NavigateFunction}, thunkAPI) => {
     try {
-        const {username, navigate} = params
-        await authenticationService.logout(username)
+        const {refreshToken, navigate} = params
+        await authenticationService.logout(refreshToken)
         navigate('/')
         return ;
     } catch(e) {

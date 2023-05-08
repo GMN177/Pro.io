@@ -21,10 +21,15 @@ const getUser = (state: RootState): User => {
     return state.login.user;
 }
 
+const getExpiresAt = (state: RootState): number | null => {
+    return state.login.expiresAt;
+}
+
 export const loginSelectors = {
     getAccessToken,
     getRefreshToken,
     getIsError,
     getIsLoading,
-    getUser
+    getUser,
+    getExpiresAt
 }

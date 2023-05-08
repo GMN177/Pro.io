@@ -7,5 +7,6 @@ export interface UserLoginState {
     refreshToken?: string,
     errorMessage: string,
     isSuccess: boolean,
-    user?: User
+    user?: User,
+    expiresAt: number | null
 }

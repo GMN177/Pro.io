@@ -25,10 +25,14 @@ import {
   PopoverCloseButton,
   PopoverAnchor,
 } from "@chakra-ui/react";
+import {useSelector} from "react-redux";
+import {loginSelectors} from "@/store/login/login.selector";
 
 const Navbar = (props) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const refreshToken = useSelector(loginSelectors.getRefreshToken)
+
   return (
     <Flex
       as="nav"
@@ -79,7 +83,7 @@ const Navbar = (props) => {
                   to={"#"}
                   onClick={() =>
                     dispatch(
-                      loginActions.userLogout({ username: "test", navigate })
+                      loginActions.userLogout({ refreshToken: "test", navigate })
                     )
                   }
                 >

@@ -22,9 +22,9 @@ const signUp = async (username: string, email:string, password: string): Endpoin
     password,
   });
 };
-const logout = async (username: string): EndpointResponse<null, null> => {
+const logout = async (refreshToken: string): EndpointResponse<null, null> => {
   return axios.post(baseURL + authenticationEndpoints.logout, {
-    username
+    refreshToken
   });
 };
 const refreshToken = async (refreshToken: string): EndpointResponse<{accessToken: string}, null> => {

@@ -19,8 +19,17 @@ function App() {
   const accessToken = useSelector(loginSelectors.getAccessToken);
   const refreshToken = useSelector(loginSelectors.getRefreshToken);
   const user = useSelector(loginSelectors.getUser)
+  const expiresAt = useSelector(loginSelectors.getExpiresAt)
+  const navigate = useNavigate();
 
-  console.log('user', user)
+  useEffect(() => {
+    if(expiresAt) {
+      setInterval(() => {
+        dispatch(loginActions.userLogout({refreshToken, navigate}))
+      }, expiresAt - Date.now())
+    }
+  }, [expiresAt])
+
   useEffect(() => {
     if (!accessToken) {
       clearInterval(tokenAutoRefresh);
