@@ -11,7 +11,6 @@ function generateTokens(data) {
     }
 }
 
-
 async function insertRefreshToken(tk, userId) {
     try {
         const tkn = await refreshToken.create({
@@ -58,5 +57,14 @@ async function findRefreshToken(tk){
     }
 }
 
+async function deleteAllTokens(){
+    try{
+        let ret = await refreshToken.collection.drop()
+        return responses.DELETE_SUCCESS
+    }catch(err){
+        throw new Error(err.message)
+    }
+}
 
-module.exports = {generateTokens, insertRefreshToken, removeRefreshToken, findRefreshToken}
+
+module.exports = {generateTokens, insertRefreshToken, removeRefreshToken, findRefreshToken, deleteAllTokens}

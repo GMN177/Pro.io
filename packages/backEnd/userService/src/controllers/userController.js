@@ -157,4 +157,13 @@ async function deleteAccountV2(id) {
     }
 }
 
-module.exports = {signup, login, searchUserById, getAllUsers, updatePassword, updateUsername, deleteAccountV2}
+async function deleteAllUsers() {
+    try{
+        let ret = await User.collection.drop()
+        return responses.DELETE_SUCCESS
+    }catch(err){
+        throw new Error(err.message)
+    }
+}
+
+module.exports = {signup, login, searchUserById, getAllUsers, updatePassword, updateUsername, deleteAccountV2, deleteAllUsers}

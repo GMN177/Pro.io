@@ -3,9 +3,21 @@ const jsend = require('jsend')
 const userController = require('../controllers/userController')
 const router = express.Router()
 const friendController = require('../controllers/friendController')
+const logger = require('../middlewares/logMiddleware')
 const jwt = require('jsonwebtoken')
 
 router.use(express.json());
+router.use(logger)
+
+// delete entire user database (only for development management)
+router.delete('/deleteUsers', async (req, res) => {
+    try{
+        let ret = await userController.deleteAllUsers()
+        return res.status(ret.status).send(ret.response)
+    }catch(err){
+        return res.status(500).send(jsend.error({message: err.message}))
+    }
+})
 
 // get all users from database
 router.get('/', async (req, res) => {

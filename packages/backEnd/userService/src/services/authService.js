@@ -9,7 +9,17 @@ const router = express.Router()
 router.use(express.json());
 router.use(logger)
 
-router.post('/token', async (req,res) =>{
+// delete entire user database (only for development management)
+router.delete('/deleteTokens', async (req,res) => {
+    try{
+        let ret = await authController.deleteAllTokens()
+        return res.status(ret.status).send(ret.response)
+    }catch(err){
+        return res.status(500).send(jsend.error({message: err.message}))
+    }
+})
+
+router.post('/token', async (req,res) => {
     let tk = req.body.refreshToken
     try {
         let decoded = jwt.verify(tk, process.env.REFRESH_TOKEN_SECRET)
