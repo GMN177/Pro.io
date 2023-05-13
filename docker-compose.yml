@@ -41,7 +41,7 @@ services:
         depends_on:
             - mongodb
         command: "npm run start"
-    socketService:
+    socketservice:
         container_name: 'SocketService'
         env_file: .env
         build:
