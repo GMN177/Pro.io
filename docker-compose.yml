@@ -67,4 +67,4 @@ services:
             - userservice
             - matchservice
             - gameservice
-            - socketService
+            - socketservice
