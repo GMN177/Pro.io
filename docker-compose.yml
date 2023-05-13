@@ -41,6 +41,19 @@ services:
         depends_on:
             - mongodb
         command: "npm run start"
+    socketService:
+        container_name: 'SocketService'
+        env_file: .env
+        build:
+            context: ./packages/backEnd/socketService
+        ports:
+            - "4004:4000"
+        restart: unless-stopped
+        depends_on:
+            - userservice
+            - matchservice
+            - gameservice
+        command: "npm run start"
     nginx:
         container_name: 'nginx'
         build:
@@ -54,3 +67,4 @@ services:
             - userservice
             - matchservice
             - gameservice
+            - socketService
