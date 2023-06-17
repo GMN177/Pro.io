@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
         const a  = await userController.login(req.body.username, req.body.password)
         if(a.status == 200) {
             let tokens = authController.generateTokens({id: a.response.data.id})
-            let insertToken =  await authController.insertRefreshToken(tokens.refreshToken, a.response.data.message)
+            let insertToken =  await authController.insertRefreshToken(tokens.refreshToken, a.response.data.id)
             return res.status(200).send(jsend.success({accessToken: tokens.accessToken, refreshToken: tokens.refreshToken}))
         }else{
             return res.status(a.status).send(a.response)
