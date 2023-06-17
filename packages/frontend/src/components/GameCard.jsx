@@ -12,7 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import socket from "@/socket";
+import {socket} from "@/api/socket";
 import {loginSelectors} from '@/store/login/login.selector'
 import {useSelector} from 'react-redux'
 
@@ -27,7 +27,7 @@ export const GameCard = ({ id, title, image, description }) => {
     const matchId = 1;
     try{
       // do rest call to retrieve match Id
-      
+
       // create a socket instance
       socketInstance = socket({token, matchId});
       const resp = socketInstance.connect();
