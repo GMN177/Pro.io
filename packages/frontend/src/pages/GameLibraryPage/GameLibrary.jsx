@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Box,
   Grid,
@@ -8,27 +8,18 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { GameCard } from "@/components/GameCard";
+import {useDispatch, useSelector} from "react-redux";
+import {gamesActions} from "@/store/games/games.action";
+import {gamesSelectors} from "@/store/games/games.selector";
 
 export const GameLibrary = () => {
-  const games = [
-    {
-      id: 1,
-      title: "first game",
-      image: "/",
-      description:
-        "descripsasdjsadnjasdsajkcasjbcasjbcsajbd  sjcba,c as asd as dsa dsa ",
-    },
-    { id: 2, title: "second game", image: "/", description: "descr" },
-    { id: 3, title: "third game", image: "/", description: "descr" },
-    { id: 4, title: "fourth game", image: "/", description: "descr" },
-    { id: 5, title: "fifth game", image: "/", description: "descr" },
-    { id: 6, title: "sixth game", image: "/", description: "descr" },
-    { id: 7, title: "seventh game", image: "/", description: "descr" },
-    { id: 8, title: "8 game", image: "/", description: "descr" },
-    { id: 9, title: "9 game", image: "/", description: "descr" },
-    { id: 10, title: "10 game", image: "/", description: "descr" },
-    { id: 11, title: "11 game", image: "/", description: "descr" },
-  ];
+
+    const dispatch = useDispatch();
+    const games = useSelector(gamesSelectors.getGamesList)
+
+  useEffect(() => {
+      dispatch(gamesActions.fetchGamesList())
+  }, [])
 
   return (
     <Box>
@@ -46,7 +37,7 @@ export const GameLibrary = () => {
         gap={20}
         p={10}
       >
-        {games.map((game) => (
+        {games && games.map((game) => (
           <GameCard
             key={game.id}
             title={game.title}
