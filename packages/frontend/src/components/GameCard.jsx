@@ -17,21 +17,19 @@ import {loginSelectors} from '@/store/login/login.selector'
 import {useSelector} from 'react-redux'
 
 let socketInstance = null;
-
+const matchId = '648f6b3c28811234030576f5'
 export const GameCard = ({ id, title, image, description }) => {
 
   const token = useSelector(loginSelectors.getRefreshToken)
 
   const joinPublicGame = () => {
     console.log("join public game")
-    const matchId = 1;
     try{
       // do rest call to retrieve match Id
 
       // create a socket instance
       socketInstance = socket({token, matchId});
       const resp = socketInstance.connect();
-      socket.emit("joinPublicGame", {id})
 
     }catch(error){
       console.log("error", error)
