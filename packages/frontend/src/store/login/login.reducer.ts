@@ -47,11 +47,18 @@ export const loginReducer = {
         });
         builder.addCase(loginActions.userLogin.rejected, (state, action): UserLoginState => {
             console.log("action", action)
+            let message: string = "";
+            try{
+                message = action.payload as string
+            }catch(e) {
+                message = "Unexpected error"
+            }
+
             return {
                 ...state,
                 isLoading: false,
                 isError: true,
-
+                errorMessage: message
             }
         });
         builder.addCase(loginActions.userTokenRefresh.fulfilled, (state, action): UserLoginState => {

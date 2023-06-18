@@ -4,7 +4,8 @@ import {RegisterState} from '@/store/register/types';
 
 const initialState: RegisterState = {
     isError: false,
-    isLoading: false
+    isLoading: false,
+    errorMessage: ''
 }
 
 export const registerReducer = {
@@ -16,19 +17,23 @@ export const registerReducer = {
                 isError: false
             }
         });
-        builder.addCase(registerActions.signUp.fulfilled, (state): RegisterState => {
+        builder.addCase(registerActions.signUp.fulfilled, (state, action): RegisterState => {
+            console.log(action)
             return {
                 ...state,
                 isLoading: false,
                 isError: false
             }
         });
-        builder.addCase(registerActions.signUp.rejected, (state): RegisterState => {
+        builder.addCase(registerActions.signUp.rejected, (state, action): RegisterState => {
+            console.log('rejected state: ', action)
+            const message: string = action.payload as string
             return {
-                ...state,
-                isLoading: false,
-                isError: true
-            }
+              ...state,
+              isLoading: false,
+              isError: true,
+              errorMessage: message
+            };
         });
     })
 }
