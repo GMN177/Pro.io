@@ -5,12 +5,12 @@ import {UserLoginState} from '@/store/login/types';
 let accessToken = null, refreshToken = null, expiresAt = null, parsedData = null;
 
 const storedSessionData = sessionStorage.getItem('PRO_IO_SESSION');
-
+console.log('storedSessionData', storedSessionData)
 if(storedSessionData) {
     parsedData = JSON.parse(storedSessionData)
 
     if (parsedData.accessToken && parsedData.refreshToken && parsedData.expiresAt) {
-        accessToken = parsedData.accessTokenparsedData
+        accessToken = parsedData.accessToken
         refreshToken = parsedData.refreshToken
         expiresAt = parsedData.expiresAt
     }

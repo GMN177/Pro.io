@@ -3,8 +3,6 @@ import axios from 'axios';
 import {NavigateFunction} from 'react-router-dom';
 import {authenticationService} from '@/api/authentication.service';
 import jwt_decode from "jwt-decode";
-import {usersService} from '@/api/users.service';
-import {User} from '@/models/user';
 import {loggedUserActions} from '@/store/loggedUser/loggedUser.action';
 const enum LOGIN_ACTIONS {
     userLogin = 'userLogin/',

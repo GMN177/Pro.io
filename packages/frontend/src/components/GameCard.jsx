@@ -20,7 +20,7 @@ let socketInstance = null;
 
 export const GameCard = ({ id, title, image, description }) => {
 
-  const token = useSelector(loginSelectors.getToken)
+  const token = useSelector(loginSelectors.getRefreshToken)
 
   const joinPublicGame = () => {
     console.log("join public game")
