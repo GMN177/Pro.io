@@ -64,6 +64,8 @@ export const LoginPage = () => {
               mb={10}
               borderBottomColor="#D1D1E9"
               borderBottomWidth={2}
+              id="username"
+              autoComplete="username"
             />
             <Input
               variant="flushed"
@@ -73,6 +75,8 @@ export const LoginPage = () => {
               onChange={(event) => setPassword(event.target.value)}
               borderBottomColor="#D1D1E9"
               borderBottomWidth={2}
+              id="password"
+              autoComplete="current-password"
             />
             {isError && (
               <Text color="red.theme" mt={4}>
@@ -85,6 +89,7 @@ export const LoginPage = () => {
               color="white"
               colorScheme="twitter"
               isLoading={isLoading}
+              isDisabled={!username || !password}
               mt={8}
             >
               Login

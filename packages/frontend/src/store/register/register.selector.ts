@@ -7,7 +7,12 @@ const getIsLoading = (state: RootState) => {
     return state.register.isLoading;
 }
 
+const getErrorMessage = (state: RootState) => {
+    return state.register.errorMessage;
+}
+
 export const registerSelectors = {
     getIsError,
-    getIsLoading
+    getIsLoading,
+    getErrorMessage
 }

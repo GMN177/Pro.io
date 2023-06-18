@@ -25,7 +25,7 @@ function App() {
   useEffect(() => {
     if(expiresAt) {
       setInterval(() => {
-        dispatch(loginActions.userLogout({refreshToken, navigate}))
+        //dispatch(loginActions.userLogout({refreshToken, navigate}))
       }, expiresAt - Date.now())
     }
   }, [expiresAt])

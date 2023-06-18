@@ -34,8 +34,8 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
             refreshToken
         }
     } catch(e) {
-        console.log('Login request failed')
-        throw e;
+        console.log('Login request failed', e)
+        return thunkAPI.rejectWithValue(e.response.data.message);
     }
 });
 
