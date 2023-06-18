@@ -1,8 +1,13 @@
 const express = require('express');
 const gameRouter = require('./src/services/matchService');
 const {connectToDatabase} = require('./src/configs/database')
+const cors = require('cors')
 
 const app = express();
+
+app.use(cors({
+    origin: '*'
+}))
 
 app.use('/api/matches', gameRouter);
 
