@@ -6,7 +6,7 @@ const enum GAMES_ACTIONS {
 }
 export const fetchGamesList = createAsyncThunk(GAMES_ACTIONS.fetchGamesList, async() => {
     try {
-        const resp = (await gameService.getAllGames()).data.data
+        const resp = (await gameService.getAllGames()).data.data.message
 
         return {
             resp
