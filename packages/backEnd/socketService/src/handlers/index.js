@@ -7,18 +7,19 @@ let matches = {};
 const onConnection = async (socket) => {
     try {
         console.log("New connection: " + socket.id);
-        
+
         socket.join(socket.handshake.query.matchId);
     
         console.log("New client connected in room: " + socket.handshake.query.matchId);
 
         let match;
-        if (matches.containsKey(socket.handshake.query.matchId)) {
+        if (socket.handshake.query.matchId in matches) {
             match = matches[socket.handshake.query.matchId];
         } else {
             match = await getMatch(socket.handshake.query.matchId);
             matches[socket.handshake.query.matchId] = match;
         }
+        
         console.log(match);
 
         socket.emit("newState", {
