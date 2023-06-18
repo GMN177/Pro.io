@@ -83,7 +83,7 @@ const Navbar = (props) => {
                   to={"#"}
                   onClick={() =>
                     dispatch(
-                      loginActions.userLogout({ refreshToken: "test", navigate })
+                      loginActions.userLogout({ refreshToken, navigate })
                     )
                   }
                 >
