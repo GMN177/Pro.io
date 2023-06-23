@@ -55,6 +55,11 @@ const FORBIDDEN_ERROR = {
     response: jsend.error({message: "no refresh token"})
 }
 
+const NOT_VERIFIED = {
+    status: 403,
+    response: jsend.error({message: "user is not verified"})
+}
+
 function genericSuccessResponse(status, data){
     return {
         status: status,
@@ -74,6 +79,7 @@ module.exports = {
     REJECT_REQUEST_SUCCESS,
     FORBIDDEN_ERROR,
     GENERIC_NOT_FOUND,
+    NOT_VERIFIED,
     genericSuccessResponse
 }
 

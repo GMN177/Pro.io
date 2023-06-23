@@ -3,13 +3,15 @@ const jsend = require('jsend')
 const userController = require('../controllers/userController')
 const authController = require('../controllers/authController')
 const jwt = require('jsonwebtoken')
-const logger = require('../middlewares/logMiddleware')
+const {authServiceLogger} = require('../middlewares/logMiddleware')
+const email = require('../controllers/emailController')
+const {authenticateAccessToken} = require('../middlewares/authMiddleware')
 
 const router = express.Router()
 router.use(express.json());
-router.use(logger)
+router.use(authServiceLogger)
 
-// delete entire user database (only for development management)
+// delete entire Refresh Token database (only for development management)
 router.delete('/deleteTokens', async (req,res) => {
     try{
         let ret = await authController.deleteAllTokens()
@@ -54,6 +56,8 @@ router.post('/login', async (req, res) => {
 router.post('/signup', async (req,res) => {
     try{
         const a = await userController.signup(req.body.username, req.body.email, req.body.password)
+        let id = await userController.getIdfromEmail(req.body.email)
+        await email.send(req.body.email, 'Pro.IO Account Verification', id)
         return res.status(a.status).send(a.response)
     }catch (err) {
         if(Number(err.message) == 11000){
@@ -64,7 +68,7 @@ router.post('/signup', async (req,res) => {
     }
 })
 
-router.post('/logout', async (req, res) => {
+router.post('/logout', authenticateAccessToken, async (req, res) => {
     let tk = req.body.refreshToken
     try {
         let ret =  await authController.removeRefreshToken(tk)
@@ -72,6 +76,17 @@ router.post('/logout', async (req, res) => {
     }catch(err) {
         return res.status(500).send(jsend.error({message: err.message}))
     }
+})
+
+router.get('/verify/:id', async (req, res) => {
+    try{
+        let ret = await userController.verifyAccount(req.params.id)
+        return res.status(ret.status).send(ret.response)
+    }catch(err){
+        return res.status(500).send(jsend.error({message: err.message}))
+    }
+    
+    
 })
 
 module.exports = router

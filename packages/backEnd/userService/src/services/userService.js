@@ -3,11 +3,13 @@ const jsend = require('jsend')
 const userController = require('../controllers/userController')
 const router = express.Router()
 const friendController = require('../controllers/friendController')
-const logger = require('../middlewares/logMiddleware')
+const {userServiceLogger} = require('../middlewares/logMiddleware')
 const jwt = require('jsonwebtoken')
+const {authenticateAccessToken} = require('../middlewares/authMiddleware')
 
 router.use(express.json());
-router.use(logger)
+router.use(userServiceLogger)
+// router.use(authenticateAccessToken)
 
 // delete entire user database (only for development management)
 router.delete('/deleteUsers', async (req, res) => {

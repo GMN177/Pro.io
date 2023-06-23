@@ -13,7 +13,8 @@ const userSchema = new mongoose.Schema({
     friends: [mongoose.Types.ObjectId],
     pending: [mongoose.Types.ObjectId],
     sent: [mongoose.Types.ObjectId],
-    status: String
+    status: String,
+    verified: Boolean
 
 }, {timestamps: true})
 

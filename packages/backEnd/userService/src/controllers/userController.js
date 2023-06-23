@@ -38,7 +38,8 @@ async function signup(username, email, password) {
             sent: [],
             totMatches: 0,
             totWins: 0,
-            status: "ACTIVE"
+            status: "INACTIVE",
+            verified: false
         })
         let response = responses.genericSuccessResponse(200, {})
         return response
@@ -53,6 +54,9 @@ async function signup(username, email, password) {
 async function login(username, password){
     try {
         const u = await User.findOne({username: username}).where('status').equals('ACTIVE')
+        if(!u.verified){
+            return responses.NOT_VERIFIED
+        }
         if(u == null){
             return responses.INVALID_USERNAME_OR_PW
         }
@@ -166,4 +170,31 @@ async function deleteAllUsers() {
     }
 }
 
-module.exports = {signup, login, searchUserById, getAllUsers, updatePassword, updateUsername, deleteAccountV2, deleteAllUsers}
+async function verifyAccount(id) {
+    if(!mongoose.isValidObjectId(id)){
+        return responses.INVALID_ID
+    }
+    try{
+        const u = await User.findById(id)
+        if(u == null) {
+            return responses.INVALID_ID
+        }else{
+            await User.updateOne({_id:[id]}, {verified: true, status:"ACTIVE"})
+            return responses.UPDATE_SUCCESS
+        }
+        
+    }catch(err){
+        throw new Error(err.message)
+    }
+}
+
+async function getIdfromEmail(email){
+    try {
+        let us = await User.findOne().where("email").equals(email)
+        return us.id
+    }catch(err){
+        throw new Error(err.message)
+    }
+}
+
+module.exports = {signup, login, searchUserById, getAllUsers, updatePassword, updateUsername, deleteAccountV2, deleteAllUsers, verifyAccount, getIdfromEmail}

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-function authenticateToken(req, res, next) {
+function authenticateAccessToken(req, res, next) {
     const token = req.headers.authorization && req.headers.authorization.split(' ')[1]
     if(token == undefined) {
         console.log("UNAUTHORIZED")
@@ -19,14 +19,22 @@ function authenticateToken(req, res, next) {
     })
 }
 
-function testMiddleware(req,res,next) {
+function authenticateRefreshToken(req, res, next) {
     const token = req.headers.authorization && req.headers.authorization.split(' ')[1]
     if(token == undefined) {
         console.log("UNAUTHORIZED")
         return res.sendStatus(401)
-    }
-    req.body.tokenData = token
-    next()
+    } 
+    
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, data) => {
+        if(err) {
+            console.log("FORBIDDEN")
+            return res.sendStatus(403)
+        }
+        req.body.tokenData = data
+        console.log("ACCESS GRANTED")
+        next()
+    })
 }
 
-module.exports = {authenticateToken, testMiddleware}
+module.exports = {authenticateAccessToken, authenticateRefreshToken}
