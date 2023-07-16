@@ -15,26 +15,27 @@ import {
 import {socket} from "@/api/socket";
 import {loginSelectors} from '@/store/login/login.selector'
 import {useSelector} from 'react-redux'
+import {matchServices} from "@/api/match.service";
 
-let socketInstance = null;
-const matchId = '648f6b3c28811234030576f5'
 export const GameCard = ({ id, title, image, description }) => {
 
   const token = useSelector(loginSelectors.getRefreshToken)
 
-  const joinPublicGame = () => {
-    console.log("join public game")
+  const joinPublicGame = async () => {
     try{
       // do rest call to retrieve match Id
-
+      const matches = await matchServices.getMatchesByGameId(id);
+      /*
+       * TODO --> we still need to figure out if this is really an array, and in case provide a kind of round-robin algorithm
+       * TODO -->  for trying all of them.
+       */
+      const matchId = matches[0]
       // create a socket instance
-      socketInstance = socket({token, matchId});
+      const socketInstance = socket({token, matchId});
       const resp = socketInstance.connect();
-
     }catch(error){
       console.log("error", error)
     }
-
   }
 
 
@@ -63,7 +64,7 @@ export const GameCard = ({ id, title, image, description }) => {
           <Button variant="ghost" colorScheme="blue">
             Create a Private Game
           </Button>
-          <Button variant="solid" colorScheme="green">
+          <Button variant="solid" colorScheme="green" onClick={joinPublicGame}>
             Join a Private Game
           </Button>
         </VStack>
