@@ -51,14 +51,14 @@ async function getMatchesByGame(gameId) {
 
 async function createMatch(gameId, duration, startTime, endTime, status) {
     try {
-        await Match.create({
+        const match = await Match.create({
             game: gameId,
             duration: duration,
             startTime: startTime,
             endTime: endTime,
             status: status
         });
-        return responses.genericSuccessResponse(200, "Match added");
+        return responses.genericSuccessResponse(200, match._id);
     } catch (err) {
         if (err.code === 11000) throw new Error(err.code);
         else {
