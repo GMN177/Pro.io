@@ -32,11 +32,19 @@ function isValidMove(context, event) {
     return context.players[context.currentPlayer] == event.player && context.cells[event.value] === null;
 };
 
-function sendEventAndEmitNewState(io, gameStateService, event, matchId) {
-    gameStateService.send(event);
-    console.log(gameStateService.getSnapshot().machine.states[gameStateService.getSnapshot().value].events);
-    io.to(matchId).emit("newState", {
+function sendEventAndEmitNewState(io, gameStateService, event, match) {
+    gameStateService.withContext(match.context);
+
+    if (event) {
+        gameStateService.send(event);
+    }
+
+    match.context = gameStateService.getSnapshot().context;
+
+    io.to(match._id).emit("newState", {
         state: gameStateService.getSnapshot(),
+        stateValue: gameStateService.getSnapshot().value,
+        stateContext: gameStateService.getSnapshot().context,
         nextEvents: gameStateService.getSnapshot().machine.states[gameStateService.getSnapshot().value].events
     });
 }

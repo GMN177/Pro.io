@@ -15,18 +15,18 @@ const initialContext = {
 };
 
 const gameStates = createMachine({
-        initial: 'setup',
+        initial: 'lobby',
         states: {
-            'setup': {
+            'lobby': {
                 always: [{
                     target: 'playing',
                     cond: "checkGameReady"
                 }],
                 on: {
                     READY: {
-                        cond: "playernotingame",
+                        cond: "playerNotInGame",
                         actions: "addPlayer",
-                        target: 'setup'
+                        target: 'lobby'
                     }
                 }
             },
@@ -55,7 +55,7 @@ const gameStates = createMachine({
         },
         on: {
             RESET: {
-                target: "setup",
+                target: "lobby",
                 actions: "resetGame"
             }
     },
@@ -86,7 +86,7 @@ const gameStates = createMachine({
         checkWin,
         checkDraw,
         isValidMove,
-        playernotingame: (ctx, e) => ctx.players.indexOf(e.value) === -1
+        playerNotInGame: (ctx, e) => ctx.players.indexOf(e.value) === -1
     }
     }
 );
@@ -98,5 +98,6 @@ const gameStateService = interpret(gameStates)
     .start();
 
 module.exports = {
+    initialContext,
     gameStateService
 };

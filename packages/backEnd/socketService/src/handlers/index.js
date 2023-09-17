@@ -1,6 +1,6 @@
 const { getMatch } = require('../connectors/toMatchService');
 const { sendEventAndEmitNewState } = require('../utils');
-const { gameStateService } = require('../handlers/game.js');
+const { initialContext, gameStateService } = require('../handlers/game.js');
 
 let matches = {};
 
@@ -17,21 +17,26 @@ const onConnection = async (socket) => {
             match = matches[socket.handshake.query.matchId];
         } else {
             match = await getMatch(socket.handshake.query.matchId);
+            match.context = initialContext;
             matches[socket.handshake.query.matchId] = match;
         }
         
         console.log(matches);
 
-        socket.emit("newState", {
+        /*socket.emit("newState", {
             state: gameStateService.getSnapshot(),
+            stateValue: gameStateService.getSnapshot().value,
+            stateContext: gameStateService.getSnapshot().context,
             nextEvents: gameStateService.getSnapshot().machine.states[gameStateService.getSnapshot().value].events
-        });
+        });*/
+
+        sendEventAndEmitNewState(socket, gameStateService, null, matches[socket.handshake.query.matchId]);
     
         socket.on("READY", (msg) => {
             sendEventAndEmitNewState(socket, gameStateService, {
                 type: "READY",
                 value: msg.player
-            }, socket.handshake.query.matchId);
+            }, matches[socket.handshake.query.matchId]);
         });
 
         socket.on("PLAY", (msg) => {
@@ -39,13 +44,13 @@ const onConnection = async (socket) => {
                 type: "PLAY",
                 player: msg.player,
                 value: msg.i
-            }, socket.handshake.query.matchId);
+            }, matches[socket.handshake.query.matchId]);
         });
     
         socket.on("RESET", () => {
             sendEventAndEmitNewState(socket, gameStateService, {
                 type: "RESET"
-            }, socket.handshake.query.matchId);
+            }, matches[socket.handshake.query.matchId]);
         });
 
         socket.on("disconnect", () => {
