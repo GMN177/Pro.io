@@ -20,7 +20,7 @@ const onConnection = async (socket) => {
             matches[socket.handshake.query.matchId] = match;
         }
         
-        console.log(match);
+        console.log(matches);
 
         socket.emit("newState", {
             state: gameStateService.getSnapshot(),
@@ -28,6 +28,7 @@ const onConnection = async (socket) => {
         });
     
         socket.on("READY", (msg) => {
+            console.log(msg);
             sendEventAndEmitNewState(socket, gameStateService, {
                 type: "READY",
                 value: msg.player
