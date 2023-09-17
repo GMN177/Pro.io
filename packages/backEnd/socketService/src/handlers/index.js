@@ -1,6 +1,6 @@
 const { getMatch } = require('../connectors/toMatchService');
 const { sendEventAndEmitNewState } = require('../utils');
-const { initialContext, gameStateService } = require('../handlers/game.js');
+const { initialContext, gameStates } = require('../handlers/game.js');
 
 let matches = {};
 
@@ -30,17 +30,17 @@ const onConnection = async (socket) => {
             nextEvents: gameStateService.getSnapshot().machine.states[gameStateService.getSnapshot().value].events
         });*/
 
-        sendEventAndEmitNewState(socket, gameStateService, null, matches[socket.handshake.query.matchId]);
+        sendEventAndEmitNewState(socket, gameStates, null, matches[socket.handshake.query.matchId]);
     
         socket.on("READY", (msg) => {
-            sendEventAndEmitNewState(socket, gameStateService, {
+            sendEventAndEmitNewState(socket, gameStates, {
                 type: "READY",
                 value: msg.player
             }, matches[socket.handshake.query.matchId]);
         });
 
         socket.on("PLAY", (msg) => {
-            sendEventAndEmitNewState(socket, gameStateService, {
+            sendEventAndEmitNewState(socket, gameStates, {
                 type: "PLAY",
                 player: msg.player,
                 value: msg.i
@@ -48,7 +48,7 @@ const onConnection = async (socket) => {
         });
     
         socket.on("RESET", () => {
-            sendEventAndEmitNewState(socket, gameStateService, {
+            sendEventAndEmitNewState(socket, gameStates, {
                 type: "RESET"
             }, matches[socket.handshake.query.matchId]);
         });

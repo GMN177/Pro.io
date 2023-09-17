@@ -91,13 +91,14 @@ const gameStates = createMachine({
     }
 );
 
-gameStates.withContext(initialContext);
+/*gameStates.withContext(initialContext);
 
 const gameStateService = interpret(gameStates)
     .onTransition((state) => console.log(state.value, state.context))
-    .start();
+    .start();*/
 
 module.exports = {
     initialContext,
-    gameStateService
+    gameStates,
+    //gameStateService
 };

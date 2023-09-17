@@ -32,8 +32,12 @@ function isValidMove(context, event) {
     return context.players[context.currentPlayer] == event.player && context.cells[event.value] === null;
 };
 
-function sendEventAndEmitNewState(io, gameStateService, event, match) {
-    gameStateService.withContext(match.context);
+function sendEventAndEmitNewState(io, gameStates, event, match) {
+    gameStates.withContext(match.context);
+
+    const gameStateService = interpret(gameStates)
+        .onTransition((state) => console.log(state.value, state.context))
+        .start();
 
     if (event) {
         gameStateService.send(event);
