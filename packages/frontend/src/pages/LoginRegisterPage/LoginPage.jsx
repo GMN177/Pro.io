@@ -24,6 +24,7 @@ export const LoginPage = () => {
 
   const isLoading = useSelector(loginSelectors.getIsLoading);
   const isError = useSelector(loginSelectors.getIsError);
+  const errorMessage = useSelector(loginSelectors.getErrorMessage);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -80,7 +81,7 @@ export const LoginPage = () => {
             />
             {isError && (
               <Text color="red.theme" mt={4}>
-                Username and password don't match!
+                {errorMessage}
               </Text>
             )}
             <Button
