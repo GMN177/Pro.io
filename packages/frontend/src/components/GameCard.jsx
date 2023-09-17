@@ -29,7 +29,11 @@ export const GameCard = ({ id, title, image, description }) => {
        * TODO --> we still need to figure out if this is really an array, and in case provide a kind of round-robin algorithm
        * TODO -->  for trying all of them.
        */
-      const matchId = matches[0]
+      let newGame
+      if(matches.data.data.message.length === 0) {
+        newGame = await matchServices.createMatch({game: id, duration: 0, endTime: 0, status: '', startTime: 0})
+      }
+      const matchId = matches[0] || newGame.data.data._id
       // create a socket instance
       const socketInstance = socket({token, matchId});
       const resp = socketInstance.connect();

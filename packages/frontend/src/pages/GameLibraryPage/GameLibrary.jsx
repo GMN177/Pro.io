@@ -20,7 +20,7 @@ export const GameLibrary = () => {
   useEffect(() => {
       dispatch(gamesActions.fetchGamesList())
   }, [])
-
+    console.log('games', games)
   return (
     <Box>
       <HStack p={8} justifyContent="space-between">
@@ -39,7 +39,8 @@ export const GameLibrary = () => {
       >
         {games && games.map((game) => (
           <GameCard
-            key={game.id}
+            key={game._id}
+            id={game._id}
             title={game.title}
             image={game.image}
             description={game.description}

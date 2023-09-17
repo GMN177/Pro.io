@@ -15,7 +15,19 @@ const getMatchesByGameId = (gameId: string): EndpointResponse<Array<Match>, any>
     return axios.get(baseURL + matchEndpoints.matchesByGame + gameId)
 }
 
+const createMatch = (payload:{game:string, duration: number, startTime: number, endTime: number, status: string}): EndpointResponse<Match, any> => {
+    const {game, duration, status, startTime, endTime} = payload
+    return axios.post(baseURL + matchEndpoints.matches, {
+        game,
+        duration,
+        startTime,
+        endTime,
+        status
+    })
+}
+
 export const matchServices = {
     getAllMatches,
-    getMatchesByGameId
+    getMatchesByGameId,
+    createMatch
 }

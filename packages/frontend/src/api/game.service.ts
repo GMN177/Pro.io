@@ -10,6 +10,8 @@ const getAllGames = (): EndpointResponse<Array<Game>, any> => {
     return axios.get(baseURL + gamesEndpoints.games);
 }
 
+
+
 export const gameService = {
     getAllGames
 }
