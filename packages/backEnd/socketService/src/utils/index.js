@@ -53,6 +53,7 @@ function sendEventAndEmitNewState(io, gameStates, event, match) {
     match.context = gameStateService.getSnapshot().context;
 
     console.log('match post:', match);
+    console.log('snapshot post:', gameStateService.getSnapshot());
 
     io.to(match.id).emit("newState", {
         state: gameStateService.getSnapshot(),
