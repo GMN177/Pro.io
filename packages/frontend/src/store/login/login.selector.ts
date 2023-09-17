@@ -13,6 +13,10 @@ const getIsError = (state: RootState) => {
     return state.login.isError;
 }
 
+const getErrorMessage = (state: RootState) => {
+    return state.login.errorMessage;
+}
+
 const getIsLoading = (state: RootState) => {
     return state.login.isLoading;
 }
@@ -31,5 +35,6 @@ export const loginSelectors = {
     getIsError,
     getIsLoading,
     getUser,
-    getExpiresAt
+    getExpiresAt,
+    getErrorMessage
 }
