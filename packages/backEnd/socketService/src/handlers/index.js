@@ -28,14 +28,14 @@ const onConnection = async (socket) => {
         });
     
         socket.on("READY", (msg) => {
-            sendEventAndEmitNewState(io, gameStateService, {
+            sendEventAndEmitNewState(socket, gameStateService, {
                 type: "READY",
                 value: msg.player
             }, socket.handshake.query.matchId);
         });
 
         socket.on("PLAY", (msg) => {
-            sendEventAndEmitNewState(io, gameStateService, {
+            sendEventAndEmitNewState(socket, gameStateService, {
                 type: "PLAY",
                 player: msg.player,
                 value: msg.i
@@ -43,7 +43,7 @@ const onConnection = async (socket) => {
         });
     
         socket.on("RESET", () => {
-            sendEventAndEmitNewState(io, gameStateService, {
+            sendEventAndEmitNewState(socket, gameStateService, {
                 type: "RESET"
             }, socket.handshake.query.matchId);
         });
