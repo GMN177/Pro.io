@@ -20,6 +20,7 @@ const onConnection = async (socket) => {
             console.log('match does not exist')
             match = await getMatch(socket.handshake.query.matchId);
             match.context = initialContext;
+            match.state = JSON.stringify(gameStates.initialState);
             matches[socket.handshake.query.matchId] = match;
         }
         
