@@ -33,9 +33,8 @@ function isValidMove(context, event) {
 };
 
 function sendEventAndEmitNewState(io, gameStateService, event, matchId) {
-    console.log(event);
-    console.log(matchId);
     gameStateService.send(event);
+    console.log(gameStateService.getSnapshot().machine.states[gameStateService.getSnapshot().value].events);
     io.to(matchId).emit("newState", {
         state: gameStateService.getSnapshot(),
         nextEvents: gameStateService.getSnapshot().machine.states[gameStateService.getSnapshot().value].events

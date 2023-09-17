@@ -28,7 +28,6 @@ const onConnection = async (socket) => {
         });
     
         socket.on("READY", (msg) => {
-            console.log(msg);
             sendEventAndEmitNewState(socket, gameStateService, {
                 type: "READY",
                 value: msg.player
