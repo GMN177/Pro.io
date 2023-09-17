@@ -1,6 +1,5 @@
 const {
     createMachine,
-    interpret,
     assign
 } = require('xstate');
 
@@ -99,6 +98,5 @@ const gameStateService = interpret(gameStates)
 
 module.exports = {
     initialContext,
-    gameStates,
-    //gameStateService
+    gameStates
 };

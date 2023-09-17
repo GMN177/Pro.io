@@ -1,3 +1,7 @@
+const {
+    interpret
+} = require('xstate');
+
 function checkGameReady(context, event) {
     return context.players.length === 2;
 };
