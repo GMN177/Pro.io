@@ -37,17 +37,22 @@ function isValidMove(context, event) {
 };
 
 function sendEventAndEmitNewState(io, gameStates, event, match) {
+
+    console.log('match pre:', match);
+
     gameStates.withContext(match.context);
 
     const gameStateService = interpret(gameStates)
         .onTransition((state) => console.log(state.value, state.context))
         .start();
 
-    if (event) {
+    if (event !== null) {
         gameStateService.send(event);
     }
 
     match.context = gameStateService.getSnapshot().context;
+
+    console.log('match post:', match);
 
     io.to(match.id).emit("newState", {
         state: gameStateService.getSnapshot(),
