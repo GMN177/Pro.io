@@ -16,15 +16,17 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
         const resp = (await authenticationService.login(username, password)).data.data
 
         const {accessToken, refreshToken} = resp
-        sessionStorage.setItem('PRO_IO_SESSION', JSON.stringify({
-            accessToken,
-            refreshToken,
-            expiresAt: (Date.now() + 840000)
-        }))
+
         if(accessToken) {
             axios.defaults.headers['Authorization'] = 'Bearer ' + accessToken;
         }
         const id = jwt_decode<{id: string}>(accessToken).id
+        sessionStorage.setItem('PRO_IO_SESSION', JSON.stringify({
+            accessToken,
+            refreshToken,
+            expiresAt: (Date.now() + 840000),
+            id
+        }))
         thunkAPI.dispatch(loggedUserActions.findLoggedUser(id))
         bean.navigate('/')
 
@@ -63,6 +65,7 @@ const userLogout = createAsyncThunk(LOGIN_ACTIONS.userLogout, async (params: {re
     try {
         const {refreshToken, navigate} = params
         await authenticationService.logout(refreshToken)
+        sessionStorage.removeItem('PRO_IO_SESSION')
         navigate('/')
         return ;
     } catch(e) {

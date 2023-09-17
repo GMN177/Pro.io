@@ -2,7 +2,7 @@ import {loginActions} from './login.action';
 import {createReducer} from '@reduxjs/toolkit'
 import {UserLoginState} from '@/store/login/types';
 
-let accessToken = null, refreshToken = null, expiresAt = null, parsedData = null;
+let accessToken = null, refreshToken = null, expiresAt = null, parsedData = null, id = null;
 
 const storedSessionData = sessionStorage.getItem('PRO_IO_SESSION');
 console.log('storedSessionData', storedSessionData)
@@ -13,6 +13,7 @@ if(storedSessionData) {
         accessToken = parsedData.accessToken
         refreshToken = parsedData.refreshToken
         expiresAt = parsedData.expiresAt
+        id = parsedData.id
     }
 }
 
@@ -20,6 +21,7 @@ const initialState: UserLoginState = {
     refreshToken,
     accessToken,
     expiresAt,
+    id,
     isError: false,
     isLoading: false,
     errorMessage: '',
@@ -42,7 +44,8 @@ export const loginReducer = {
                 isError: false,
                 accessToken: action.payload.accessToken,
                 refreshToken: action.payload.refreshToken,
-                expiresAt: (Date.now() + 840000)
+                expiresAt: (Date.now() + 840000),
+                id: action.payload.id
             }
         });
         builder.addCase(loginActions.userLogin.rejected, (state, action): UserLoginState => {

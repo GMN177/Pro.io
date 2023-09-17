@@ -18,7 +18,6 @@ function App() {
   const dispatch = useAppDispatch();
   const accessToken = useSelector(loginSelectors.getAccessToken);
   const refreshToken = useSelector(loginSelectors.getRefreshToken);
-  const user = useSelector(loginSelectors.getUser)
   const expiresAt = useSelector(loginSelectors.getExpiresAt)
   const navigate = useNavigate();
 

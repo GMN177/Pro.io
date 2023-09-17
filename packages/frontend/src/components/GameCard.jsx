@@ -16,11 +16,14 @@ import {socket} from "@/api/socket";
 import {loginSelectors} from '@/store/login/login.selector'
 import {useSelector} from 'react-redux'
 import {matchServices} from "@/api/match.service";
-
+import {useState} from 'react'
+import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
 export const GameCard = ({ id, title, image, description }) => {
 
   const token = useSelector(loginSelectors.getRefreshToken)
-
+  const userId = useSelector(loginSelectors.getUserId)
+  console.log('userId', userId)
+  const [amIReady, setAmIReady] = useState(false)
   const joinPublicGame = async () => {
     try{
       // do rest call to retrieve match Id
@@ -33,10 +36,18 @@ export const GameCard = ({ id, title, image, description }) => {
       if(matches.data.data.message.length === 0) {
         newGame = await matchServices.createMatch({game: id, duration: 0, endTime: 0, status: '', startTime: 0})
       }
-      const matchId = matches[0] || newGame.data.data._id
+      const matchId = matches.data.data.message[0]._id || newGame.data.data.message
       // create a socket instance
       const socketInstance = socket({token, matchId});
-      const resp = socketInstance.connect();
+      socketInstance.connect();
+      socketInstance.emit('READY', {player: userId})
+      socketInstance.on('newState', (message) => {
+        console.log('ci sono', message)
+        if(message.stateValue === 'playing') {
+          console.log('stiamo giocando')
+        }
+      })
+
     }catch(error){
       console.log("error", error)
     }
