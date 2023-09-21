@@ -19,15 +19,19 @@ import {
 import "./Homepage.css";
 import { useSelector } from "react-redux";
 import { loginSelectors } from "@/store/login/login.selector";
+import { loggedUserSelectors } from "@/store/loggedUser/loggedUser.selector";
 import { getRandomPosition } from "@/lib/helperFunctions";
 import { Link as ReachLink, useNavigate } from "react-router-dom";
 
 const Homepage = () => {
   const accessToken = useSelector(loginSelectors.getAccessToken);
-
+  const user = useSelector(loggedUserSelectors.getLoggedUserInfo);
   const [isVisible, setIsVisible] = useState(true);
   const [position, setPosition] = useState(getRandomPosition());
   const [count, setCount] = useState(0);
+
+  console.log(accessToken)
+  console.log(user)
 
   // function to handle the click of the little box, change his position after 200 ms
   const handleBoxClick = () => {
@@ -94,14 +98,26 @@ const Homepage = () => {
         >
           Pro.io is a platform hosting multiple games, try them!
         </Heading>
-        <Link as={ReachLink} to={"/games"} style={{ textDecoration: "none" }}>
+        {
+        accessToken ? 
+        <>
+          <Link as={ReachLink} to={"/games"} style={{ textDecoration: "none" }}>
+            <Button color="white" bg="blue.theme">
+              Play Online
+            </Button>
+          </Link>
           <Button color="white" bg="blue.theme">
-            Gioca Online
+            Play By Yourself
           </Button>
-        </Link>
-        <Button color="white" bg="blue.theme">
-          Gioca da solo
-        </Button>
+        </>
+        :  
+        <Link as={ReachLink} to={"/login"} style={{ textDecoration: "none" }}>
+          <Button color="white" bg="blue.theme">
+            Play Now
+          </Button>
+        </Link>  
+      }
+        
       </VStack>
 
       <Box

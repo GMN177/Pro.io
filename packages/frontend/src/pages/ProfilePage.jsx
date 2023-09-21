@@ -2,19 +2,16 @@ import { Divider, HStack, Heading,  VStack, Button, Box, Input, Text } from '@ch
 import React, {useState} from 'react'
 // import users from reducer store
 import { useDispatch, useSelector } from 'react-redux'
-import { loginSelectors } from '@/store/login/login.selector'
 import { CustomModal } from '../components/Utils/CustomModal'
-import { loginActions } from '@/store/login/login.action'
 import {CustomAlert} from '../components/Utils/CustomAlert'
 import { loggedUserSelectors } from '@/store/loggedUser/loggedUser.selector'
 import { loggedUserActions } from '@/store/loggedUser/loggedUser.action'
 
 export const ProfilePage = () => {
     const dispatch = useDispatch();
-    const user = useSelector(loginSelectors.getUser)
     const isLoading = useSelector(loggedUserSelectors.getIsLoading)
     const isError = useSelector(loggedUserSelectors.getIsError)
-    const loggedUser = useSelector(loggedUserSelectors.getLoggedUser)
+    const loggedUser = useSelector(loggedUserSelectors.getLoggedUserInfo)
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -23,11 +20,11 @@ export const ProfilePage = () => {
     console.log("isLoading", isLoading)
     console.log("isError", isError)
 
-    console.log("loggedUser", loggedUser);
+    console.log("loggedUser", loggedUser.user.username);
 
     // submit function to change username
     const changeUsername = () => {
-        const id = user.id
+        const id = loggedUser.user.id
 
         // dispatch action to change username
         dispatch(loggedUserActions.changeUsernameUser({username, password, id}))
@@ -37,7 +34,7 @@ export const ProfilePage = () => {
 
      // submit function to change password
      const changePassword = () => {
-        const id = user.id
+        const id = loggedUser.user.id
 
         // dispatch action to change username
         dispatch(loggedUserActions.changeUsernamePassword({password, newPassword, id}))
@@ -53,7 +50,7 @@ export const ProfilePage = () => {
             <Box p={4}>
                 <Heading as="h4" size='md' >Personal Informations</Heading>
                 <HStack p={4}>
-                    <Heading as="h5" size='sm' >Username: {user.username}</Heading>
+                    <Heading as="h5" size='sm' >Username: {loggedUser.user.username}</Heading>
                     <CustomModal
                         isCentered
                         header="Change Username"
@@ -64,7 +61,7 @@ export const ProfilePage = () => {
                         isIcon={false}
                     >
                         <VStack>
-                        <CustomAlert status="success" message=""/>
+                        <CustomAlert status="success" message="Username cambiato con successo"/>
 
                         <Input
                                 variant="flushed"
@@ -91,9 +88,10 @@ export const ProfilePage = () => {
                 </HStack>
 
                 <HStack p={4}>
-                    <Heading as="h5" size='sm' >Email: {user.email}</Heading>
+                    <Heading as="h5" size='sm' >Email: {loggedUser.user.email}</Heading>
                 </HStack>
                 <HStack p={4}>
+                <Heading as="h5" size='sm' >Password: </Heading>
                     <CustomModal
                         isCentered
                         header="Change Password"
@@ -132,10 +130,10 @@ export const ProfilePage = () => {
             <Box p={4}>
                 <Heading as="h4" size='md' >Game Informations</Heading>
                 <HStack p={4}>
-                    <Heading as="h5" size='sm' >Total games: {user.totMatches}</Heading>
+                    <Heading as="h5" size='sm' >Total games: {loggedUser.user.totMatches}</Heading>
                 </HStack>
                 <HStack p={4}>
-                    <Heading as="h5" size='sm' >Total wins: {user.totWins}</Heading>
+                    <Heading as="h5" size='sm' >Total wins: {loggedUser.totWins}</Heading>
                 </HStack>
             </Box>
             <Divider />

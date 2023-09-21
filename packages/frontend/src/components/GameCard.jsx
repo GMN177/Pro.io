@@ -18,7 +18,7 @@ import {useSelector} from 'react-redux'
 import {matchServices} from "@/api/match.service";
 import {useState} from 'react'
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
-export const GameCard = ({ id, title, image, description }) => {
+export const GameCard = ({ id, title, image, description, openLobby }) => {
 
   const token = useSelector(loginSelectors.getRefreshToken)
   const userId = useSelector(loginSelectors.getUserId)
@@ -40,6 +40,10 @@ export const GameCard = ({ id, title, image, description }) => {
       // create a socket instance
       const socketInstance = socket({token, matchId});
       socketInstance.connect();
+      // wait 1 second
+      setTimeout(() => {
+        openLobby()
+      }, 1000)
       socketInstance.emit('READY', {player: userId})
       socketInstance.on('newState', (message) => {
         console.log('ci sono', message)

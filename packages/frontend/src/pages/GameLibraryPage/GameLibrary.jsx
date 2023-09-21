@@ -6,16 +6,20 @@ import {
   HStack,
   useMediaQuery,
   Text,
+  useDisclosure
 } from "@chakra-ui/react";
 import { GameCard } from "@/components/GameCard";
 import {useDispatch, useSelector} from "react-redux";
 import {gamesActions} from "@/store/games/games.action";
 import {gamesSelectors} from "@/store/games/games.selector";
+import { Lobby } from "@/components/Lobby";
 
 export const GameLibrary = () => {
 
     const dispatch = useDispatch();
     const games = useSelector(gamesSelectors.getGamesList)
+
+    const {isOpen, onOpen, onClose} = useDisclosure()
 
   useEffect(() => {
       dispatch(gamesActions.fetchGamesList())
@@ -44,9 +48,11 @@ export const GameLibrary = () => {
             title={game.title}
             image={game.image}
             description={game.description}
+            openLobby={onOpen}
           />
         ))}
       </Grid>
+          <Lobby isOpen={isOpen} onClose={onClose}></Lobby>
     </Box>
   );
 };
