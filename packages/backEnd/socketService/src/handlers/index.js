@@ -15,6 +15,27 @@ const onConnection = (io) => {
         try {
             let matchId = socket.handshake.query.matchId;
 
+            console.log("New connection: " + socket.id);
+
+            await socket.join(matchId);
+
+            console.log("New client connected in room: " + matchId);
+
+            let match;
+            if (socket.handshake.query.matchId in matches) {
+                match = matches[socket.handshake.query.matchId];
+            } else {
+                match = await getMatch(socket.handshake.query.matchId);
+                match.state = JSON.stringify(gameStates.initialState);
+                matches[socket.handshake.query.matchId] = match;
+            }
+
+            console.log('matches:', matches);
+
+            setTimeout(() => {
+                sendEventAndEmitNewState(io, gameStates, null, matches[matchId]);
+            }, 1000);
+
             socket.on("READY", (msg) => {
                 sendEventAndEmitNewState(socket, gameStates, {
                     type: "READY",
@@ -39,24 +60,6 @@ const onConnection = (io) => {
             socket.on("disconnect", () => {
                 console.log("Client disconnected");
             });
-
-            console.log("New connection: " + socket.id);
-
-            await socket.join(matchId);
-
-            console.log("New client connected in room: " + matchId);
-
-            if (!(matchId in matches)) {
-                let match = await getMatch(matchId);
-                match.state = JSON.stringify(gameStates.initialState);
-                matches[matchId] = match;
-            }
-
-            console.log('matches:', matches);
-
-            setTimeout(() => {
-                sendEventAndEmitNewState(io, gameStates, null, matches[matchId]);
-            }, 1000);
         } catch (err) {
             console.log(err);
         }
