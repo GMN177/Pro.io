@@ -23,7 +23,9 @@ const onConnection = async (socket) => {
         
         console.log('matches:', matches);
 
-        sendEventAndEmitNewState(socket, gameStates, null, matches[socket.handshake.query.matchId]);
+        setTimeout(() => {
+            sendEventAndEmitNewState(socket, gameStates, null, matches[socket.handshake.query.matchId]);
+        }, 10);
     
         socket.on("READY", (msg) => {
             sendEventAndEmitNewState(socket, gameStates, {
