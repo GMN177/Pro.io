@@ -13,11 +13,14 @@ async function getAllGames() {
 }
 
 async function getGame(id) {
+  console.log("SONO DENTRO")
   if (!mongoose.isValidObjectId(id)) {
     return responses.INVALID_ID;
   }
   try {
+    console.log("ID", id)
     const game = await Game.findById(id);
+    console.log(game)
     if (game == null) {
       return responses.INVALID_ID;
     }
@@ -27,6 +30,8 @@ async function getGame(id) {
       duration: game.description,
       playersNumber: game.playersNumber
     };
+
+    console.log("GAMERET", gameToRetrieve)
 
     return response = responses.genericSuccessResponse(200, gameToRetrieve);
   } catch (err) {

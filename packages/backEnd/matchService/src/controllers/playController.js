@@ -31,6 +31,7 @@ async function getByMatch(matchId) {
 async function getByMatchAndUser(matchId, userId) {
     try {
         const plays = await Play.find({match: matchId, user: userId});
+        //console.log(plays)
         if(plays == null) {
             return responses.PLAY_NOT_FOUND;
         }
@@ -58,7 +59,7 @@ async function createPlay(userId, matchId) {
     }
 }
 
-
+//chiamare quando status è FINISHED
 async function updatePlay(id, userId, matchId, isWinner, points) {
     if (!mongoose.isValidObjectId(id)) {
         return responses.INVALID_ID;

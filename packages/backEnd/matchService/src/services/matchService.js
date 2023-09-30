@@ -3,11 +3,13 @@ const jsend = require("jsend");
 const matchController = require("../controllers/matchController");
 const playController = require("../controllers/playController");
 const router = express.Router();
+const {authenticateToken} = require("../middlewares/authMiddleware")
 
 router.use(express.json());
 
 // get all games from database
 router.get("/", async (req, res) => {
+    console.log(req.body.tokenData);
     try {
         let matches = await matchController.getAllMatches();
         return res.status(matches.status).send(matches.response);
@@ -45,6 +47,7 @@ router.get("/matchByUser/:user", async (req, res) => {
     }
 });
 
+//ho bisogno di tutti gli userId e i punti
 // modify game.
 router.put("/:id", async (req, res) => {
     try {
@@ -82,5 +85,20 @@ router.post("/", async (req, res) => {
         }
     }
 });
+
+router.post("/matchmaking", async(req, res) => {
+    try {
+        const playToAdd = await matchController.matchmaking(req.body.game, req.body.user, req.headers.authorization);
+        return res.status(playToAdd.status).send(playToAdd.response);
+    } catch (err) {
+        if (Number(err.message) === 11000) {
+            return res
+                .status(409)
+                .send(jsend.error({message: "Duplicate key error"}));
+        } else {
+            return res.status(500).send(jsend.error({message: err.message}));
+        }
+    }
+})
 
 module.exports = router;
