@@ -3,7 +3,6 @@ const jsend = require("jsend");
 const matchController = require("../controllers/matchController");
 const playController = require("../controllers/playController");
 const router = express.Router();
-const {authenticateToken} = require("../middlewares/authMiddleware")
 
 router.use(express.json());
 
