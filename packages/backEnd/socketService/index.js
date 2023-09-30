@@ -14,6 +14,6 @@ const io = socketio(process.env.SERVER_PORT || 4000, {
 
 //io.use(verifyToken);
 
-io.on("connection", onConnection);
+io.on("connection", onConnection(io));
 
 io.on("connect_error", onConnectionError);

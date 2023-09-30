@@ -37,9 +37,6 @@ function isValidMove(context, event) {
 };
 
 function sendEventAndEmitNewState(io, gameStates, event, match) {
-
-    console.log('match pre:', match);
-
     const gameStateService = interpret(gameStates)
         .onTransition((state) => {
             match.state = JSON.stringify(state);
@@ -49,8 +46,6 @@ function sendEventAndEmitNewState(io, gameStates, event, match) {
     if (event !== null) {
         gameStateService.send(event);
     }
-
-    console.log('match post:', match);
 
     console.log('emitting to:', match.id, 'with state:', gameStateService.getSnapshot().value);
 
