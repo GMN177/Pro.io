@@ -14,21 +14,16 @@ const onConnection = async (socket) => {
 
         let match;
         if (socket.handshake.query.matchId in matches) {
-            console.log('match exists')
             match = matches[socket.handshake.query.matchId];
         } else {
-            console.log('match does not exist')
             match = await getMatch(socket.handshake.query.matchId);
-            match.context = initialContext;
             match.state = JSON.stringify(gameStates.initialState);
             matches[socket.handshake.query.matchId] = match;
         }
         
         console.log('matches:', matches);
 
-        /*sendEventAndEmitNewState(socket, gameStates, {
-            type: ""
-        }, matches[socket.handshake.query.matchId]);*/
+        sendEventAndEmitNewState(socket, gameStates, null, matches[socket.handshake.query.matchId]);
     
         socket.on("READY", (msg) => {
             sendEventAndEmitNewState(socket, gameStates, {

@@ -40,25 +40,19 @@ function sendEventAndEmitNewState(io, gameStates, event, match) {
 
     console.log('match pre:', match);
 
-    //gameStates.withContext(match.context);
-
     const gameStateService = interpret(gameStates)
         .onTransition((state) => {
             match.state = JSON.stringify(state);
-            console.log('stateValue', state.value);
-            console.log('stateContext', state.context);
         })
-        .start(JSON.parse(match.state))
-        .start();
+        .start(JSON.parse(match.state));
 
     if (event !== null) {
         gameStateService.send(event);
     }
 
-    //match.context = gameStateService.getSnapshot().context;
-
     console.log('match post:', match);
-    console.log('snapshot post:', gameStateService.getSnapshot());
+
+    console.log('emitting to:', match.id, 'with state:', gameStateService.getSnapshot().value);
 
     io.to(match.id).emit("newState", {
         state: gameStateService.getSnapshot(),
