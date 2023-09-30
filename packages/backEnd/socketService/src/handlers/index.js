@@ -25,7 +25,7 @@ const onConnection = async (socket) => {
 
         setTimeout(() => {
             sendEventAndEmitNewState(socket, gameStates, null, matches[socket.handshake.query.matchId]);
-        }, 10);
+        }, 1000);
     
         socket.on("READY", (msg) => {
             sendEventAndEmitNewState(socket, gameStates, {
