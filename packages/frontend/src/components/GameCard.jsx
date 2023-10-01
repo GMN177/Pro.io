@@ -23,20 +23,21 @@ export const GameCard = ({ id, title, image, description, openLobby }) => {
   const token = useSelector(loginSelectors.getRefreshToken)
   const userId = useSelector(loginSelectors.getUserId)
   console.log('userId', userId)
-  const [amIReady, setAmIReady] = useState(false)
-  const joinPublicGame = async () => {
+
+  /* const joinPublicGame = async () => {
     try{
       // do rest call to retrieve match Id
       const matches = await matchServices.getMatchesByGameId(id);
-      /*
+
        * TODO --> we still need to figure out if this is really an array, and in case provide a kind of round-robin algorithm
        * TODO -->  for trying all of them.
-       */
+
       let newGame
       if(matches.data.data.message.length === 0) {
         newGame = await matchServices.createMatch({game: id, duration: 0, endTime: 0, status: '', startTime: 0})
       }
       const matchId = matches.data.data.message[0]._id || newGame.data.data.message
+
       // create a socket instance
       const socketInstance = socket({token, matchId});
       socketInstance.connect();
@@ -54,6 +55,28 @@ export const GameCard = ({ id, title, image, description, openLobby }) => {
 
     }catch(error){
       console.log("error", error)
+    }
+  }*/
+
+  const joinPublicGame = async () => {
+    try {
+      const match = await matchServices.matchmaking({userId, gameId: id})
+      const socketInstance = socket({token, matchId});
+      socketInstance.on('newState', (message) => {
+        console.log('ci sono', message)
+        if(message.stateValue === 'playing') {
+          console.log('stiamo giocando')
+        }
+      })
+      socketInstance.connect();
+      // wait 1 second
+      setTimeout(() => {
+        openLobby()
+      }, 1000)
+      socketInstance.emit('READY', {player: userId})
+
+    } catch (e) {
+
     }
   }
 

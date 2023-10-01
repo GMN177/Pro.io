@@ -4,7 +4,8 @@ import {Match} from '@/models/match';
 
 const enum matchEndpoints {
     matches = "matches/",
-    matchesByGame = "matches/matchByGame/"
+    matchesByGame = "matches/matchByGame/",
+    matchmaking = "matches/matchmaking/",
 }
 
 const getAllMatches = (): EndpointResponse<any, any> => {
@@ -26,8 +27,18 @@ const createMatch = (payload:{game:string, duration: number, startTime: number, 
     })
 }
 
+
+const matchmaking = (payload:{gameId:string, userId: number}): EndpointResponse<any, any> => {
+    const {gameId, userId} = payload
+    return axios.post(baseURL + matchEndpoints.matchmaking, {
+        gameId,
+        userId
+    })
+}
+
 export const matchServices = {
     getAllMatches,
     getMatchesByGameId,
-    createMatch
+    createMatch,
+    matchmaking
 }
