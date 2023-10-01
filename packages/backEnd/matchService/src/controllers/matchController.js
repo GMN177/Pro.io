@@ -68,10 +68,10 @@ async function matchmaking(gameId, userId, token) {
         })
 
         if(valid_matches.length === 0) {
-            let match = createMatch(gameId, 2000, new Date(), null, "WAIT", userId);
+            let match = await createMatch(gameId, 2000, new Date(), null, "WAIT", userId);
 
             console.log('match', match)
-            
+
             return responses.genericSuccessResponse(200, match.response.data.message);
         } else {
             let match = valid_matches[Math.floor(Math.random() * valid_matches.length)];
@@ -111,7 +111,7 @@ async function createMatch(gameId, duration, startTime, endTime, status, userId)
 
         console.log('matchId', matchId)
 
-        let play = createPlay(userId, matchId)
+        let play = await createPlay(userId, matchId)
 
         console.log('play', play)
 
