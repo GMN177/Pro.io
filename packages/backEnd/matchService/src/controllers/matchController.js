@@ -68,10 +68,10 @@ async function matchmaking(gameId, userId, token) {
         })
 
         if(valid_matches.length === 0) {
-            createMatch(gameId, 2000, new Date(), null, "WAIT", userId);
-            return responses.genericSuccessResponse(200, "Match added");
+            let match = createMatch(gameId, 2000, new Date(), null, "WAIT", userId);
+            return responses.genericSuccessResponse(200, match.response.data.message);
         } else {
-            let match = valid_matches[Math.floor(Math.random()*valid_matches.length)];
+            let match = valid_matches[Math.floor(Math.random() * valid_matches.length)];
             await createPlay(userId, match._id);
 
             fetch('http://localhost:4001/api/games/' + gameId, {
@@ -88,7 +88,7 @@ async function matchmaking(gameId, userId, token) {
                     }
                 })
 
-            return responses.genericSuccessResponse(200, match, "Play added");
+            return responses.genericSuccessResponse(200, match._id);
         }
     } catch (err) {
         throw new Error(err.message);
@@ -98,7 +98,7 @@ async function matchmaking(gameId, userId, token) {
 async function createMatch(gameId, duration, startTime, endTime, status, userId) {
     //TODO chiamo createPlayed
     try {
-        let match = (await Match.create({
+        let matchId = (await Match.create({
             game: gameId,
             duration: duration,
             startTime: startTime,
@@ -106,10 +106,10 @@ async function createMatch(gameId, duration, startTime, endTime, status, userId)
             status: status
         }))._id;
 
-        console.log(match)
+        console.log(matchId)
 
-        createPlay(userId, match)
-        return responses.genericSuccessResponse(200, "Match added");
+        createPlay(userId, matchId)
+        return responses.genericSuccessResponse(200, matchId);
     } catch (err) {
         if (err.code === 11000) throw new Error(err.code);
         else {
