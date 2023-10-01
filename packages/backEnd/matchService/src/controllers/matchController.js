@@ -57,6 +57,9 @@ async function getMatchesByGame(gameId) {
 //status: { WAIT, INGAME, FINISHED }
 async function matchmaking(gameId, userId, token) {
     try {
+        console.log('gameId:', gameId)
+        console.log('userId:', userId)
+
         const matches = await Match.find({game: gameId});
 
         if (matches == null) {
@@ -79,7 +82,7 @@ async function matchmaking(gameId, userId, token) {
             let match = valid_matches[Math.floor(Math.random() * valid_matches.length)];
             await createPlay(userId, match._id);
 
-            fetch('http://localhost:4001/api/games/' + gameId, {
+            fetch('http://gameservice:4000/api/games/' + gameId, {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
@@ -149,11 +152,22 @@ async function updateMatch(id, gameId, duration, startTime, endTime, status) {
     }
 }
 
+async function deleteAllMatches() {
+    try {
+        await Play.deleteMany({});
+        await Match.deleteMany({});
+        return responses.DELETE_SUCCESS;
+    } catch (err) {
+        throw new Error(err.message);
+    }
+}
+
 module.exports = {
     getAllMatches,
     getMatch,
     getMatchesByGame,
     createMatch,
     updateMatch,
-    matchmaking
+    matchmaking,
+    deleteAllMatches
 };

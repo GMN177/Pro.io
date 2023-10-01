@@ -100,4 +100,13 @@ router.post("/matchmaking", async(req, res) => {
     }
 })
 
+router.delete("/", async (req, res) => {
+    try {
+        const matchDeleted = await matchController.deleteAllMatches();
+        return res.status(matchDeleted.status).send(matchDeleted.response);
+    } catch (err) {
+        return res.status(500).send(jsend.error({message: err.message}));
+    }
+});
+
 module.exports = router;

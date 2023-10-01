@@ -40,6 +40,11 @@ const UPDATE_SUCCESS = {
     response: jsend.success({ message: "Match updated" }),
 };
 
+const DELETE_SUCCESS = {
+    status: 200,
+    response: jsend.success({ message: "All matches deleted" }),
+};
+
 function genericSuccessResponse(status, data) {
     return {
         status: status,
@@ -56,5 +61,6 @@ module.exports = {
     MATCH_NOT_FOUND,
     PLAY_NOT_FOUND,
     UPDATE_SUCCESS,
+    DELETE_SUCCESS,
     genericSuccessResponse,
 };
