@@ -13,13 +13,14 @@ let matches = {};
 const onConnection = (io) => {
     return async (socket) => {
         try {
+            let playerId = socket.playerId;
             let matchId = socket.handshake.query.matchId;
 
             console.log("New connection: " + socket.id);
+            console.log('playerId:', playerId);
+            console.log('matchId:', matchId);
 
             await socket.join(matchId);
-
-            console.log("New client connected in room: " + matchId);
 
             let match;
             if (socket.handshake.query.matchId in matches) {
