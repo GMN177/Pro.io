@@ -58,19 +58,21 @@ async function getMatchesByGame(gameId) {
 async function matchmaking(gameId, userId, token) {
     try {
         const matches = await Match.find({game: gameId});
-        //console.log(matches)
+
         if (matches == null) {
             return responses.INVALID_GAME;
         }
+
+        console.log('matches:', matches)
 
         let valid_matches = matches.filter( match => {
             return match.status === "WAIT"
         })
 
+        console.log('valid_matches:', valid_matches)
+
         if(valid_matches.length === 0) {
             let match = await createMatch(gameId, 2000, new Date(), null, "WAIT", userId);
-
-            console.log('match', match)
 
             return responses.genericSuccessResponse(200, match.response.data.message);
         } else {
@@ -85,6 +87,9 @@ async function matchmaking(gameId, userId, token) {
                 .then(result => result.json())
                 .then(async data => {
                     const plays = await getByMatchAndUser(match._id, userId)
+
+                    console.log('data:', data)
+                    console.log('plays:', plays)
 
                     if(data.data.message.playersNumber === plays.response.data.message.length) {
                         await updateMatch(match._id, gameId, match.duration, new Date(), match.endTime, "INGAME")
@@ -109,11 +114,7 @@ async function createMatch(gameId, duration, startTime, endTime, status, userId)
             status: status
         }))._id;
 
-        console.log('matchId', matchId)
-
-        let play = await createPlay(userId, matchId)
-
-        console.log('play', play)
+        await createPlay(userId, matchId)
 
         return responses.genericSuccessResponse(200, matchId);
     } catch (err) {
