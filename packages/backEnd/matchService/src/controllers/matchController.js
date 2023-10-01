@@ -66,13 +66,9 @@ async function matchmaking(gameId, userId, token) {
             return responses.INVALID_GAME;
         }
 
-        console.log('matches:', matches)
-
         let valid_matches = matches.filter( match => {
             return match.status === "WAIT"
         })
-
-        console.log('valid_matches:', valid_matches)
 
         if(valid_matches.length === 0) {
             let match = await createMatch(gameId, 2000, new Date(), null, "WAIT", userId);

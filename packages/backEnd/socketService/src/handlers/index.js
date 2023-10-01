@@ -31,23 +31,19 @@ const onConnection = (io) => {
                 matches[socket.handshake.query.matchId] = match;
             }
 
-            console.log('matches:', matches);
+            sendEventAndEmitNewState(io, gameStates, null, matches[matchId]);
 
-            setTimeout(() => {
-                sendEventAndEmitNewState(io, gameStates, null, matches[matchId]);
-            }, 1000);
-
-            socket.on("READY", (msg) => {
+            socket.on("READY", () => {
                 sendEventAndEmitNewState(socket, gameStates, {
                     type: "READY",
-                    value: msg.player
+                    value: playerId
                 }, matches[matchId]);
             });
 
             socket.on("PLAY", (msg) => {
                 sendEventAndEmitNewState(socket, gameStates, {
                     type: "PLAY",
-                    player: msg.player,
+                    player: playerId,
                     value: msg.i
                 }, matches[matchId]);
             });

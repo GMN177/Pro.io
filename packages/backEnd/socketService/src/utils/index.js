@@ -44,6 +44,7 @@ function sendEventAndEmitNewState(io, gameStates, event, match) {
         .start(JSON.parse(match.state));
 
     if (event !== null) {
+        console.log('sending event:', event);
         gameStateService.send(event);
     }
 
