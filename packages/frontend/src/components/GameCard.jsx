@@ -60,7 +60,8 @@ export const GameCard = ({ id, title, image, description, openLobby }) => {
 
   const joinPublicGame = async () => {
     try {
-      const match = await matchServices.matchmaking({userId, gameId: id})
+      const matchId = (await matchServices.matchmaking({userId, gameId: id})).data.data.message
+      console.log(matchId, 'matchId')
       const socketInstance = socket({token, matchId});
       socketInstance.on('newState', (message) => {
         console.log('ci sono', message)
