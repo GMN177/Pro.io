@@ -56,6 +56,7 @@ export const GameLibrary = () => {
             key={game._id}
             id={game._id}
             title={game.title}
+            name={game.name}
             image={game.image}
             description={game.description}
             openLobby={onOpen}

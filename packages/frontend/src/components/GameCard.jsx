@@ -18,12 +18,14 @@ import {useSelector, useDispatch} from 'react-redux'
 import {matchServices} from "@/api/match.service";
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
 import { loggedUserActions } from "@/store/loggedUser/loggedUser.action";
-export const GameCard = ({ id, title, image, description, openLobby }) => {
+import {useNavigate} from "react-router-dom";
+export const GameCard = ({ id, name, title, image, description, openLobby }) => {
 
   const token = useSelector(loginSelectors.getAccessToken)
   const userId = useSelector(loginSelectors.getUserId)
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const joinPublicGame = async () => {
     try {
@@ -42,6 +44,7 @@ export const GameCard = ({ id, title, image, description, openLobby }) => {
         if(message.stateValue === 'playing') {
           // TODO --> we need to redirect to the game page
           dispatch(loggedUserActions.addUserToMatch(matchId))
+          navigate('/' + name + '/' + matchId)
         }
       })
 

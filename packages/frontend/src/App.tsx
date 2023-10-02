@@ -11,6 +11,7 @@ import { useAppDispatch } from "@/store/store.config";
 import { RegisterPage } from "./pages/LoginRegisterPage/RegisterPage";
 import { GameLibrary } from "./pages/GameLibraryPage/GameLibrary";
 import {ProfilePage} from "./pages/ProfilePage";
+import {Game} from '@/pages/Game';
 
 let tokenAutoRefresh = null;
 
@@ -72,6 +73,15 @@ function App() {
               <>
                 <Navbar isLogged={true} />
                 <ProfilePage />
+              </>
+            }
+          />
+          <Route
+            path={"/:game/:matchId"}
+            element={
+              <>
+                <Navbar isLogged={true} />
+                <Game />
               </>
             }
           />
