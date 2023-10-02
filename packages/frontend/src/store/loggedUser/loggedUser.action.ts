@@ -1,11 +1,12 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {createAsyncThunk, createAction} from '@reduxjs/toolkit';
 import {User} from '@/models/user';
 import {usersService} from '@/api/users.service';
 
 const enum LOGGED_USER_ACTIONS {
     findLoggedUser = 'findLoggedUser/',
     changeUsernameUser = 'changeUsernameUser/',
-    changeUsernamePassword = 'changeUsernamePassword/'
+    changeUsernamePassword = 'changeUsernamePassword/',
+    addUserToMatch = 'addUserToMatch'
 }
 
 const findLoggedUser = createAsyncThunk(LOGGED_USER_ACTIONS.findLoggedUser, async (id: string, thunkAPI) => {
@@ -49,9 +50,19 @@ const changeUsernamePassword = createAsyncThunk(LOGGED_USER_ACTIONS.changeUserna
     }
 });
 
+const addUserToMatch = createAction(LOGGED_USER_ACTIONS.addUserToMatch, (gameId: string) => {
+    console.log('payload', gameId)
+    return {
+        payload: {
+            gameId: gameId
+        }
+    }
+});
+
 
 export const loggedUserActions = {
     findLoggedUser,
     changeUsernameUser,
-    changeUsernamePassword
+    changeUsernamePassword,
+    addUserToMatch
 }

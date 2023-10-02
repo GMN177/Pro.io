@@ -30,7 +30,6 @@ const Homepage = () => {
   const [position, setPosition] = useState(getRandomPosition());
   const [count, setCount] = useState(0);
 
-  console.log(accessToken)
   console.log(user)
 
   // function to handle the click of the little box, change his position after 200 ms

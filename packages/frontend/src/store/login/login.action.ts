@@ -37,9 +37,6 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
         }
     } catch(e) {
         console.log('Login request failed', e)
-        if(e.message) {
-            return thunkAPI.rejectWithValue(e.message);
-        }
         return thunkAPI.rejectWithValue(e.response.data.message);
     }
 });

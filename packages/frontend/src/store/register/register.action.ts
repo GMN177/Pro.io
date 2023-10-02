@@ -20,9 +20,6 @@ const signUp = createAsyncThunk(REGISTER_ACTIONS.signUp, async (bean:{username:s
     } catch(e) {
        // retrieve error message from exception
        console.log('reject')
-       if(e.message) {
-              return thunkAPI.rejectWithValue(e.message);
-         }
        return thunkAPI.rejectWithValue(e.response.data.message);
         //throw e;
     }

@@ -14,15 +14,18 @@ import {
 
 import {socket} from "@/api/socket";
 import {loginSelectors} from '@/store/login/login.selector'
-import {useSelector} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
 import {matchServices} from "@/api/match.service";
 import {useState} from 'react'
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
+import { loggedUserActions } from "@/store/loggedUser/loggedUser.action";
 export const GameCard = ({ id, title, image, description, openLobby }) => {
 
-  const token = useSelector(loginSelectors.getRefreshToken)
+  const token = useSelector(loginSelectors.getAccessToken)
   const userId = useSelector(loginSelectors.getUserId)
-  console.log('userId', userId)
+  const user = useSelector(loggedUserSelectors.getLoggedUserInfo)
+  
+  const dispatch = useDispatch()
 
   /* const joinPublicGame = async () => {
     try{
@@ -60,21 +63,41 @@ export const GameCard = ({ id, title, image, description, openLobby }) => {
 
   const joinPublicGame = async () => {
     try {
-      const matchId = (await matchServices.matchmaking({userId, gameId: id})).data.data.message
+
+      const matchId = (await matchServices.matchmaking({user: userId, game: id})).data.data.message
       console.log(matchId, 'matchId')
-      const socketInstance = socket({token, matchId});
+
+      const querySocket = {token, matchId}
+
+      console.log('querySocket', querySocket)
+
+      const socketInstance = socket({token, matchId });
+
+      /* Handlers socket */
       socketInstance.on('newState', (message) => {
         console.log('ci sono', message)
+        console.log('matchId', matchId)
         if(message.stateValue === 'playing') {
           console.log('stiamo giocando')
+          // TODO --> we need to redirect to the game page
+          dispatch(loggedUserActions.addUserToMatch(matchId))
         }
       })
+
+      socketInstance.on("connect_error", (err) => {
+        console.log('err',err instanceof Error); // true
+        console.log(err.message); // not authorized
+        console.log(err.data); // { content: "Please retry later" }
+      });
+
       socketInstance.connect();
+
       // wait 1 second
       setTimeout(() => {
         openLobby()
       }, 1000)
-      socketInstance.emit('READY', {player: userId})
+
+      socketInstance.emit('READY')
 
     } catch (e) {
 

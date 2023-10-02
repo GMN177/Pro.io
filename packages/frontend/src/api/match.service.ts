@@ -28,11 +28,11 @@ const createMatch = (payload:{game:string, duration: number, startTime: number, 
 }
 
 
-const matchmaking = (payload:{gameId:string, userId: number}): EndpointResponse<any, any> => {
-    const {gameId, userId} = payload
+const matchmaking = (payload:{game:string, user: number}): EndpointResponse<any, any> => {
+    const {game, user} = payload
     return axios.post(baseURL + matchEndpoints.matchmaking, {
-        gameId,
-        userId
+        game,
+        user
     })
 }
 

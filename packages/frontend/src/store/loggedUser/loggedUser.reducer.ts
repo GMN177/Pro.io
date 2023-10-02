@@ -18,9 +18,12 @@ export const loggedUserReducer = {
             }
         });
         builder.addCase(loggedUserActions.findLoggedUser.fulfilled, (state, action): LoggedUserState => {
+            const loggedUser = action.payload.user;
+            loggedUser.user.matchPlayingId = '';
+            console.log('loggedUser', loggedUser)
             return {
                 ...state,
-                loggedUser: action.payload.user,
+                loggedUser,
                 isLoading: false,
                 isError: false
             }
@@ -55,6 +58,23 @@ export const loggedUserReducer = {
                 isError: true,
 
             }
+        });
+        builder.addCase(loggedUserActions.addUserToMatch, (state, action) => {
+            console.log('action', action)
+            console.log('state', state )
+            const {gameId} = action.payload;
+            return {
+                ...state,
+                loggedUser: {
+                    ...state.loggedUser,
+                    user : {
+                        ...state.loggedUser.user,
+                        matchPlayingId: gameId
+                    }
+                  
+                }
+            }
+
         });
     })
 }
