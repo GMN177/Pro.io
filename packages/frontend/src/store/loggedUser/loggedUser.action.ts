@@ -11,7 +11,7 @@ const enum LOGGED_USER_ACTIONS {
 
 const findLoggedUser = createAsyncThunk(LOGGED_USER_ACTIONS.findLoggedUser, async (id: string, thunkAPI) => {
     try {
-        const user: User = (await usersService.findSingleUser(id)).data.data
+        const user: User = (await usersService.findSingleUser(id)).data.data.user
         return {
             user
         }
@@ -50,11 +50,11 @@ const changeUsernamePassword = createAsyncThunk(LOGGED_USER_ACTIONS.changeUserna
     }
 });
 
-const addUserToMatch = createAction(LOGGED_USER_ACTIONS.addUserToMatch, (gameId: string) => {
-    console.log('payload', gameId)
+const addUserToMatch = createAction(LOGGED_USER_ACTIONS.addUserToMatch, (matchId: string) => {
+    console.log('payload', matchId)
     return {
         payload: {
-            gameId: gameId
+            matchId: matchId
         }
     }
 });

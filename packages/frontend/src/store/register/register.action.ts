@@ -14,13 +14,11 @@ const signUp = createAsyncThunk(REGISTER_ACTIONS.signUp, async (bean:{username:s
     try {
         const {username, email, password, navigate} = bean
         const resp = await authenticationService.signUp(username, email, password)
-        console.log("resp signUp", resp)
         thunkAPI.dispatch(loginActions.userLogin({username, password, navigate}))
         return ;
     } catch(e) {
-       // retrieve error message from exception
-       console.log('reject')
-       return thunkAPI.rejectWithValue(e.response.data.message);
+        // retrieve error message from exception
+        return thunkAPI.rejectWithValue(e.response.data.message);
         //throw e;
     }
 });

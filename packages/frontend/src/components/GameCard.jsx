@@ -16,56 +16,19 @@ import {socket} from "@/api/socket";
 import {loginSelectors} from '@/store/login/login.selector'
 import {useSelector, useDispatch} from 'react-redux'
 import {matchServices} from "@/api/match.service";
-import {useState} from 'react'
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
 import { loggedUserActions } from "@/store/loggedUser/loggedUser.action";
 export const GameCard = ({ id, title, image, description, openLobby }) => {
 
   const token = useSelector(loginSelectors.getAccessToken)
   const userId = useSelector(loginSelectors.getUserId)
-  const user = useSelector(loggedUserSelectors.getLoggedUserInfo)
-  
+
   const dispatch = useDispatch()
-
-  /* const joinPublicGame = async () => {
-    try{
-      // do rest call to retrieve match Id
-      const matches = await matchServices.getMatchesByGameId(id);
-
-       * TODO --> we still need to figure out if this is really an array, and in case provide a kind of round-robin algorithm
-       * TODO -->  for trying all of them.
-
-      let newGame
-      if(matches.data.data.message.length === 0) {
-        newGame = await matchServices.createMatch({game: id, duration: 0, endTime: 0, status: '', startTime: 0})
-      }
-      const matchId = matches.data.data.message[0]._id || newGame.data.data.message
-
-      // create a socket instance
-      const socketInstance = socket({token, matchId});
-      socketInstance.connect();
-      // wait 1 second
-      setTimeout(() => {
-        openLobby()
-      }, 1000)
-      socketInstance.emit('READY', {player: userId})
-      socketInstance.on('newState', (message) => {
-        console.log('ci sono', message)
-        if(message.stateValue === 'playing') {
-          console.log('stiamo giocando')
-        }
-      })
-
-    }catch(error){
-      console.log("error", error)
-    }
-  }*/
 
   const joinPublicGame = async () => {
     try {
 
       const matchId = (await matchServices.matchmaking({user: userId, game: id})).data.data.message
-      console.log(matchId, 'matchId')
 
       const querySocket = {token, matchId}
 
@@ -76,9 +39,7 @@ export const GameCard = ({ id, title, image, description, openLobby }) => {
       /* Handlers socket */
       socketInstance.on('newState', (message) => {
         console.log('ci sono', message)
-        console.log('matchId', matchId)
         if(message.stateValue === 'playing') {
-          console.log('stiamo giocando')
           // TODO --> we need to redirect to the game page
           dispatch(loggedUserActions.addUserToMatch(matchId))
         }

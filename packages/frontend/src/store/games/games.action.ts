@@ -12,7 +12,6 @@ export const fetchGamesList = createAsyncThunk(GAMES_ACTIONS.fetchGamesList, asy
             resp
         }
     } catch(e) {
-        console.log('fetchGamesList request failed')
         throw e;
     }
 })

@@ -6,7 +6,7 @@ const enum usersEndpoints {
     users = "users/"
 }
 
-const findSingleUser = (id: string): EndpointResponse<User, null> => {
+const findSingleUser = (id: string): EndpointResponse<{user: User}, null> => {
     return axios.get(baseURL + usersEndpoints.users + id);
 }
 

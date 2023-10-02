@@ -8,7 +8,6 @@ const initialState = {
 export const testReducer = {
     test: createReducer(initialState, (builder) => {
         builder.addCase(testActions.testAction, (state, action) => {
-            console.log(action, 'action')
             return {
                 ...state,
                 visible: action.payload

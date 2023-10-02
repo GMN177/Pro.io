@@ -18,7 +18,6 @@ export const registerReducer = {
             }
         });
         builder.addCase(registerActions.signUp.fulfilled, (state, action): RegisterState => {
-            console.log(action)
             return {
                 ...state,
                 isLoading: false,
@@ -26,7 +25,6 @@ export const registerReducer = {
             }
         });
         builder.addCase(registerActions.signUp.rejected, (state, action): RegisterState => {
-            console.log('rejected state: ', action)
             const message: string = action.payload as string
             return {
               ...state,
