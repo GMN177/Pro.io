@@ -30,10 +30,5 @@ function sendEventAndEmitNewState(io, event, match) {
 }
 
 module.exports = {
-    checkGameReady,
-    checkWin,
-    checkDraw,
-    isValidMove,
-    saveGame,
     sendEventAndEmitNewState
 };
