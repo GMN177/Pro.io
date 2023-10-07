@@ -20,11 +20,11 @@ export const ProfilePage = () => {
     console.log("isLoading", isLoading)
     console.log("isError", isError)
 
-    console.log("loggedUser", loggedUser.user.username);
+    console.log("loggedUser", loggedUser.username);
 
     // submit function to change username
     const changeUsername = () => {
-        const id = loggedUser.user.id
+        const id = loggedUser.id
 
         // dispatch action to change username
         dispatch(loggedUserActions.changeUsernameUser({username, password, id}))
@@ -34,7 +34,7 @@ export const ProfilePage = () => {
 
      // submit function to change password
      const changePassword = () => {
-        const id = loggedUser.user.id
+        const id = loggedUser.id
 
         // dispatch action to change username
         dispatch(loggedUserActions.changeUsernamePassword({password, newPassword, id}))
@@ -50,7 +50,7 @@ export const ProfilePage = () => {
             <Box p={4}>
                 <Heading as="h4" size='md' >Personal Informations</Heading>
                 <HStack p={4}>
-                    <Heading as="h5" size='sm' >Username: {loggedUser.user.username}</Heading>
+                    <Heading as="h5" size='sm' >Username: {loggedUser.username}</Heading>
                     <CustomModal
                         isCentered
                         header="Change Username"
@@ -88,7 +88,7 @@ export const ProfilePage = () => {
                 </HStack>
 
                 <HStack p={4}>
-                    <Heading as="h5" size='sm' >Email: {loggedUser.user.email}</Heading>
+                    <Heading as="h5" size='sm' >Email: {loggedUser.email}</Heading>
                 </HStack>
                 <HStack p={4}>
                 <Heading as="h5" size='sm' >Password: </Heading>
@@ -130,7 +130,7 @@ export const ProfilePage = () => {
             <Box p={4}>
                 <Heading as="h4" size='md' >Game Informations</Heading>
                 <HStack p={4}>
-                    <Heading as="h5" size='sm' >Total games: {loggedUser.user.totMatches}</Heading>
+                    <Heading as="h5" size='sm' >Total games: {loggedUser.totMatches}</Heading>
                 </HStack>
                 <HStack p={4}>
                     <Heading as="h5" size='sm' >Total wins: {loggedUser.totWins}</Heading>

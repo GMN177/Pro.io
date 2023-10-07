@@ -27,11 +27,13 @@ import {
 } from "@chakra-ui/react";
 import {useSelector} from "react-redux";
 import {loginSelectors} from "@/store/login/login.selector";
+import { loggedUserSelectors } from "@/store/loggedUser/loggedUser.selector";
 
 const Navbar = (props) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const refreshToken = useSelector(loginSelectors.getRefreshToken)
+  const user = useSelector(loggedUserSelectors.getLoggedUserInfo);
 
   return (
     <Flex
@@ -60,7 +62,7 @@ const Navbar = (props) => {
               {/* profile icon */}
               <Button>
                 <Circle bg="blue.theme" size="40px">
-                  <Text color="white">AL</Text>
+                  <Text color="white">{user.username.substring(0, 2).toLocaleUpperCase()}</Text>
                 </Circle>
               </Button>
               {/* profile icon */}
@@ -68,7 +70,7 @@ const Navbar = (props) => {
             <PopoverContent>
               <PopoverArrow />
               <PopoverCloseButton />
-              <PopoverHeader> Nome utente</PopoverHeader>
+              <PopoverHeader> {user.username}</PopoverHeader>
               <PopoverBody>
               <Link  as={ReachLink} to={"/settings"} style={{ textDecoration: "none" }}>
                 <Button color="blue.theme" bg="none" fontWeight={200} p={0}>
