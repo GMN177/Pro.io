@@ -12,6 +12,7 @@ import { RegisterPage } from "./pages/LoginRegisterPage/RegisterPage";
 import { GameLibrary } from "./pages/GameLibraryPage/GameLibrary";
 import {ProfilePage} from "./pages/ProfilePage";
 import {Game} from '@/pages/Game';
+import {loggedUserActions} from '@/store/loggedUser/loggedUser.action';
 
 let tokenAutoRefresh = null;
 
@@ -20,7 +21,11 @@ function App() {
   const accessToken = useSelector(loginSelectors.getAccessToken);
   const refreshToken = useSelector(loginSelectors.getRefreshToken);
   const expiresAt = useSelector(loginSelectors.getExpiresAt)
-  const navigate = useNavigate();
+  const userId = useSelector(loginSelectors.getUserId)
+
+  useEffect(() => {
+    dispatch(loggedUserActions.findLoggedUser(userId))
+  }, [userId])
 
   useEffect(() => {
     if(expiresAt) {

@@ -35,6 +35,10 @@ const Navbar = (props) => {
   const refreshToken = useSelector(loginSelectors.getRefreshToken)
   const user = useSelector(loggedUserSelectors.getLoggedUserInfo);
 
+  if(!user) {
+    return null;
+  }
+
   return (
     <Flex
       as="nav"
