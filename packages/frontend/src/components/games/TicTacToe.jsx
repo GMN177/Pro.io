@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {getSocketInstance} from "@/api/socket";
 import { Badge, Grid,GridItem, Heading } from '@chakra-ui/react';
 
 const socket = getSocketInstance()
+let test = 0
 
 const getScreenValue = (value) => {
     if(value === null) {
@@ -15,17 +16,26 @@ const getScreenValue = (value) => {
 }
 export const TicTacToe = () => {
 
-    const [context, setContext] = useState([null,null,null,null,null,null,null,null,null])
+    const [context, setContext] = useState([0,0,0,0,0,0,0,0,0])
+    const socket = useMemo(() => getSocketInstance(), [])
     useEffect(() => {
         if(socket) {
             socket.on('newState', (state) => {
                 // todo change state
+                console.log('newState', state)
             })
         }
         () => {
             console.log("unmount")
         }
     }, [])
+
+    const makeMove = (index) => {
+        console.log('socket', socket)
+        if(socket) {
+            socket.emit('PLAY', {i: index})
+        }
+    }
 
     return (
         <>
@@ -53,6 +63,7 @@ export const TicTacToe = () => {
                 alignItems="center"
                 key={i}
                 width="5em"
+                onClick={() => makeMove(i)}
                 height="5em"
                 fontSize="3xl"
                 boxShadow= "0px 0px 10px rgba(0, 0, 0, 0.2)"
@@ -66,10 +77,10 @@ export const TicTacToe = () => {
                     {getScreenValue(value)}
                 </Heading>
             </GridItem>)
-      
+
     })}
     </Grid>
     </>
-        
+
     )
 }

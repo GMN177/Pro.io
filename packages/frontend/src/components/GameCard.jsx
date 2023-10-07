@@ -37,7 +37,7 @@ export const GameCard = ({ id, name, title, image, description, openLobby }) => 
       console.log('querySocket', querySocket)
 
       const socketInstance = socket({token, matchId });
-
+      console.log('socketInstance', socketInstance)
       /* Handlers socket */
       socketInstance.on('newState', (message) => {
         console.log('ci sono', message)
