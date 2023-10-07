@@ -24,7 +24,7 @@ export const Game = () => {
     }
     return (
         <>
-
+            {renderGame()}
         </>
     )
 }

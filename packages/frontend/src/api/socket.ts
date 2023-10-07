@@ -1,8 +1,10 @@
 import {io} from 'socket.io-client';
 const URL = "http://52.23.252.196";
 
+let socketInstance: ReturnType<typeof io> | undefined;
+
 export const socket = ({token, matchId}): ReturnType<typeof io>=> {
-    return io(URL, {
+    socketInstance =  io(URL, {
         autoConnect: false,
         path: '/gameSocket',
         auth: {
@@ -11,4 +13,8 @@ export const socket = ({token, matchId}): ReturnType<typeof io>=> {
         query: {
             matchId: matchId
         }
-    })};
+    })
+    return socketInstance;
+};
+
+export const getSocketInstance = (): ReturnType<typeof io> | undefined => socketInstance
