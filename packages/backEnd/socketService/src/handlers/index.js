@@ -5,7 +5,7 @@ const {
     sendEventAndEmitNewState
 } = require('../utils');
 const {
-    initialState
+    gameStates
 } = require('../handlers/game.js');
 
 let matches = {};
@@ -27,8 +27,8 @@ const onConnection = (io) => {
                 match = matches[socket.handshake.query.matchId];
             } else {
                 match = await getMatch(socket.handshake.query.matchId);
-                
-                let state = JSON.parse(JSON.stringify(initialState));
+
+                let state = JSON.parse(JSON.stringify(gameStates.initialState));
                 state.context.matchId = socket.handshake.query.matchId;
 
                 match.state = JSON.stringify(state);
