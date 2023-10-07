@@ -42,9 +42,14 @@ export const GameCard = ({ id, name, title, image, description, openLobby }) => 
       socketInstance.on('newState', (message) => {
         console.log('ci sono', message)
         if(message.stateValue === 'playing') {
-          // TODO --> we need to redirect to the game page
           dispatch(loggedUserActions.addUserToMatch(matchId))
-          navigate('/' + name + '/' + matchId)
+          // todo change value of firstPlayer
+          navigate('/' + name + '/' + matchId, {
+            state:
+                {
+                  firstPlayer: message.stateContext
+                }}
+          )
         }
       })
 
