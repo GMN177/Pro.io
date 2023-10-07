@@ -5,7 +5,7 @@ const {
     sendEventAndEmitNewState
 } = require('../utils');
 const {
-    gameStates
+    initialState
 } = require('../handlers/game.js');
 
 let matches = {};
@@ -27,21 +27,25 @@ const onConnection = (io) => {
                 match = matches[socket.handshake.query.matchId];
             } else {
                 match = await getMatch(socket.handshake.query.matchId);
-                match.state = JSON.stringify(gameStates.initialState);
+                
+                let state = JSON.parse(JSON.stringify(initialState));
+                state.context.matchId = socket.handshake.query.matchId;
+
+                match.state = JSON.stringify(state);
                 matches[socket.handshake.query.matchId] = match;
             }
 
-            sendEventAndEmitNewState(io, gameStates, null, matches[matchId]);
+            sendEventAndEmitNewState(io, null, matches[matchId]);
 
             socket.on("READY", () => {
-                sendEventAndEmitNewState(socket, gameStates, {
+                sendEventAndEmitNewState(io, {
                     type: "READY",
                     value: playerId
                 }, matches[matchId]);
             });
 
             socket.on("PLAY", (msg) => {
-                sendEventAndEmitNewState(socket, gameStates, {
+                sendEventAndEmitNewState(io, {
                     type: "PLAY",
                     player: playerId,
                     value: msg.i
@@ -49,13 +53,17 @@ const onConnection = (io) => {
             });
 
             socket.on("RESET", () => {
-                sendEventAndEmitNewState(socket, gameStates, {
+                sendEventAndEmitNewState(io, {
                     type: "RESET"
                 }, matches[matchId]);
             });
 
             socket.on("disconnect", () => {
                 console.log("Client disconnected");
+                sendEventAndEmitNewState(io, {
+                    type: "DISCONNECT",
+                    value: playerId
+                }, matches[matchId]);
             });
         } catch (err) {
             console.log(err);

@@ -1,6 +1,13 @@
 const {
     interpret
 } = require('xstate');
+const {
+    gameStates
+} = require('../handlers/game.js');
+const {
+    getMatch,
+    updateMatch
+} = require('../connectors/toMatchService');
 
 function checkGameReady(context, event) {
     return context.players.length === 2;
@@ -36,7 +43,22 @@ function isValidMove(context, event) {
     return context.players[context.currentPlayer] == event.player && context.cells[event.value] === null;
 };
 
-function sendEventAndEmitNewState(io, gameStates, event, match) {
+function saveGame(context) {
+    console.log('saving game:', context);
+
+    let match = getMatch(context.matchId);
+
+    match.endTime = new Date();
+    match.duration = match.endTime - match.startTime;
+    match.status = "FINISHED";
+
+
+    updateMatch(context.matchId, {
+        state: JSON.stringify(context)
+    });
+}
+
+function sendEventAndEmitNewState(io, event, match) {
     const gameStateService = interpret(gameStates)
         .onTransition((state) => {
             match.state = JSON.stringify(state);
@@ -63,5 +85,6 @@ module.exports = {
     checkWin,
     checkDraw,
     isValidMove,
+    saveGame,
     sendEventAndEmitNewState
 };

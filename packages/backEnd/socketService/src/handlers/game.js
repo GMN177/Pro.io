@@ -3,14 +3,15 @@ const {
     assign
 } = require('xstate');
 
-const { checkGameReady, checkWin, checkDraw, isValidMove } = require('../utils');
+const { checkGameReady, checkWin, checkDraw, isValidMove, saveGame } = require('../utils');
 
 
 const initialContext = {
     cells: Array(9).fill(null),
     players: [],
     currentPlayer: 0,
-    winner: null
+    winner: null,
+    matchId: null
 };
 
 const gameStates = createMachine({
@@ -26,6 +27,9 @@ const gameStates = createMachine({
                         cond: "playerNotInGame",
                         actions: "addPlayer",
                         target: 'lobby'
+                    },
+                    DISCONNECT: {
+                        target: "cancelled"
                     }
                 }
             },
@@ -40,17 +44,39 @@ const gameStates = createMachine({
                     }
                 ],
                 on: {
-                    PLAY: [{
+                    PLAY: {
                         target: "playing",
                         cond: "isValidMove",
                         actions: "updateBoard"
-                    }]
+                    },
+                    DISCONNECT: {
+                        target: "win",
+                        actions: "handleDisconnectWhilePlaying"
+                    }
                 }
             },
             "win": {
-                onEntry: "setWinner"
+                onEntry: "setWinner",
+                always: {
+                    target: 'gameSaved',
+                    action: "saveGame"
+                }
             },
-            "draw": {}
+            "draw": {
+                always: {
+                    target: 'gameSaved',
+                    action: "saveGame"
+                }
+            },
+            "cancelled": {
+                always: {
+                    target: 'gameSaved',
+                    action: "saveGame"
+                }
+            },
+            "gameSaved": {
+                type: "final"
+            }
         },
         on: {
             RESET: {
@@ -78,7 +104,14 @@ const gameStates = createMachine({
         resetGame: assign(initialContext),
         setWinner: assign({
             winner: ctx => ctx.currentPlayer === 0 ? 1 : 0
-        })
+        }),
+        handleDisconnectWhilePlaying: assign({
+            currentPlayer: (ctx, e) => ctx.players[0] === e.value ? 0 : 1
+        }),
+        saveGame: (ctx, e) => {
+            console.log('saving game:', ctx);
+            saveGame(ctx);
+        }
     },
     guards: {
         checkGameReady,

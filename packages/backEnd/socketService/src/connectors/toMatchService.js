@@ -6,6 +6,13 @@ const getMatch = async (matchId) => {
     return data.data.message;
 };
 
+const updateMatch = async (matchId, body) => {
+    const response = await fetch('http://matchservice:4000/api/matches/' + matchId, {method: 'PUT', body: body});
+    const data = await response.json();
+    return data.data.message;
+};
+
 module.exports = {
-    getMatch
+    getMatch,
+    updateMatch
 };
