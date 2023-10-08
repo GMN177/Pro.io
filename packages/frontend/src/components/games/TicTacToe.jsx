@@ -20,9 +20,12 @@ export const TicTacToe = () => {
     const socket = useMemo(() => getSocketInstance(), [])
     useEffect(() => {
         if(socket) {
-            socket.on('newState', (state) => {
+            socket.on('newState', (message) => {
                 // todo change state
-                console.log('newState', state)
+                console.log('message', message)
+                if(message.stateValue === 'playing' && message.stateContext.cells) {
+                    setContext(message.stateContext.cells)
+                }
             })
         }
         () => {
