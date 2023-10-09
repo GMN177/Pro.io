@@ -1,9 +1,9 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import {getSocketInstance} from "@/api/socket";
 import { Badge, Grid,GridItem, Heading } from '@chakra-ui/react';
-
-const socket = getSocketInstance()
-let test = 0
+import {isUndefined} from "lodash";
+import {useSelector} from "react-redux";
+import {loginSelectors} from "@/store/login/login.selector";
 
 const getScreenValue = (value) => {
     if(value === null) {
@@ -16,22 +16,27 @@ const getScreenValue = (value) => {
 }
 export const TicTacToe = () => {
 
-    const [context, setContext] = useState([0,0,0,0,0,0,0,0,0])
+    const [context, setContext] = useState([null,null,null,null,null,null,null,null,null,])
+    const [isMyTurn, setIsMyTurn] = useState(false)
     const socket = useMemo(() => getSocketInstance(), [])
+    const userId = useSelector(loginSelectors.getUserId)
+
     useEffect(() => {
-        if(socket) {
+        if(socket && userId) {
             socket.on('newState', (message) => {
-                // todo change state
-                console.log('message', message)
-                if(message.stateValue === 'playing' && message.stateContext.cells) {
+                if((message.stateValue === 'playing' || message.stateValue === 'gameSaved') && message.stateContext.cells) {
                     setContext(message.stateContext.cells)
+                }
+                if(!isUndefined(message.stateContext.currentPlayer) && message.stateContext.players) {
+                    if(message.stateContext.players[message.stateContext.currentPlayer] === userId) {
+                        setIsMyTurn(true)
+                    } else {
+                        setIsMyTurn(false)
+                    }
                 }
             })
         }
-        () => {
-            console.log("unmount")
-        }
-    }, [])
+    }, [socket, userId])
 
     const makeMove = (index) => {
         console.log('socket', socket)
