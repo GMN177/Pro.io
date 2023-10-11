@@ -5,15 +5,24 @@ import {
   Heading,
   HStack,
   useMediaQuery,
-  Text,
-  useDisclosure
+  PopoverTrigger,
+  useDisclosure,
+  Popover,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
+  PopoverHeader,
+  PopoverContent,
+  Button,
+  VStack,
+  Text
 } from "@chakra-ui/react";
 import { GameCard } from "@/components/GameCard";
 import {useDispatch, useSelector} from "react-redux";
 import {gamesActions} from "@/store/games/games.action";
 import {gamesSelectors} from "@/store/games/games.selector";
 import { loggedUserActions } from "@/store/loggedUser/loggedUser.action";
-import { loggedUserSelectors } from "@/store/loggedUser/loggedUser.selector";
+import FilterIcon from "@/assets/Icons/FilterIcon";
 import { loginSelectors } from "@/store/login/login.selector";
 import { Lobby } from "@/components/Lobby";
 
@@ -21,24 +30,56 @@ export const GameLibrary = () => {
 
     const dispatch = useDispatch();
     const games = useSelector(gamesSelectors.getGamesList)
-    const user = useSelector(loggedUserSelectors.getLoggedUserInfo);
+    const [gameChosen, setGameChosen] = useState(null)
     const idUser = useSelector(loginSelectors.getUserId);
     const {isOpen, onOpen, onClose} = useDisclosure()
-
-    console.log('user', user)
-    console.log('idUser', idUser)
 
   useEffect(() => {
       dispatch(gamesActions.fetchGamesList())
       dispatch(loggedUserActions.findLoggedUser(idUser))
 
   }, [])
-    console.log('games', games)
+
+  const openLobby = (description) => {
+      setGameChosen(description)
+      onOpen()
+  }
+
+  const filterGames = (mode) => {
+    switch (mode) {
+      case 'nameAsc':
+        dispatch(gamesActions.filterGamesByNameAsc(games))
+        break;
+
+      default:
+        break;
+
+    }
+  }
+
   return (
     <Box>
       <HStack p={8} justifyContent="space-between">
         <Heading as="h2">Game Library </Heading>
-        <Text>Add filter</Text>
+        <Popover>
+          <PopoverTrigger>
+            <Button>
+              <FilterIcon boxSize={6} />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverHeader>Filter Games</PopoverHeader>
+              <PopoverBody>
+                <VStack>
+                  <Button variant="solid" colorScheme="blue" w="100%"> Filter by number of players playing </Button>
+                  <Button variant="solid" colorScheme="blue" w="100%" onClick={() => filterGames('nameAsc')}> Filter by Name Asc </Button>
+                </VStack>
+              </PopoverBody>
+            </PopoverContent>   
+        </Popover>
+
       </HStack>
       <Grid
         templateColumns={{
@@ -59,11 +100,12 @@ export const GameLibrary = () => {
             name={game.name}
             image={game.image}
             description={game.description}
-            openLobby={onOpen}
+            openLobby={openLobby}
+            playersOnline={game.activePlayers}
           />
         ))}
       </Grid>
-          <Lobby isOpen={isOpen} onClose={onClose}></Lobby>
+          <Lobby isOpen={isOpen} onClose={onClose} description={gameChosen}></Lobby>
     </Box>
   );
 };

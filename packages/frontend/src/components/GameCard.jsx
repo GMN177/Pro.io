@@ -19,7 +19,7 @@ import {matchServices} from "@/api/match.service";
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
 import { loggedUserActions } from "@/store/loggedUser/loggedUser.action";
 import {useNavigate} from "react-router-dom";
-export const GameCard = ({ id, name, title, image, description, openLobby }) => {
+export const GameCard = ({ id, name, title, image, description, openLobby, playersOnline }) => {
 
   const token = useSelector(loginSelectors.getAccessToken)
   const userId = useSelector(loginSelectors.getUserId)
@@ -63,7 +63,7 @@ export const GameCard = ({ id, name, title, image, description, openLobby }) => 
 
       // wait 1 second
       setTimeout(() => {
-        openLobby()
+        openLobby(description)
       }, 1000)
 
       socketInstance.emit('READY')
@@ -86,7 +86,7 @@ export const GameCard = ({ id, name, title, image, description, openLobby }) => 
           <Heading size="md">{title}</Heading>
           <Text>{description}</Text>
           <Text color="blue.600" fontSize="xl">
-            x Players online now
+            {playersOnline} Players online now
           </Text>
         </Stack>
       </CardBody>

@@ -63,8 +63,6 @@ export const loggedUserReducer = {
             }
         });
         builder.addCase(loggedUserActions.addUserToMatch, (state, action) => {
-            console.log('action', action)
-            console.log('state', state )
             const {matchId} = action.payload;
             return {
                 ...state,

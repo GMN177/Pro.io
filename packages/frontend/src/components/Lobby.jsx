@@ -10,10 +10,11 @@ import {
     Stack,
     VStack,
     Spinner,
-    Heading
+    Heading,
+    Text
   } from "@chakra-ui/react";
 
-export const Lobby = ({onClose, isOpen}) => {
+export const Lobby = ({onClose, isOpen, description}) => {
 
     return (
 
@@ -26,6 +27,7 @@ export const Lobby = ({onClose, isOpen}) => {
                     <VStack spacing={8}>
                         <Stack >
                         <Heading as="h3" size="lg">Waiting for players to join.. </Heading>
+                        <Text>{description}</Text>
                         </Stack>
                         <Stack>
                             <Spinner size='xl' thickness='4px'

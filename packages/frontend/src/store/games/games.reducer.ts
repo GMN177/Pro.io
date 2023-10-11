@@ -17,9 +17,29 @@ export const gamesReducer = {
             }
         });
         builder.addCase(gamesActions.fetchGamesList.fulfilled, (state, action): GamesState => {
+            const {matches} = action.payload;
+
+            // Retrieve the matches that have ingame status
+            const ingameMatches = matches.filter((match) => {
+                return match.status === "INGAME"
+            })
+
+            console.log(ingameMatches)
+
+            const {resp} = action.payload;
+
+            const games = resp.map((game) => {
+                return {
+                    ...game,
+                    activePlayers: ingameMatches.filter((match) => {
+                        return match.game[0] === game._id
+                    }).length
+                }
+            })
+
             return {
                 ...state,
-                games: action.payload.resp,
+                games: games,
                 isLoading: false,
                 isError: false
             }
@@ -30,6 +50,29 @@ export const gamesReducer = {
                 isLoading: false,
                 isError: true
             }
+        });
+        builder.addCase(gamesActions.filterGamesByNameAsc, (state, action) => {
+            console.log('action', action)
+            console.log('state', state )
+            const {games} = action.payload;
+            console.log(games)
+            // filter games by name asc
+            const gamesFiltered = [...games].sort((a, b) => {
+                console.log(a.name, b.name)
+                if(a.name > b.name) {
+                    return 1
+                }
+                if(a.name < b.name) {
+                    return -1
+                }
+                return 0
+            })
+            console.log(gamesFiltered)
+            return {
+                ...state,
+                games: gamesFiltered
+            }
+
         });
     })
 }
