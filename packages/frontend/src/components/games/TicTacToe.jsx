@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import {getSocketInstance} from "@/api/socket";
-import { Badge, Grid,GridItem, Heading } from '@chakra-ui/react';
+import { Badge, Button, Grid,GridItem, Heading, Stack } from '@chakra-ui/react';
 import {isUndefined} from "lodash";
 import {useSelector} from "react-redux";
 import {loginSelectors} from "@/store/login/login.selector";
@@ -20,10 +20,12 @@ export const TicTacToe = () => {
     const [isMyTurn, setIsMyTurn] = useState(false)
     const socket = useMemo(() => getSocketInstance(), [])
     const userId = useSelector(loginSelectors.getUserId)
+    const [gameFinished, setGameFinished] = useState(false)
 
     useEffect(() => {
         if(socket && userId) {
             socket.on('newState', (message) => {
+                console.log('message', message)
                 if((message.stateValue === 'playing' || message.stateValue === 'gameSaved') && message.stateContext.cells) {
                     setContext(message.stateContext.cells)
                 }
@@ -34,7 +36,20 @@ export const TicTacToe = () => {
                         setIsMyTurn(false)
                     }
                 }
+                if((message.stateValue === 'win') && !gameFinished) {
+                    setGameFinished(true)
+                    if(message.stateContext.players[message.stateContext.winner] === userId) {
+                        alert('You win!')
+                    } else {
+                        alert('You lose!')
+                    }
+                }
             })
+            return () => {
+                console.log('disconnect')
+            }
+            
+
         }
     }, [socket, userId])
 
@@ -88,6 +103,10 @@ export const TicTacToe = () => {
 
     })}
     </Grid>
+    <Stack spacing={3} mt={5}>
+        <Button colorScheme="blue" variant="solid" disabled={!isMyTurn}>Surrender</Button>
+
+    </Stack>    
     </>
 
     )

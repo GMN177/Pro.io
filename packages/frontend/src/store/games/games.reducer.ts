@@ -52,8 +52,6 @@ export const gamesReducer = {
             }
         });
         builder.addCase(gamesActions.filterGamesByNameAsc, (state, action) => {
-            console.log('action', action)
-            console.log('state', state )
             const {games} = action.payload;
             console.log(games)
             // filter games by name asc
