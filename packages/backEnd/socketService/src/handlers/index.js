@@ -6,7 +6,7 @@ const {
 } = require('../utils');
 const {
     gameStates
-} = require('../handlers/game.js');
+} = require('../gameState/game.js');
 
 let matches = {};
 

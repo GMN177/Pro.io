@@ -3,9 +3,7 @@ const {
 } = require('xstate');
 const {
     gameStates
-} = require('../handlers/game.js');
-
-
+} = require('../gameState/game.js');
 
 function sendEventAndEmitNewState(io, event, match) {
     const gameStateService = interpret(gameStates)
