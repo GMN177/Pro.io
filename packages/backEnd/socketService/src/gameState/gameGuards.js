@@ -37,7 +37,7 @@ function playerNotInGame(context, event) {
 };
 
 function checkForfeit(context, event) {
-    return context.players === 2 && context.players.includes(event.value);
+    return context.players.length === 2 && context.players.includes(event.value);
 }
 
 function checkCancelled(context, event) {
