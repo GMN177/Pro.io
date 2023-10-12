@@ -6,6 +6,8 @@ const enum matchEndpoints {
     matches = "matches/",
     matchesByGame = "matches/matchByGame/",
     matchmaking = "matches/matchmaking/",
+    createPrivateMatch = "matches/createPrivateMatch/",
+    joinPrivateMatch = "matches/joinPrivateMatch"
 }
 
 const getAllMatches = (): EndpointResponse<any, any> => {
@@ -36,9 +38,27 @@ const matchmaking = (payload:{game:string, user: number}): EndpointResponse<any,
     })
 }
 
+const createPrivateMatch = (payload:{game:string, user: number}): EndpointResponse<string, any> => {
+    const {game, user} = payload
+    return axios.post(baseURL + matchEndpoints.createPrivateMatch, {
+        game,
+        user
+    })
+}
+
+const joinPrivateMatch = (payload:{user: number, matchId: string}): EndpointResponse<string,any> => {
+    const {user, matchId} = payload
+    return axios.post(baseURL + matchEndpoints.joinPrivateMatch, {
+        user,
+        matchId
+    })
+}
+
 export const matchServices = {
     getAllMatches,
     getMatchesByGameId,
     createMatch,
-    matchmaking
+    matchmaking,
+    createPrivateMatch,
+    joinPrivateMatch
 }

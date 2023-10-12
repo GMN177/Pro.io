@@ -1,3 +1,4 @@
+import React, {useState} from "react";
 import {
   Card,
   Stack,
@@ -10,6 +11,15 @@ import {
   Heading,
   CardFooter,
   VStack,
+  Popover,
+  PopoverTrigger,
+  useDisclosure,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
+  PopoverHeader,
+  PopoverContent,
+  Input
 } from "@chakra-ui/react";
 
 import {socket} from "@/api/socket";
@@ -19,11 +29,16 @@ import {matchServices} from "@/api/match.service";
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
 import { loggedUserActions } from "@/store/loggedUser/loggedUser.action";
 import {useNavigate} from "react-router-dom";
-export const GameCard = ({ id, name, title, image, description, openLobby, playersOnline }) => {
+import { set } from "lodash";
+import {CustomAlert} from '../components/Utils/CustomAlert'
+
+export const GameCard = ({ id, name, title, image, description, openLobby, playersOnline, openPrivateLobby }) => {
 
   const token = useSelector(loginSelectors.getAccessToken)
   const userId = useSelector(loginSelectors.getUserId)
 
+  const [keyPrivate, setKeyPrivate] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -73,6 +88,73 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
     }
   }
 
+  const createPrivateGame = async () => {
+    try{
+      const matchKey = (await matchServices.createPrivateMatch({user: userId, game: id})).data.data.message
+
+      console.log('matchKey',matchKey);
+
+      const socketInstance = socket({token, matchId : matchKey });
+      console.log('socketInstance', socketInstance)
+      /* Handlers socket */
+      socketInstance.on('newState', (message) => {
+        console.log('ci sono', message)
+        if(message.stateValue === 'playing') {
+          dispatch(loggedUserActions.addUserToMatch(matchKey))
+          // todo change value of firstPlayer
+          navigate('/' + name + '/' + matchKey, {
+            state:
+                {
+                  firstPlayer: message.stateContext
+                }}
+          )
+        }
+      })
+      socketInstance.connect();
+      socketInstance.emit('READY')
+      // wait 1 second
+      setTimeout(() => {
+        openPrivateLobby(description, matchKey)
+      }, 1000)
+    }catch(e) {
+      console.log('exception', e)
+    }
+  }
+
+  const joinPrivateGame = async (key) => {
+    try{
+      const matchId = (await matchServices.joinPrivateMatch({user: userId, matchId: key})).data.data.message 
+      console.log('matchId', matchId)
+      if(matchId === "" || matchId === 'Match not found' || matchId === 'Invalid match') {
+        setErrorMessage(matchId);
+        return
+      }
+
+      const socketInstance = socket({token, matchId });
+      console.log('socketInstance', socketInstance)
+      /* Handlers socket */
+      socketInstance.on('newState', (message) => {
+        console.log('ci sono', message)
+        if(message.stateValue === 'playing') {
+          dispatch(loggedUserActions.addUserToMatch(matchId))
+          // todo change value of firstPlayer
+          navigate('/' + name + '/' + matchId, {
+            state:
+                {
+                  firstPlayer: message.stateContext
+                }}
+          )
+        }
+      })
+      socketInstance.connect();
+      socketInstance.emit('READY')
+    }
+    catch(e) {
+      console.log('exception', e)
+      setErrorMessage(e.message);
+    }
+  }
+
 
   return (
     <Card maxW="sm">
@@ -96,12 +178,30 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
           <Button variant="solid" colorScheme="blue" onClick={joinPublicGame}>
             Join a Public game
           </Button>
-          <Button variant="ghost" colorScheme="blue">
+          <Button variant="ghost" colorScheme="blue" onClick={createPrivateGame}>
             Create a Private Game
           </Button>
-          <Button variant="solid" colorScheme="green" onClick={joinPublicGame}>
-            Join a Private Game
-          </Button>
+          <Popover
+           placement="right"
+          >
+            <PopoverTrigger>
+            <Button variant="solid" colorScheme="green">
+              Join a Private Game
+            </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverHeader>Insert Key</PopoverHeader>
+              <PopoverBody>
+              <VStack>
+              {errorMessage && <CustomAlert status="error" message={errorMessage}/>}
+                  <Input variant="solid" colorScheme="blue" w="100%" value={keyPrivate} onChange={(event) => setKeyPrivate(event.target.value)} placeholder="Insert Key" /> 
+                  <Button isDisabled={!keyPrivate} variant="solid" colorScheme="green" w="100%" onClick={() => joinPrivateGame(keyPrivate)}> Join </Button>
+                </VStack>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
         </VStack>
       </CardFooter>
     </Card>

@@ -25,6 +25,7 @@ import { loggedUserActions } from "@/store/loggedUser/loggedUser.action";
 import FilterIcon from "@/assets/Icons/FilterIcon";
 import { loginSelectors } from "@/store/login/login.selector";
 import { Lobby } from "@/components/Lobby";
+import {LobbyPrivate} from "@/components/LobbyPrivate";
 
 export const GameLibrary = () => {
 
@@ -33,6 +34,8 @@ export const GameLibrary = () => {
     const [gameChosen, setGameChosen] = useState(null)
     const idUser = useSelector(loginSelectors.getUserId);
     const {isOpen, onOpen, onClose} = useDisclosure()
+    const privateModal = useDisclosure()
+    const [privateKey, setPrivateKey] = useState("");
 
   useEffect(() => {
       dispatch(gamesActions.fetchGamesList())
@@ -42,6 +45,13 @@ export const GameLibrary = () => {
 
   const openLobby = (description) => {
       setGameChosen(description)
+      onOpen()
+  }
+
+  const openPrivate = (description, privateKey) => {
+      const {isOpen, onOpen, onClose} = privateModal
+      setGameChosen(description)
+      setPrivateKey(privateKey)
       onOpen()
   }
 
@@ -102,10 +112,12 @@ export const GameLibrary = () => {
             description={game.description}
             openLobby={openLobby}
             playersOnline={game.activePlayers}
+            openPrivateLobby={openPrivate}
           />
         ))}
       </Grid>
           <Lobby isOpen={isOpen} onClose={onClose} description={gameChosen}></Lobby>
+          <LobbyPrivate isOpen={privateModal.isOpen} onClose={privateModal.onClose} description={gameChosen} privateKey={privateKey}></LobbyPrivate>
     </Box>
   );
 };
