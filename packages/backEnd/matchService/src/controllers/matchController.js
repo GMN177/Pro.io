@@ -1,7 +1,7 @@
 const Match = require("../models/match");
 const {default: mongoose} = require("mongoose");
 const responses = require("../models/responses");
-const {createPlay, getByMatchAndUser} = require("./playController");
+const {getByMatch} = require("./playController");
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
 
 async function getAllMatches() {
@@ -55,11 +55,8 @@ async function getMatchesByGame(gameId) {
 //se giocatori necessari --> status INGAME
 //se giocatore esce da match ancora in WAIT --> deletePlayed
 //status: { WAIT, INGAME, FINISHED }
-async function matchmaking(gameId, userId, token) {
+async function matchmaking(gameId, token) {
     try {
-        console.log('gameId:', gameId)
-        console.log('userId:', userId)
-
         const matches = await Match.find({game: gameId});
 
         if (matches == null) {
@@ -71,12 +68,11 @@ async function matchmaking(gameId, userId, token) {
         })
 
         if(valid_matches.length === 0) {
-            let match = await createMatch(gameId, 2000, new Date(), null, "WAIT", userId);
+            let match = await createMatch(gameId, 2000, new Date(), null, "WAIT");
 
             return responses.genericSuccessResponse(200, match.response.data.message);
         } else {
             let match = valid_matches[Math.floor(Math.random() * valid_matches.length)];
-            await createPlay(userId, match._id);
 
             fetch('http://gameservice:4000/api/games/' + gameId, {
                 headers: {
@@ -85,10 +81,7 @@ async function matchmaking(gameId, userId, token) {
             })
                 .then(result => result.json())
                 .then(async data => {
-                    const plays = await getByMatchAndUser(match._id, userId)
-
-                    console.log('data:', data)
-                    console.log('plays:', plays)
+                    const plays = await getByMatch(match._id)
 
                     if(data.data.message.playersNumber === plays.response.data.message.length) {
                         await updateMatch(match._id, gameId, match.duration, new Date(), match.endTime, "INGAME")
@@ -102,8 +95,7 @@ async function matchmaking(gameId, userId, token) {
     }
 }
 
-async function createMatch(gameId, duration, startTime, endTime, status, userId) {
-    //TODO chiamo createPlayed
+async function createMatch(gameId, duration, startTime, endTime, status) {
     try {
         let matchId = (await Match.create({
             game: gameId,
@@ -112,8 +104,6 @@ async function createMatch(gameId, duration, startTime, endTime, status, userId)
             endTime: endTime,
             status: status
         }))._id;
-
-        await createPlay(userId, matchId)
 
         return responses.genericSuccessResponse(200, matchId);
     } catch (err) {
@@ -148,9 +138,50 @@ async function updateMatch(id, gameId, duration, startTime, endTime, status) {
     }
 }
 
+async function createPrivateMatch(gameId, userId) {
+    try {
+        let match = await createMatch(gameId, 2000, new Date(), null, "RESERVED", userId);
+
+        return responses.genericSuccessResponse(200, match.response.data.message);
+    } catch (err) {
+        throw new Error(err.message);
+    }
+}
+
+async function joinPrivateMatch(matchId, token) {
+    try {
+        const match = await Match.findById(matchId);
+
+        if (match == null) {
+            return responses.INVALID_ID;
+        }
+
+        if (match.status !== "RESERVED") {
+            return responses.INVALID_MATCH;
+        }
+
+        let game = await fetch('http://gameservice:4000/api/games/' + gameId, {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+            
+        game = await game.json()
+
+        const plays = await getByMatch(match._id)
+
+        if(game.data.message.playersNumber === plays.response.data.message.length) {
+            await updateMatch(match._id, gameId, match.duration, new Date(), match.endTime, "INGAME")
+        }
+
+        return responses.genericSuccessResponse(200, match._id);
+    } catch (err) {
+        throw new Error(err.message);
+    }
+}
+
 async function deleteAllMatches() {
     try {
-        await Play.deleteMany({});
         await Match.deleteMany({});
         return responses.DELETE_SUCCESS;
     } catch (err) {
@@ -165,5 +196,7 @@ module.exports = {
     createMatch,
     updateMatch,
     matchmaking,
+    createPrivateMatch,
+    joinPrivateMatch,
     deleteAllMatches
 };

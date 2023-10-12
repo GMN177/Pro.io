@@ -8,7 +8,6 @@ router.use(express.json());
 
 // get all games from database
 router.get("/", async (req, res) => {
-    console.log(req.body.tokenData);
     try {
         let matches = await matchController.getAllMatches();
         return res.status(matches.status).send(matches.response);
@@ -87,8 +86,53 @@ router.post("/", async (req, res) => {
 
 router.post("/matchmaking", async(req, res) => {
     try {
-        const playToAdd = await matchController.matchmaking(req.body.game, req.body.user, req.headers.authorization);
-        return res.status(playToAdd.status).send(playToAdd.response);
+        const match = await matchController.matchmaking(req.body.game, req.headers.authorization);
+
+        if (match.status === 200) {
+            await playController.createPlay(req.body.user, match.response.data.message);
+        }
+
+        return res.status(match.status).send(match.response);
+    } catch (err) {
+        if (Number(err.message) === 11000) {
+            return res
+                .status(409)
+                .send(jsend.error({message: "Duplicate key error"}));
+        } else {
+            return res.status(500).send(jsend.error({message: err.message}));
+        }
+    }
+})
+
+router.post("/createPrivateMatch", async(req, res) => {
+    try {
+        const privateMatch = await matchController.createPrivateMatch(req.body.game, req.body.user);
+
+        if (privateMatch.status === 200) {
+            await playController.createPlay(req.body.user, privateMatch.response.data.message);
+        }
+
+        return res.status(privateMatch.status).send(privateMatch.response);
+    } catch (err) {
+        if (Number(err.message) === 11000) {
+            return res
+                .status(409)
+                .send(jsend.error({message: "Duplicate key error"}));
+        } else {
+            return res.status(500).send(jsend.error({message: err.message}));
+        }
+    }
+})
+
+router.post("/joinPrivateMatch", async(req, res) => {
+    try {
+        const privateMatch = await matchController.joinPrivateMatch(req.body.matchId, req.body.user, req.headers.authorization);
+
+        if (privateMatch.status === 200) {
+            await playController.createPlay(req.body.user, privateMatch.response.data.message);
+        }
+
+        return res.status(privateMatch.status).send(privateMatch.response);
     } catch (err) {
         if (Number(err.message) === 11000) {
             return res
@@ -103,7 +147,8 @@ router.post("/matchmaking", async(req, res) => {
 router.delete("/", async (req, res) => {
     try {
         const matchDeleted = await matchController.deleteAllMatches();
-        return res.status(matchDeleted.status).send(matchDeleted.response);
+        const playDeleted = await playController.deleteAllPlays();
+        return res.status(200).send("Success");
     } catch (err) {
         return res.status(500).send(jsend.error({message: err.message}));
     }
