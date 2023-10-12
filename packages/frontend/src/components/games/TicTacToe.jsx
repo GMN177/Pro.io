@@ -14,20 +14,30 @@ const getScreenValue = (value) => {
     }
     return 'X'
 }
-export const TicTacToe = () => {
+
+export const TicTacToe = (props) => {
 
     const [context, setContext] = useState([null,null,null,null,null,null,null,null,null,])
-    const [isMyTurn, setIsMyTurn] = useState(false)
+    // todo set as false when we know who is the first
+    const [isMyTurn, setIsMyTurn] = useState(props.isFirstPlayer)
     const socket = useMemo(() => getSocketInstance(), [])
     const userId = useSelector(loginSelectors.getUserId)
     const [gameFinished, setGameFinished] = useState(false)
-
     useEffect(() => {
+
         if(socket && userId) {
-            socket.on('newState', (message) => {
+            socket.off('newState').on('newState', (message) => {
                 console.log('message', message)
-                if((message.stateValue === 'playing' || message.stateValue === 'gameSaved') && message.stateContext.cells) {
+                if((message.stateValue === 'playing' || message.stateValue === 'win') && message.stateContext.cells) {
                     setContext(message.stateContext.cells)
+                    if(message.stateValue === 'win' && !gameFinished) {
+                        setGameFinished(true)
+                        if(message.stateContext.players[message.stateContext.winner] === userId) {
+                            alert('You win!')
+                        } else {
+                            alert('You lose!')
+                        }
+                    }
                 }
                 if(!isUndefined(message.stateContext.currentPlayer) && message.stateContext.players) {
                     if(message.stateContext.players[message.stateContext.currentPlayer] === userId) {
@@ -36,25 +46,12 @@ export const TicTacToe = () => {
                         setIsMyTurn(false)
                     }
                 }
-                if((message.stateValue === 'win') && !gameFinished) {
-                    setGameFinished(true)
-                    if(message.stateContext.players[message.stateContext.winner] === userId) {
-                        alert('You win!')
-                    } else {
-                        alert('You lose!')
-                    }
-                }
             })
-            return () => {
-                console.log('disconnect')
-            }
-            
 
         }
-    }, [socket, userId])
+    }, [])
 
     const makeMove = (index) => {
-        console.log('socket', socket)
         if(socket) {
             socket.emit('PLAY', {i: index})
         }
@@ -86,15 +83,15 @@ export const TicTacToe = () => {
                 alignItems="center"
                 key={i}
                 width="5em"
-                onClick={() => makeMove(i)}
+                onClick={() => {if(isMyTurn) makeMove(i)}}
                 height="5em"
                 fontSize="3xl"
                 boxShadow= "0px 0px 10px rgba(0, 0, 0, 0.2)"
                 borderRadius="5px"
-                cursor="pointer"
-                _hover={{
+                cursor={isMyTurn ? "pointer" : undefined}
+                _hover={isMyTurn ? {
                     background: "gray.100", // Adjust the hover color as needed
-                }}
+                }: {}}
                 >
                 <Heading>
                     {getScreenValue(value)}
@@ -106,7 +103,7 @@ export const TicTacToe = () => {
     <Stack spacing={3} mt={5}>
         <Button colorScheme="blue" variant="solid" disabled={!isMyTurn}>Surrender</Button>
 
-    </Stack>    
+    </Stack>
     </>
 
     )

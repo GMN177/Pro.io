@@ -24,16 +24,10 @@ function App() {
   const userId = useSelector(loginSelectors.getUserId)
 
   useEffect(() => {
-    dispatch(loggedUserActions.findLoggedUser(userId))
-  }, [userId])
-
-  useEffect(() => {
-    if(expiresAt) {
-      setInterval(() => {
-        //dispatch(loginActions.userLogout({refreshToken, navigate}))
-      }, expiresAt - Date.now())
+    if(userId) {
+      dispatch(loggedUserActions.findLoggedUser(userId))
     }
-  }, [expiresAt])
+  }, [userId])
 
   useEffect(() => {
     if (!accessToken) {

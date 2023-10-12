@@ -31,12 +31,10 @@ export const GameLibrary = () => {
     const dispatch = useDispatch();
     const games = useSelector(gamesSelectors.getGamesList)
     const [gameChosen, setGameChosen] = useState(null)
-    const idUser = useSelector(loginSelectors.getUserId);
     const {isOpen, onOpen, onClose} = useDisclosure()
 
   useEffect(() => {
       dispatch(gamesActions.fetchGamesList())
-      dispatch(loggedUserActions.findLoggedUser(idUser))
 
   }, [])
 
@@ -77,7 +75,7 @@ export const GameLibrary = () => {
                   <Button variant="solid" colorScheme="blue" w="100%" onClick={() => filterGames('nameAsc')}> Filter by Name Asc </Button>
                 </VStack>
               </PopoverBody>
-            </PopoverContent>   
+            </PopoverContent>
         </Popover>
 
       </HStack>

@@ -11,7 +11,6 @@ export const fetchGamesList = createAsyncThunk(GAMES_ACTIONS.fetchGamesList, asy
         const resp = (await gameService.getAllGames()).data.data.message
 
         const matches = (await matchServices.getAllMatches()).data.data.message
-        console.log("matches",matches);
 
         return {
             resp,

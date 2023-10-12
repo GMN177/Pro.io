@@ -27,7 +27,6 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
             expiresAt: (Date.now() + 840000),
             id
         }))
-        thunkAPI.dispatch(loggedUserActions.findLoggedUser(id))
         bean.navigate('/')
 
         return {

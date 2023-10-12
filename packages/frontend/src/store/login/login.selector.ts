@@ -1,5 +1,4 @@
 import {RootState} from '../reducer.config';
-import {User} from '@/models/user';
 
 const getAccessToken = (state: RootState) => {
     return state.login.accessToken;

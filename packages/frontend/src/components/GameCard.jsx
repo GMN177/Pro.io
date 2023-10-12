@@ -37,17 +37,14 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
       console.log('querySocket', querySocket)
 
       const socketInstance = socket({token, matchId });
-      console.log('socketInstance', socketInstance)
       /* Handlers socket */
-      socketInstance.on('newState', (message) => {
-        console.log('ci sono', message)
+      socketInstance.off('newState').on('newState', (message) => {
         if(message.stateValue === 'playing') {
           dispatch(loggedUserActions.addUserToMatch(matchId))
-          // todo change value of firstPlayer
           navigate('/' + name + '/' + matchId, {
             state:
                 {
-                  firstPlayer: message.stateContext
+                  firstPlayer: userId === message.stateContext.players[message.stateContext.currentPlayer]
                 }}
           )
         }

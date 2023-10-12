@@ -25,12 +25,9 @@ import { Link as ReachLink, useNavigate } from "react-router-dom";
 
 const Homepage = () => {
   const accessToken = useSelector(loginSelectors.getAccessToken);
-  const user = useSelector(loggedUserSelectors.getLoggedUserInfo);
   const [isVisible, setIsVisible] = useState(true);
   const [position, setPosition] = useState(getRandomPosition());
   const [count, setCount] = useState(0);
-
-  console.log(user)
 
   // function to handle the click of the little box, change his position after 200 ms
   const handleBoxClick = () => {
@@ -98,7 +95,7 @@ const Homepage = () => {
           Pro.io is a platform hosting multiple games, try them!
         </Heading>
         {
-        accessToken ? 
+        accessToken ?
         <>
           <Link as={ReachLink} to={"/games"} style={{ textDecoration: "none" }}>
             <Button color="white" bg="blue.theme">
@@ -109,14 +106,14 @@ const Homepage = () => {
             Play By Yourself
           </Button>
         </>
-        :  
+        :
         <Link as={ReachLink} to={"/login"} style={{ textDecoration: "none" }}>
           <Button color="white" bg="blue.theme">
             Play Now
           </Button>
-        </Link>  
+        </Link>
       }
-        
+
       </VStack>
 
       <Box
