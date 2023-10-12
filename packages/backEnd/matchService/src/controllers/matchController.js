@@ -152,6 +152,8 @@ async function joinPrivateMatch(matchId, token) {
     try {
         const match = await Match.findById(matchId);
 
+        console.log('trying to join match: ', match)
+
         if (match == null) {
             return responses.INVALID_ID;
         }
@@ -160,7 +162,7 @@ async function joinPrivateMatch(matchId, token) {
             return responses.INVALID_MATCH;
         }
 
-        let game = await fetch('http://gameservice:4000/api/games/' + gameId, {
+        let game = await fetch('http://gameservice:4000/api/games/' + match.game[0], {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
