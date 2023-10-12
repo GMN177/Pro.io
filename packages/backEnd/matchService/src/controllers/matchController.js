@@ -173,7 +173,7 @@ async function joinPrivateMatch(matchId, token) {
         const plays = await getByMatch(match._id)
 
         if(game.data.message.playersNumber === plays.response.data.message.length) {
-            await updateMatch(match._id, gameId, match.duration, new Date(), match.endTime, "INGAME")
+            await updateMatch(match._id, match.game[0], match.duration, new Date(), match.endTime, "INGAME")
         }
 
         return responses.genericSuccessResponse(200, match._id);
