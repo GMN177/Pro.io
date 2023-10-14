@@ -30,10 +30,10 @@ const handleDisconnectWhilePlaying = assign({
     currentPlayer: (context, event) => context.players[0] === event.value ? 0 : 1
 });
 
-const saveGame = (context) => {
+const saveGame = async (context) => {
     console.log('saving game:', context);
 
-    let match = getMatch(context.matchId);
+    let match = await getMatch(context.matchId);
 
     console.log('match pre-update:', match);
 
@@ -43,7 +43,7 @@ const saveGame = (context) => {
 
     console.log('match post-update:', match);
 
-    let result = updateMatch(context.matchId, match);
+    let result = await updateMatch(context.matchId, match);
 
     console.log('save result:', result);
 }
