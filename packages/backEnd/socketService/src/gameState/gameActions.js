@@ -43,9 +43,7 @@ const saveGame = (context) => {
 
     console.log('match post-update:', match);
 
-    let result = updateMatch(context.matchId, {
-        state: JSON.stringify(context)
-    });
+    let result = updateMatch(context.matchId, match);
 
     console.log('save result:', result);
 }

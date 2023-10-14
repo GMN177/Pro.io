@@ -7,7 +7,14 @@ const getMatch = async (matchId) => {
 };
 
 const updateMatch = async (matchId, body) => {
-    const response = await fetch('http://matchservice:4000/api/matches/' + matchId, {method: 'PUT', body: body});
+    const response = await fetch('http://matchservice:4000/api/matches/' + matchId, {
+        method: 'PUT', body: {
+            game: body.game,
+            duration: body.duration,
+            startTime: body.startTime,
+            endTime: body.endTime,
+            status: body.status
+    }});
     const data = await response.json();
     return data.data.message;
 };
