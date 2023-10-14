@@ -1,6 +1,7 @@
 require('dotenv').config()
 const socketio = require('socket.io');
-const { verifyToken } = require('./src/middleware');
+const logger = require('./src/middlewares/logMiddleware')
+const { verifyToken } = require('./src/middleware/authMiddleware');
 const { onConnection, onConnectionError } = require('./src/handlers');
 
 
@@ -11,6 +12,8 @@ const io = socketio(process.env.SERVER_PORT || 4000, {
         origin: '*',
     }
 });
+
+io.engine.use(logger);
 
 io.use(verifyToken);
 

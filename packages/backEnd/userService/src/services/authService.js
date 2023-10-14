@@ -3,11 +3,8 @@ const jsend = require('jsend')
 const userController = require('../controllers/userController')
 const authController = require('../controllers/authController')
 const jwt = require('jsonwebtoken')
-const logger = require('../middlewares/logMiddleware')
 
 const router = express.Router()
-router.use(express.json());
-router.use(logger)
 
 // delete entire user database (only for development management)
 router.delete('/deleteTokens', async (req,res) => {

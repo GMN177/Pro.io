@@ -1,9 +1,8 @@
 const express = require("express");
 const jsend = require("jsend");
 const gameController = require("../controllers/gameController");
-const router = express.Router();
 
-router.use(express.json());
+const router = express.Router();
 
 // get all games from database
 router.get("/", async (req, res) => {

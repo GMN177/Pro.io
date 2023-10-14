@@ -1,14 +1,18 @@
 const express = require('express');
+const cors = require('cors')
+const logger = require('./src/middlewares/logMiddleware')
 const userServiceRouter = require('./src/services/userService');
 const authServiceRouter =  require('./src/services/authService')
 const {connectToDatabase} = require('./src/configs/database')
-const cors = require('cors')   
 
 const app = express();
 
 app.use(cors({
     origin: '*'
 }))
+
+router.use(express.json());
+router.use(logger)
 
 app.use('/api/users', userServiceRouter);
 app.use('/api/auth', authServiceRouter)

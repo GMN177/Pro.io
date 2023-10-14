@@ -1,13 +1,17 @@
 const express = require('express');
+const cors = require('cors')
+const logger = require('./src/middlewares/logMiddleware')
 const gameRouter = require('./src/services/matchService');
 const {connectToDatabase} = require('./src/configs/database')
-const cors = require('cors')
 
 const app = express();
 
 app.use(cors({
     origin: '*'
 }))
+
+router.use(express.json());
+router.use(logger)
 
 app.use('/api/matches', gameRouter);
 
