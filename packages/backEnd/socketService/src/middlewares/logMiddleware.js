@@ -6,7 +6,8 @@ function logger(req, res, next){
     const time  = 'time: '.concat(hours, ':', minutes, ':', seconds);
     const url = req.url;
     const method = req.method;
-    console.log('###', method, url, time);
+    const body = req.body;
+    console.log('###', method, url, time, body);
     next();
 }
 

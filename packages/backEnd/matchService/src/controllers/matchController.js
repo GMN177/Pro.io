@@ -128,10 +128,16 @@ async function updateMatch(id, gameId, duration, startTime, endTime, status) {
             endTime: endTime,
             status: status
         };
-        await Match.findByIdAndUpdate({ _id: id }, matchUpdated, {
+
+        console.log('matchUpdated:', matchUpdated)
+
+        let result = await Match.findByIdAndUpdate({ _id: id }, matchUpdated, {
             new: true,
             overwrite: true,
         });
+
+        console.log('result:', result)
+        
         return responses.UPDATE_SUCCESS;
     } catch (err) {
         throw new Error(err.message);

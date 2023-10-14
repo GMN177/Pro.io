@@ -33,12 +33,14 @@ const handleDisconnectWhilePlaying = assign({
 const saveGame = async (context) => {
     console.log('saving game:', context);
 
+    let endTime = new Date();
+
     let match = await getMatch(context.matchId);
 
     console.log('match pre-update:', match);
 
-    match.endTime = new Date();
-    match.duration = match.endTime - match.startTime;
+    match.endTime = endTime.toString();
+    match.duration = new Date(endTime - Date(match.startTime)).getMinutes();
     match.status = "FINISHED";
 
     console.log('match post-update:', match);
