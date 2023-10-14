@@ -1,7 +1,7 @@
 require('dotenv').config()
 const socketio = require('socket.io');
 const logger = require('./src/middlewares/logMiddleware')
-const { verifyToken } = require('./src/middleware/authMiddleware');
+const { verifyToken } = require('./src/middlewares/authMiddleware');
 const { onConnection, onConnectionError } = require('./src/handlers');
 
 

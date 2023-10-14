@@ -10,8 +10,8 @@ app.use(cors({
     origin: '*'
 }))
 
-router.use(express.json());
-router.use(logger)
+app.use(express.json());
+app.use(logger)
 
 app.use('/api/matches', gameRouter);
 
