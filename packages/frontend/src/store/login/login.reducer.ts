@@ -9,7 +9,7 @@ console.log('storedSessionData', storedSessionData)
 if(storedSessionData) {
     parsedData = JSON.parse(storedSessionData)
 
-    if (parsedData.accessToken && parsedData.refreshToken && parsedData.expiresAt) {
+    if (parsedData.accessToken && parsedData.refreshToken && parsedData.expiresAt && parsedData.id) {
         accessToken = parsedData.accessToken
         refreshToken = parsedData.refreshToken
         expiresAt = parsedData.expiresAt
@@ -44,7 +44,7 @@ export const loginReducer = {
                 isError: false,
                 accessToken: action.payload.accessToken,
                 refreshToken: action.payload.refreshToken,
-                expiresAt: (Date.now() + 840000),
+                expiresAt: Date.now() + 900000,
                 id: action.payload.id
             }
         });
@@ -68,6 +68,7 @@ export const loginReducer = {
             return {
                 ...state,
                 accessToken: action.payload.accessToken,
+                refreshToken: action.payload.refreshToken,
                 expiresAt: action.payload.expiresAt
             }
         });

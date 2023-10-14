@@ -20,7 +20,6 @@ function App() {
   const dispatch = useAppDispatch();
   const accessToken = useSelector(loginSelectors.getAccessToken);
   const refreshToken = useSelector(loginSelectors.getRefreshToken);
-  const expiresAt = useSelector(loginSelectors.getExpiresAt)
   const userId = useSelector(loginSelectors.getUserId)
 
   useEffect(() => {
@@ -36,6 +35,7 @@ function App() {
     }
 
     if (refreshToken) {
+      clearInterval(tokenAutoRefresh)
       tokenAutoRefresh = setInterval(() => {
         dispatch(loginActions.userTokenRefresh({ refreshToken }));
       }, 840000); // 14 minutes refresh for a 15 minutes access token

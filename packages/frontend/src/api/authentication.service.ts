@@ -27,7 +27,7 @@ const logout = async (refreshToken: string): EndpointResponse<null, null> => {
     refreshToken
   });
 };
-const refreshToken = async (refreshToken: string): EndpointResponse<{accessToken: string}, null> => {
+const refreshToken = async (refreshToken: string): EndpointResponse<{new_access_token: string}, null> => {
   return axios.post(baseURL + authenticationEndpoints.refreshToken, {
     refreshToken
   });

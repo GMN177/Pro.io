@@ -4,6 +4,7 @@ import {NavigateFunction} from 'react-router-dom';
 import {authenticationService} from '@/api/authentication.service';
 import jwt_decode from "jwt-decode";
 import {loggedUserActions} from '@/store/loggedUser/loggedUser.action';
+import {RootState} from '@/store/reducer.config';
 const enum LOGIN_ACTIONS {
     userLogin = 'userLogin/',
     userTokenRefresh = 'userTokenRefresh/',
@@ -24,7 +25,7 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
         sessionStorage.setItem('PRO_IO_SESSION', JSON.stringify({
             accessToken,
             refreshToken,
-            expiresAt: (Date.now() + 840000),
+            expiresAt: (Date.now() + 900000),
             id
         }))
         bean.navigate('/')
@@ -43,14 +44,17 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
 const userTokenRefresh = createAsyncThunk(LOGIN_ACTIONS.userTokenRefresh, async (params: {refreshToken: string}, thunkAPI) => {
     try {
         const {refreshToken} = params
+        const {loggedUser} = thunkAPI.getState() as RootState
         const resp = (await authenticationService.refreshToken(refreshToken)).data.data
-        const {accessToken} = resp
+        const {new_access_token} = resp
         sessionStorage.setItem('PRO_IO_SESSION', JSON.stringify({
-            accessToken,
+            accessToken: new_access_token,
             refreshToken,
-            expiresAt: (Date.now() + 840000)
+            expiresAt: (Date.now() + 900000),
+            id: loggedUser.loggedUser.id
         }))
-        return {accessToken, expiresAt: (Date.now() + 840000)};
+        axios.defaults.headers['Authorization'] = 'Bearer ' + new_access_token;
+        return {accessToken: new_access_token, refreshToken, expiresAt: (Date.now() + 900000)};
     } catch(e) {
         console.log('Refresh request failed')
         throw e;
