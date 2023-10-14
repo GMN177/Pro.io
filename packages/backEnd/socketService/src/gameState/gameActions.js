@@ -35,14 +35,19 @@ const saveGame = (context) => {
 
     let match = getMatch(context.matchId);
 
+    console.log('match pre-update:', match);
+
     match.endTime = new Date();
     match.duration = match.endTime - match.startTime;
     match.status = "FINISHED";
 
+    console.log('match post-update:', match);
 
-    updateMatch(context.matchId, {
+    let result = updateMatch(context.matchId, {
         state: JSON.stringify(context)
     });
+
+    console.log('save result:', result);
 }
 
 module.exports = {
