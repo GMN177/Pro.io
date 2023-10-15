@@ -13,6 +13,7 @@ import { GameLibrary } from "./pages/GameLibraryPage/GameLibrary";
 import {ProfilePage} from "./pages/ProfilePage";
 import {Game} from '@/pages/Game';
 import {loggedUserActions} from '@/store/loggedUser/loggedUser.action';
+import {FriendsPage} from '@/pages/friendsPage/friendsPage.component';
 
 let tokenAutoRefresh = null;
 
@@ -43,59 +44,71 @@ function App() {
   }, [accessToken, refreshToken]);
 
   return (
-    <>
-      {accessToken ? (
-        <Routes>
-          <Route
-            path={"/*"}
-            element={
-              <>
-                <div className="App">
-                  <Navbar isLogged={true} />
-                  <Homepage />
-                </div>
-              </>
-            }
-          />
-          <Route
-            path={"/games"}
-            element={
-              <>
-                <Navbar isLogged={true} />
-                <GameLibrary />
-              </>
-            }
-          />
-          <Route
-            path={"/settings"}
-            element={
-              <>
-                <Navbar isLogged={true} />
-                <ProfilePage />
-              </>
-            }
-          />
-          <Route
-            path={"/:game/:matchId"}
-            element={
-              <>
-                <Navbar isLogged={true} />
-                <Game />
-              </>
-            }
-          />
-        </Routes>
-      ) : (
-        <>
-          <Navbar isLogged={false} />
-          <Routes>
-            <Route path={"/"} element={<Homepage />} />
-            <Route path={"/login"} element={<LoginPage />} />
-            <Route path={"/signup"} element={<RegisterPage />} />
-          </Routes>
-        </>
-      )}
-    </>
+      <>
+        {accessToken ? (
+            <Routes>
+              <Route
+                  path={"/*"}
+                  element={
+                    <>
+                      <div className="App">
+                        <Navbar isLogged={true} />
+                        <Homepage />
+                      </div>
+                    </>
+                  }
+              />
+              <Route
+                  path={"/games"}
+                  element={
+                    <>
+                      <Navbar isLogged={true} />
+                      <GameLibrary />
+                    </>
+                  }
+              />
+              <Route
+                  path={"/settings"}
+                  element={
+                    <>
+                      <Navbar isLogged={true} />
+                      <ProfilePage />
+                    </>
+                  }
+              />
+              <Route
+                  path={"/friends"}
+                  element={
+                    <>
+                      <Navbar isLogged={true} />
+                      <FriendsPage />
+                    </>
+                  }
+              />
+              <Route
+                  path={"/:game/:matchId"}
+                  element={
+                    <>
+                      <Navbar isLogged={true} />
+                      <Game />
+                    </>
+                  }
+              />
+              <Route path={"*"} element={<Homepage />} />
+            </Routes>
+
+        ) : (
+            <>
+              <Navbar isLogged={false} />
+              <Routes>
+                <Route path={"/"} element={<Homepage />} />
+                <Route path={"/login"} element={<LoginPage />} />
+                <Route path={"/signup"} element={<RegisterPage />} />
+                <Route path={"*"} element={<Homepage />} />
+              </Routes>
+            </>
+        )}
+      </>
   );
 }
 
