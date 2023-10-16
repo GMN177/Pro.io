@@ -7,7 +7,11 @@ async function getUserFriends(id){
         return responses.INVALID_ID
     }
     try{
-        let ret = await User.findById(id).where('status').equals('ACTIVE')
+        let ret = await User.findById(id)
+            .populate('friends', 'username')
+            .populate('pending', 'username')
+            .populate('sent', 'username')
+            .where('status').equals('ACTIVE')
         if(ret==null) {
             return responses.USER_NOT_FOUND
         }
