@@ -44,8 +44,8 @@ export const FriendsPage = () => {
                 <Heading as={'h1'}>Users to add as friends</Heading>
                 <ul>
                     {otherUsers.map((u, key) => (
-                        <HStack>
-                            <li key={key}>
+                        <HStack key={key}>
+                            <li>
                                 <div>{u.username}</div>
                             </li>
                             <Button onClick={() => addFriend(u)}>Add</Button>
