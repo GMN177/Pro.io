@@ -1,10 +1,11 @@
 import {io} from 'socket.io-client';
 const URL = "http://52.23.252.196";
 
-let socketInstance: ReturnType<typeof io> | undefined;
+let gameSocketInstance: ReturnType<typeof io> | undefined;
+let chatSocketInstance: ReturnType<typeof io> | undefined;
 
-export const socket = ({token, matchId}): ReturnType<typeof io>=> {
-    socketInstance =  io(URL, {
+export const gameSocket = ({token, matchId}): ReturnType<typeof io>=> {
+    gameSocketInstance =  io(URL, {
         autoConnect: false,
         path: '/gameSocket',
         auth: {
@@ -14,7 +15,22 @@ export const socket = ({token, matchId}): ReturnType<typeof io>=> {
             matchId: matchId
         }
     })
-    return socketInstance;
+    return gameSocketInstance;
 };
 
-export const getSocketInstance = (): ReturnType<typeof io> | undefined => socketInstance
+export const chatSocket = ({username, matchId}): ReturnType<typeof io>=> {
+    chatSocketInstance =  io(URL, {
+        autoConnect: false,
+        path: '/chatSocket',
+        query: {
+            matchId,
+            username
+        }
+    })
+    return chatSocketInstance;
+};
+
+
+
+export const getGameSocketInstance = (): ReturnType<typeof io> | undefined => gameSocketInstance
+export const getChatSocketInstance = (): ReturnType<typeof io> | undefined => chatSocketInstance

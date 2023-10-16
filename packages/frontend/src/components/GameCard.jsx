@@ -22,14 +22,12 @@ import {
   Input
 } from "@chakra-ui/react";
 
-import {socket} from "@/api/socket";
+import {gameSocket} from "@/api/socket";
 import {loginSelectors} from '@/store/login/login.selector'
 import {useSelector, useDispatch} from 'react-redux'
 import {matchServices} from "@/api/match.service";
-import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
 import { loggedUserActions } from "@/store/loggedUser/loggedUser.action";
 import {useNavigate} from "react-router-dom";
-import { set } from "lodash";
 import {CustomAlert} from '../components/Utils/CustomAlert'
 
 export const GameCard = ({ id, name, title, image, description, openLobby, playersOnline, openPrivateLobby }) => {
@@ -51,7 +49,7 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
 
       console.log('querySocket', querySocket)
 
-      const socketInstance = socket({token, matchId });
+      const socketInstance = gameSocket({token, matchId });
       /* Handlers socket */
       socketInstance.off('newState').on('newState', (message) => {
         if(message.stateValue === 'playing') {
@@ -91,7 +89,7 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
 
       console.log('matchKey',matchKey);
 
-      const socketInstance = socket({token, matchId : matchKey });
+      const socketInstance = gameSocket({token, matchId : matchKey });
       console.log('socketInstance', socketInstance)
       /* Handlers socket */
       socketInstance.on('newState', (message) => {
@@ -120,14 +118,14 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
 
   const joinPrivateGame = async (key) => {
     try{
-      const matchId = (await matchServices.joinPrivateMatch({user: userId, matchId: key})).data.data.message 
+      const matchId = (await matchServices.joinPrivateMatch({user: userId, matchId: key})).data.data.message
       console.log('matchId', matchId)
       if(matchId === "" || matchId === 'Match not found' || matchId === 'Invalid match') {
         setErrorMessage(matchId);
         return
       }
 
-      const socketInstance = socket({token, matchId });
+      const socketInstance = gameSocket({token, matchId });
       console.log('socketInstance', socketInstance)
       /* Handlers socket */
       socketInstance.on('newState', (message) => {
@@ -193,7 +191,7 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
               <PopoverBody>
               <VStack>
               {errorMessage && <CustomAlert status="error" message={errorMessage}/>}
-                  <Input variant="solid" colorScheme="blue" w="100%" value={keyPrivate} onChange={(event) => setKeyPrivate(event.target.value)} placeholder="Insert Key" /> 
+                  <Input variant="solid" colorScheme="blue" w="100%" value={keyPrivate} onChange={(event) => setKeyPrivate(event.target.value)} placeholder="Insert Key" />
                   <Button isDisabled={!keyPrivate} variant="solid" colorScheme="green" w="100%" onClick={() => joinPrivateGame(keyPrivate)}> Join </Button>
                 </VStack>
               </PopoverBody>
