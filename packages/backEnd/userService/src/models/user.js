@@ -10,9 +10,9 @@ const userSchema = new mongoose.Schema({
     salt: String,
     totMatches: Number,
     totWins: Number,
-    friends: [mongoose.Types.ObjectId],
-    pending: [mongoose.Types.ObjectId],
-    sent: [mongoose.Types.ObjectId],
+    friends: [{ type: Schema.Types.ObjectId, ref: 'user' }],
+    pending: [{ type: Schema.Types.ObjectId, ref: 'user' }],
+    sent: [{ type: Schema.Types.ObjectId, ref: 'user' }],
     status: String
 
 }, {timestamps: true})

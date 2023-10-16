@@ -7,10 +7,12 @@ async function getUserFriends(id){
         return responses.INVALID_ID
     }
     try{
-        let ret = await User.findOne({_id: id, status: 'ACTIVE'})
-            .populate('friends', 'username')
-            .populate('pending', 'username')
-            .populate('sent', 'username')
+        let ret = await User.findOne({ _id: id, status: 'ACTIVE' })
+            .populate([
+                { path: 'friends', select: 'username' },
+                { path: 'pending', select: 'username' },
+                { path: 'sent', select: 'username' }
+            ])
             .exec()
 
         if(ret == null) {
