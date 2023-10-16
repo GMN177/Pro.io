@@ -11,6 +11,9 @@ export const FriendsPage = () => {
     const loggedUser = useSelector(loggedUserSelectors.getLoggedUserInfo)
 
     const friends = useSelector(friendsSelector.getFriendsList)
+    const pending = useSelector(friendsSelector.getPendingRequests)
+    const sent = useSelector(friendsSelector.getSentRequests)
+
     const otherUsers = useSelector(friendsSelector.getUsersWhoAreNotFriends)
     useEffect(() => {
         if(loggedUser?.id) {
@@ -28,32 +31,55 @@ export const FriendsPage = () => {
         return null;
     }
     return (
+        <VStack>
+            <HStack width={'100%'} alignItems={'start'} paddingX={20}>
+                <Box width={'50%'} p={10}>
+                    <Heading as={'h1'}>Friends</Heading>
+                    <ul>
+                        {friends.map((f, key) => (
+                            <li key={key}>
+                                {f.username}
+                            </li>
+                        ))}
+                    </ul>
+                </Box>
+                <Box width={'50%'} p={10}>
+                    <Heading as={'h1'}>Users to add as friends</Heading>
+                    <ul>
+                        {otherUsers.map((u, key) => (
+                            <HStack key={key}>
+                                <li>
+                                    <div>{u.username}</div>
+                                </li>
+                                <Button onClick={() => addFriend(u)}>Add</Button>
+                            </HStack>
 
-        <HStack width={'100%'} alignItems={'start'}>
-            <Box width={'50%'} p={10}>
-                <Heading as={'h1'}>Friends</Heading>
-                <ul>
-                    {friends.map((f, key) => (
+                        ))}
+                    </ul>
+                </Box>
+            </HStack>
+            <HStack width={'100%'} alignItems={'start'} paddingY={10} paddingX={20}>
+                <Box width={'50%'}>
+                    <Heading as={'h1'}>Pending requests</Heading>
+                    <ul>
+                        {pending.map((p, key) => (
+                            <li key={key}>
+                                <span>{p.username}</span>
+                                <Button onClick={() => dispatch(friendsActions.acceptOrDeclineFriendRequest({friendId: p, accept: true}))}>Accept</Button>
+                                <Button onClick={() => dispatch(friendsActions.acceptOrDeclineFriendRequest({friendId: p, accept: false}))}>Decline</Button>
+                            </li>
+                        ))}
+                    </ul>
+                </Box>
+                <Box width={'50%'}>
+                    <Heading as={'h1'}>Requests sent</Heading>
+                    {sent.map((s, key) => (
                         <li key={key}>
-                            {f.username}
+                            <span>{s.username}</span>
                         </li>
                     ))}
-                </ul>
-            </Box>
-            <Box width={'50%'} p={10}>
-                <Heading as={'h1'}>Users to add as friends</Heading>
-                <ul>
-                    {otherUsers.map((u, key) => (
-                        <HStack key={key}>
-                            <li>
-                                <div>{u.username}</div>
-                            </li>
-                            <Button onClick={() => addFriend(u)}>Add</Button>
-                        </HStack>
-
-                    ))}
-                </ul>
-            </Box>
-        </HStack>
+                </Box>
+            </HStack>
+        </VStack>
     )
 }

@@ -22,7 +22,7 @@ const changeUsernamePassword = (oldPassword: string, newPassword: string, id: st
     return axios.patch(baseURL + usersEndpoints.users + id, {"oldPassword": oldPassword, "newUsername": null, "newPassword": newPassword});
 }
 
-const findFriends = (userId: string): EndpointResponse<{friends: any[]}, any> => {
+const findFriends = (userId: string): EndpointResponse<{friends: string[], sent: string[], pending: string[]}, any> => {
     return axios.get(baseURL + usersEndpoints.users + userId + '/friends/')
 }
 
@@ -33,6 +33,10 @@ const deleteUser = (id: string): EndpointResponse<User, null> => {
     return axios.delete(baseURL + usersEndpoints.users + id);
 }
 
+const acceptOrDeclineFriendRequest = (bean:{friendId: string, accept: boolean}): EndpointResponse<any, any> => {
+    return axios.post(baseURL + usersEndpoints.users + 'friends/accept', bean)
+}
+
 export const usersService = {
     findSingleUser,
     changeUsernameUser,
@@ -40,5 +44,6 @@ export const usersService = {
     findFriends,
     findUsers,
     addFriend,
-    deleteUser
+    deleteUser,
+    acceptOrDeclineFriendRequest
 }

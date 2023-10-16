@@ -3,21 +3,25 @@ import {usersService} from '@/api/users.service';
 
 const enum FRIENDS_ACTIONS {
     fetchFriendsList = 'fetchFriendsList/',
-    sendFriendRequest = 'sendFriendRequest/'
+    sendFriendRequest = 'sendFriendRequest/',
+    acceptOrDeclineFriendRequest= 'acceptOrDeclineFriendRequest/'
 }
 export const fetchFriendsList = createAsyncThunk(FRIENDS_ACTIONS.fetchFriendsList, async(userId: string) => {
     try {
-        const {friends} = (await usersService.findFriends(userId)).data.data
+        const {friends, sent, pending} = (await usersService.findFriends(userId)).data.data
         const {users} = (await usersService.findUsers()).data.data
 
         return {
             friends,
-            users
+            users,
+            sent,
+            pending
         }
     } catch(e) {
         throw e;
     }
 })
+
 export const sendFriendRequest = createAsyncThunk(FRIENDS_ACTIONS.sendFriendRequest, async(bean: {userId: string, friendId: string}) => {
     try {
         await usersService.addFriend(bean);
@@ -27,7 +31,17 @@ export const sendFriendRequest = createAsyncThunk(FRIENDS_ACTIONS.sendFriendRequ
     }
 })
 
+export const acceptOrDeclineFriendRequest = createAsyncThunk(FRIENDS_ACTIONS.acceptOrDeclineFriendRequest, async(bean: {friendId: string, accept: boolean}) => {
+    try {
+        await usersService.acceptOrDeclineFriendRequest(bean);
+        return bean
+    } catch(e) {
+        throw e;
+    }
+})
+
 export const friendsActions = {
     fetchFriendsList,
-    sendFriendRequest
+    sendFriendRequest,
+    acceptOrDeclineFriendRequest
 }

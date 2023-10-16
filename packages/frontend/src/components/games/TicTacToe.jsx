@@ -81,7 +81,7 @@ export const TicTacToe = (props) => {
             <Text>Score 0 - 0</Text>
         </Badge>
         <AbsoluteCenter alignItems="center" justifyContent="center">
-       {showWinAlert && <VStack 
+       {showWinAlert && <VStack
           padding= '2em'
           bg='green.300'
           textAlign='center'
@@ -95,7 +95,7 @@ export const TicTacToe = (props) => {
             </Heading>
             <Text>Uscendo dal gioco..</Text>
         </VStack>}
-        {showLoseAlert && <VStack 
+        {showLoseAlert && <VStack
           padding= '2em'
           bg='green.300'
           textAlign='center'
@@ -109,9 +109,9 @@ export const TicTacToe = (props) => {
             </Heading>
             <Text>Uscendo dal gioco..</Text>
         </VStack>}
-        
 
-        
+
+
         </AbsoluteCenter>
 
         <Grid
