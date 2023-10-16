@@ -1,10 +1,11 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useMemo, useState, useRef} from 'react'
 import {getSocketInstance} from "@/api/socket";
-import { Badge, Button, Grid,GridItem, Heading, Stack, VStack, AbsoluteCenter, Box, Text  } from '@chakra-ui/react';
+import { Badge, Button, Grid,GridItem, Heading, Stack, VStack, AbsoluteCenter, useDisclosure, Text  } from '@chakra-ui/react';
 import {isUndefined} from "lodash";
 import {useSelector} from "react-redux";
 import {loginSelectors} from "@/store/login/login.selector";
 import {useNavigate} from "react-router-dom";
+import Chat from "../Utils/Chat";
 
 const getScreenValue = (value) => {
     if(value === null) {
@@ -26,6 +27,9 @@ export const TicTacToe = (props) => {
     const [gameFinished, setGameFinished] = useState(false)
     const [showWinAlert, setShowWinAlert] = useState(false)
     const [showLoseAlert, setShowLoseAlert] = useState(false)
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const btnRef = useRef()
 
     const navigate = useNavigate()
 
@@ -143,9 +147,10 @@ export const TicTacToe = (props) => {
 
     })}
     </Grid>
+    <Chat isOpen={isOpen} onClose={onClose} btnRef={btnRef}/>
     <Stack spacing={3} mt={5} justifyContent='center' alignItems='center'>
         <Button colorScheme="blue" variant="solid" width='10%' isDisabled={!isMyTurn}>Surrender</Button>
-
+        <Button colorScheme="blue" variant="solid" width='10%' ref={btnRef} onClick={() => onOpen}>Chat</Button>
     </Stack>
     </>
 
