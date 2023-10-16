@@ -5,13 +5,15 @@ import {loginReducer} from '@/store/login/login.reducer';
 import {registerReducer} from '@/store/register/register.reducer';
 import {gamesReducer} from '@/store/games/games.reducer';
 import {loggedUserReducer} from '@/store/loggedUser/loggedUser.reducer';
+import {friendsReducer} from '@/store/friends/friends.reducer';
 
 const appReducer = combineReducers({
     ...testReducer,
     ...loginReducer,
     ...registerReducer,
     ...gamesReducer,
-    ...loggedUserReducer
+    ...loggedUserReducer,
+    ...friendsReducer
 });
 
 
