@@ -54,6 +54,19 @@ services:
             - matchservice
             - gameservice
         command: "npm run start"
+    chatservice:
+        container_name: 'ChatService'
+        env_file: .env
+        build:
+            context: ./packages/backEnd/chatService
+        ports:
+            - "4005:4000"
+        restart: unless-stopped
+        depends_on:
+            - userservice
+            - matchservice
+            - gameservice
+        command: "npm run start"
     nginx:
         container_name: 'nginx'
         build:

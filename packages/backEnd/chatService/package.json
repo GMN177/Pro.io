@@ -1,0 +1,17 @@
+{
+  "name": "chatservice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT License",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "socket.io": "^4.7.2",
+    "jsonwebtoken": "^9.0.0"
+  }
+}
