@@ -1,10 +1,11 @@
 import React, {useEffect, useMemo, useState, useRef} from 'react'
-import {getSocketInstance} from "@/api/socket";
+import {getGameSocketInstance} from "@/api/socket";
 import { Badge, Button, Grid,GridItem, Heading, Stack, VStack, AbsoluteCenter, useDisclosure, Text  } from '@chakra-ui/react';
 import {isUndefined} from "lodash";
 import {useSelector} from "react-redux";
 import {loginSelectors} from "@/store/login/login.selector";
-import {useNavigate} from "react-router-dom";
+import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector"
+import {useNavigate, useParams} from "react-router-dom";
 import Chat from "../Utils/Chat";
 
 const getScreenValue = (value) => {
@@ -22,11 +23,13 @@ export const TicTacToe = (props) => {
     const [context, setContext] = useState([null,null,null,null,null,null,null,null,null,])
     // todo set as false when we know who is the first
     const [isMyTurn, setIsMyTurn] = useState(props.isFirstPlayer)
-    const socket = useMemo(() => getSocketInstance(), [])
+    const socket = useMemo(() => getGameSocketInstance(), [])
     const userId = useSelector(loginSelectors.getUserId)
+    const user = useSelector(loggedUserSelectors.getLoggedUserInfo)
     const [gameFinished, setGameFinished] = useState(false)
     const [showWinAlert, setShowWinAlert] = useState(false)
     const [showLoseAlert, setShowLoseAlert] = useState(false)
+    const {game, matchId} = useParams();
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = useRef()
@@ -147,10 +150,10 @@ export const TicTacToe = (props) => {
 
     })}
     </Grid>
-    <Chat isOpen={isOpen} onClose={onClose} btnRef={btnRef}/>
-    <Stack spacing={3} mt={5} justifyContent='center' alignItems='center'>
+    <Chat isOpen={isOpen} onClose={onClose} btnRef={btnRef} username={user?.username} onOpen={onOpen} matchId={matchId}/>
+    <Stack spacing={3} my={5} justifyContent='center' alignItems='center' direction='row' >
         <Button colorScheme="blue" variant="solid" width='10%' isDisabled={!isMyTurn}>Surrender</Button>
-        <Button colorScheme="blue" variant="solid" width='10%' ref={btnRef} onClick={() => onOpen}>Chat</Button>
+        <Button colorScheme="blue" variant="solid" width='10%' ref={btnRef} onClick={onOpen}>Chat</Button>
     </Stack>
     </>
 
