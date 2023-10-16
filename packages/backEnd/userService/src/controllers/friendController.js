@@ -11,7 +11,11 @@ async function getUserFriends(id){
         if(ret==null) {
             return responses.USER_NOT_FOUND
         }
-        let response = responses.genericSuccessResponse(200, {friends:ret.friends})
+        let response = responses.genericSuccessResponse(200, {
+            friends: ret.friends,
+            pending: ret.pending,
+            sent: ret.sent
+        })
         return response
     }catch(err){
         throw new Error(err.message)
