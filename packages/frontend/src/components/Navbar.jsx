@@ -46,7 +46,7 @@ const Navbar = (props) => {
       boxShadow="lg"
       gap={2}
     >
-      <Image alt="Logo" src={proLogo} />
+      <Image alt="Logo" src={proLogo} onClick={() => navigate('/')} cursor='pointer'/>
       <Text ml={5} color="blue.theme" fontWeight={700}>
         Pro.io
       </Text>

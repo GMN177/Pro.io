@@ -18,9 +18,13 @@ const changeUsernamePassword = (oldPassword: string, newPassword: string, id: st
     return axios.patch(baseURL + usersEndpoints.users + id, {"oldPassword": oldPassword, "newUsername": null, "newPassword": newPassword});
 }
 
+const deleteUser = (id: string): EndpointResponse<User, null> => {
+    return axios.delete(baseURL + usersEndpoints.users + id);
+}
 
 export const usersService = {
     findSingleUser,
     changeUsernameUser,
-    changeUsernamePassword
+    changeUsernamePassword,
+    deleteUser
 }

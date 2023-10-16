@@ -73,5 +73,14 @@ export const loggedUserReducer = {
             }
 
         });
+        builder.addCase(loggedUserActions.resetUserAttributes, (state, action) => {
+            return {
+                ...state,
+                isError: false,
+                isLoading: false,
+                isSuccess: false
+            }
+
+        });
     })
 }

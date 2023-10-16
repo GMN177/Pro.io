@@ -6,11 +6,14 @@ const enum LOGGED_USER_ACTIONS {
     findLoggedUser = 'findLoggedUser/',
     changeUsernameUser = 'changeUsernameUser/',
     changeUsernamePassword = 'changeUsernamePassword/',
-    addUserToMatch = 'addUserToMatch'
+    addUserToMatch = 'addUserToMatch',
+    deleteUser = 'deleteUser/',
+    resetUserAttributes = 'resetUserAttributes/'
 }
 
 const findLoggedUser = createAsyncThunk(LOGGED_USER_ACTIONS.findLoggedUser, async (id: string, thunkAPI) => {
     try {
+        console.log('id', id)
         const user: User = (await usersService.findSingleUser(id)).data.data.user
         return {
             user
@@ -25,15 +28,12 @@ const changeUsernameUser = createAsyncThunk(LOGGED_USER_ACTIONS.changeUsernameUs
     try {
         const {password, username, id} = params
         const resp = await usersService.changeUsernameUser(username, password,id)
-        const data = await resp.data
-        return {
-            data
-        }
+        console.log(resp)
+      
     } catch(e) {
         console.log("error", e.response.data)
         console.log('changeUsernameUser request failed')
-        const data = e.response.data
-        return {data};
+        throw e;
     }
 });
 
@@ -42,7 +42,8 @@ const changeUsernamePassword = createAsyncThunk(LOGGED_USER_ACTIONS.changeUserna
 
         console.log("params", params)
         const {password, newPassword, id} = params
-        console.log(await usersService.changeUsernamePassword(password, newPassword,id))
+        const resp = await usersService.changeUsernamePassword(password, newPassword,id)
+        console.log(resp)
 
     } catch(e) {
         console.log('changeUsernamePassword request failed')
@@ -59,10 +60,30 @@ const addUserToMatch = createAction(LOGGED_USER_ACTIONS.addUserToMatch, (matchId
     }
 });
 
+const resetUserAttributes = createAction(LOGGED_USER_ACTIONS.resetUserAttributes, () => {
+    return {};
+});
+
+const deleteUser = createAsyncThunk(LOGGED_USER_ACTIONS.deleteUser, async (params: { id: string} ,thunkAPI) => {
+    try {
+
+        console.log("params", params)
+        const {id} = params
+        const resp = await usersService.deleteUser(id)
+        console.log(resp)
+
+    } catch(e) {
+        console.log('changeUsernamePassword request failed')
+        throw e;
+    }
+});
+
 
 export const loggedUserActions = {
     findLoggedUser,
     changeUsernameUser,
     changeUsernamePassword,
-    addUserToMatch
+    addUserToMatch,
+    deleteUser,
+    resetUserAttributes
 }

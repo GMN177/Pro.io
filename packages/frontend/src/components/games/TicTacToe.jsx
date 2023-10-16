@@ -1,9 +1,10 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import {getSocketInstance} from "@/api/socket";
-import { Badge, Button, Grid,GridItem, Heading, Stack } from '@chakra-ui/react';
+import { Badge, Button, Grid,GridItem, Heading, Stack, VStack, AbsoluteCenter, Box, Text  } from '@chakra-ui/react';
 import {isUndefined} from "lodash";
 import {useSelector} from "react-redux";
 import {loginSelectors} from "@/store/login/login.selector";
+import {useNavigate} from "react-router-dom";
 
 const getScreenValue = (value) => {
     if(value === null) {
@@ -23,6 +24,11 @@ export const TicTacToe = (props) => {
     const socket = useMemo(() => getSocketInstance(), [])
     const userId = useSelector(loginSelectors.getUserId)
     const [gameFinished, setGameFinished] = useState(false)
+    const [showWinAlert, setShowWinAlert] = useState(false)
+    const [showLoseAlert, setShowLoseAlert] = useState(false)
+
+    const navigate = useNavigate()
+
     useEffect(() => {
 
         if(socket && userId) {
@@ -33,10 +39,13 @@ export const TicTacToe = (props) => {
                     if(message.stateValue === 'win' && !gameFinished) {
                         setGameFinished(true)
                         if(message.stateContext.players[message.stateContext.winner] === userId) {
-                            alert('You win!')
+                            setShowWinAlert(true)
                         } else {
-                            alert('You lose!')
+                            setShowLoseAlert(true)
                         }
+                        setTimeout(() => {
+                            navigate('/games')
+                        }, 2000)
                     }
                 }
                 if(!isUndefined(message.stateContext.currentPlayer) && message.stateContext.players) {
@@ -59,11 +68,45 @@ export const TicTacToe = (props) => {
 
     return (
         <>
-        <Badge colorScheme="purple" width="100%" p="1em" display="flex" justifyContent="space-between">
-            <p>TicTacToe</p>
-            <p>Is your Turn!</p>
-            <p>Score 0 - 0</p>
-            </Badge>
+        <Badge bg="blue.theme" color='white' width="100%" p="1em" display="flex" justifyContent="space-between">
+            <Text>TicTacToe</Text>
+            <Text>{isMyTurn ? 'Is your Turn!' : 'Is Enemy Turn!'}</Text>
+            <Text>Score 0 - 0</Text>
+        </Badge>
+        <AbsoluteCenter alignItems="center" justifyContent="center">
+       {showWinAlert && <VStack 
+          padding= '2em'
+          bg='green.300'
+          textAlign='center'
+          borderRadius='1em'
+          color='black.theme'
+        >
+          <Heading
+            as='h3'
+          >
+            Hai vinto!
+            </Heading>
+            <Text>Uscendo dal gioco..</Text>
+        </VStack>}
+        {showLoseAlert && <VStack 
+          padding= '2em'
+          bg='green.300'
+          textAlign='center'
+          borderRadius='1em'
+          color='black.theme'
+        >
+          <Heading
+            as='h3'
+          >
+            Hai perso!
+            </Heading>
+            <Text>Uscendo dal gioco..</Text>
+        </VStack>}
+        
+
+        
+        </AbsoluteCenter>
+
         <Grid
             marginTop="2em"
             templateColumns="repeat(3, 0.1fr)"
@@ -100,8 +143,8 @@ export const TicTacToe = (props) => {
 
     })}
     </Grid>
-    <Stack spacing={3} mt={5}>
-        <Button colorScheme="blue" variant="solid" disabled={!isMyTurn}>Surrender</Button>
+    <Stack spacing={3} mt={5} justifyContent='center' alignItems='center'>
+        <Button colorScheme="blue" variant="solid" width='10%' isDisabled={!isMyTurn}>Surrender</Button>
 
     </Stack>
     </>

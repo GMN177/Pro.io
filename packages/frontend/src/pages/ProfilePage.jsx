@@ -1,26 +1,40 @@
 import { Divider, HStack, Heading,  VStack, Button, Box, Input, Text } from '@chakra-ui/react'
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 // import users from reducer store
 import { useDispatch, useSelector } from 'react-redux'
 import { CustomModal } from '../components/Utils/CustomModal'
 import {CustomAlert} from '../components/Utils/CustomAlert'
 import { loggedUserSelectors } from '@/store/loggedUser/loggedUser.selector'
 import { loggedUserActions } from '@/store/loggedUser/loggedUser.action'
+import { loginActions } from '@/store/login/login.action'
+import { Link as ReachLink, useNavigate } from "react-router-dom";
 
 export const ProfilePage = () => {
+
     const dispatch = useDispatch();
     const isLoading = useSelector(loggedUserSelectors.getIsLoading)
     const isError = useSelector(loggedUserSelectors.getIsError)
+    const isSuccess = useSelector(loggedUserSelectors.getIsSuccess)
     const loggedUser = useSelector(loggedUserSelectors.getLoggedUserInfo)
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
     const [newPassword, setNewPassword] = useState("");
 
-    console.log("isLoading", isLoading)
-    console.log("isError", isError)
+    const navigate = useNavigate()
 
-    console.log("loggedUser", loggedUser.username);
+    useEffect(() => {
+
+        if(isSuccess) {
+            console.log(loggedUser.id)
+            dispatch(loggedUserActions.findLoggedUser(loggedUser.id))
+
+        }
+
+        setTimeout(() => {
+            dispatch(loggedUserActions.resetUserAttributes())
+        }, 3000)
+
+    }, [isError, isSuccess])
 
     // submit function to change username
     const changeUsername = () => {
@@ -42,6 +56,13 @@ export const ProfilePage = () => {
         setNewPassword("")
     }
 
+    const deleteUser = () => {
+        const id = loggedUser.id
+       
+        dispatch(loggedUserActions.deleteUser({id}))
+        dispatch(loginActions.logout('', navigate))
+    }
+
 
     return (
         <VStack p={4} justifyContent="flex-start" alignItems="flex-start">
@@ -61,7 +82,8 @@ export const ProfilePage = () => {
                         isIcon={false}
                     >
                         <VStack>
-                        <CustomAlert status="success" message="Username cambiato con successo"/>
+                            {isError && <CustomAlert status="error" message="Errore durante il cambio di username"/>}
+                        {isSuccess && <CustomAlert status="success" message="Username cambiato con successo"/> }
 
                         <Input
                                 variant="flushed"
@@ -151,7 +173,7 @@ export const ProfilePage = () => {
                     >
                         <VStack>
                             <Text mb="4">Are you sure you want to delete your account?</Text>
-                            <Button colorScheme="red" >Confirm Delete</Button>
+                            <Button colorScheme="red" onClick={deleteUser}>Confirm Delete</Button>
                         </VStack>
 
                 </CustomModal>
