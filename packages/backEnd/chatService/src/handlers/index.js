@@ -10,7 +10,7 @@ const onConnection = (io) => {
 
             await socket.join(matchId);
 
-            io.to(matchId).emit("NEW_MESSAGE", {
+            socket.to(matchId).emit("NEW_MESSAGE", {
                 sender: username,
                 message: username + ' has joined the chat.'
             });
@@ -24,7 +24,7 @@ const onConnection = (io) => {
 
 
             socket.on("disconnect", () => {
-                io.to(matchId).emit("NEW_MESSAGE", {
+                socket.to(matchId).emit("NEW_MESSAGE", {
                     sender: username,
                     message: username + ' has left the chat.'
                 });
