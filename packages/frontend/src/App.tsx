@@ -22,6 +22,25 @@ function App() {
   const accessToken = useSelector(loginSelectors.getAccessToken);
   const refreshToken = useSelector(loginSelectors.getRefreshToken);
   const userId = useSelector(loginSelectors.getUserId)
+  const expiresAt = useSelector(loginSelectors.getExpiresAt)
+
+  useEffect(() => {
+    const storedSessionData = sessionStorage.getItem('PRO_IO_SESSION');
+    if(storedSessionData) {
+      const parsedData = JSON.parse(storedSessionData)
+
+      if (parsedData.accessToken && parsedData.refreshToken && parsedData.expiresAt && parsedData.id) {
+        dispatch(loginActions.setStoredInfo(parsedData))
+      }
+    }
+
+    return () => {
+      if(tokenAutoRefresh) {
+        clearInterval(tokenAutoRefresh)
+        tokenAutoRefresh = null
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if(userId) {
@@ -35,13 +54,13 @@ function App() {
       tokenAutoRefresh = null;
     }
 
-    if (refreshToken) {
+    if (refreshToken && expiresAt) {
       clearInterval(tokenAutoRefresh)
-      tokenAutoRefresh = setInterval(() => {
+      tokenAutoRefresh = setTimeout(() => {
         dispatch(loginActions.userTokenRefresh({ refreshToken }));
-      }, 840000); // 14 minutes refresh for a 15 minutes access token
+      }, ((expiresAt - Date.now()) - (60 * 1000))); // 14 minutes refresh for a 15 minutes access token
     }
-  }, [accessToken, refreshToken]);
+  }, [accessToken, refreshToken, expiresAt]);
 
   return (
       <>

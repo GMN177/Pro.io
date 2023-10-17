@@ -18,6 +18,8 @@ export const gameSocket = ({token, matchId}): ReturnType<typeof io>=> {
     return gameSocketInstance;
 };
 
+
+
 export const chatSocket = ({username, matchId}): ReturnType<typeof io>=> {
     chatSocketInstance =  io(URL, {
         autoConnect: false,

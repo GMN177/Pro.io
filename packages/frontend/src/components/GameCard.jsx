@@ -30,6 +30,7 @@ import { loggedUserActions } from "@/store/loggedUser/loggedUser.action";
 import {useNavigate} from "react-router-dom";
 import {CustomAlert} from '../components/Utils/CustomAlert'
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
+import {loginActions} from "@/store/login/login.action";
 
 export const GameCard = ({ id, name, title, image, description, openLobby, playersOnline, openPrivateLobby }) => {
 
@@ -65,6 +66,8 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
       })
 
       socketInstance.on("connect_error", (err) => {
+        dispatch(loginActions.userTokenRefresh({ refreshToken }));
+
         console.log('err',err instanceof Error); // true
         console.log(err.message); // not authorized
         console.log(err.data); // { content: "Please retry later" }
@@ -126,7 +129,6 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
         setErrorMessage(matchId);
         return
       }
-
       const socketInstance = gameSocket({token, matchId });
       const chatSocketInstance = chatSocket({username, matchId})
 
