@@ -37,9 +37,15 @@ router.post('/login', async (req, res) => {
     try {
         const a  = await userController.login(req.body.username, req.body.password)
         if(a.status == 200) {
-            let tokens = authController.generateTokens({id: a.response.data.id})
-            let insertToken =  await authController.insertRefreshToken(tokens.refreshToken, a.response.data.id)
-            return res.status(200).send(jsend.success({accessToken: tokens.accessToken, refreshToken: tokens.refreshToken}))
+            let check = await authController.findRefreshTokenByUserId(a.response.data.id)
+            if(check == null){
+                let tokens = authController.generateTokens({id: a.response.data.id})
+                let insertToken =  await authController.insertRefreshToken(tokens.refreshToken, a.response.data.id)
+                return res.status(200).send(jsend.success({accessToken: tokens.accessToken, refreshToken: tokens.refreshToken}))
+            }else{
+                let at = jwt.sign({id:a.response.data.id}, process.env.ACCESS_TOKEN_SECRET,{expiresIn: '15m'})
+                return res.status(200).send(jsend.success({accessToken: at, refreshToken: check.refresh_token}))
+            }
         }else{
             return res.status(a.status).send(a.response)
         }

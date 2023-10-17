@@ -66,5 +66,18 @@ async function deleteAllTokens(){
     }
 }
 
+async function findRefreshTokenByUserId(id){
+    try{
+        res = await refreshToken.findOne({userId: id})
+        if(res == null) {
+            return null
+        }else{
+            return res
+        }
+    }catch(err) {
+        throw new Error(err.message)
+    }
+} 
 
-module.exports = {generateTokens, insertRefreshToken, removeRefreshToken, findRefreshToken, deleteAllTokens}
+
+module.exports = {generateTokens, insertRefreshToken, removeRefreshToken, findRefreshToken, deleteAllTokens, findRefreshTokenByUserId}
