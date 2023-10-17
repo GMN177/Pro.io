@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState, useRef} from 'react'
-import {getGameSocketInstance} from "@/api/socket";
+import {getChatSocketInstance, getGameSocketInstance} from "@/api/socket";
 import { Badge, Button, Grid,GridItem, Heading, Stack, VStack, AbsoluteCenter, useDisclosure, Text  } from '@chakra-ui/react';
 import {isUndefined} from "lodash";
 import {useSelector} from "react-redux";

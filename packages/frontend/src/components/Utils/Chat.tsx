@@ -19,27 +19,35 @@ import {io} from 'socket.io-client';
 
 const Chat = ({isOpen, onClose, onOpen, btnRef, username, matchId}) => {
 
-    const [socket, setSocket] = useState<ReturnType<typeof io>>()
     const [messages, setMessages] = useState([])
+    const chatSocket = useMemo(() => getChatSocketInstance(), [])
 
     const sendMessage = useCallback((data) => {
         console.log('newMessage: ', data)
         setMessages((mess) => [...mess, data])
     }, [])
-    useEffect(() => {
-        if(username && matchId && !socket) {
-            const socketInstance = chatSocket({username, matchId})
 
-            socketInstance.on('NEW_MESSAGE', sendMessage)
-            socketInstance.connect()
-            setSocket(socketInstance)
+    useEffect(() => {
+        if(chatSocket) {
+            chatSocket.on('NEW_MESSAGE', sendMessage)
+            chatSocket.connect()
         }
         return () => {
-            if(socket) {
-                socket.off('NEW_MESSAGE')
+            if(chatSocket) {
+                chatSocket.off('NEW_MESSAGE')
+                chatSocket.emit('disconnected')
             }
         }
-    }, [username, matchId, socket])
+     }, [])
+    // useEffect(() => {
+    //     if(username && matchId && !socket) {
+    //         const socketInstance = chatSocket({username, matchId})
+    //
+    //         socketInstance.on('NEW_MESSAGE', sendMessage)
+    //         socketInstance.connect()
+    //         setSocket(socketInstance)
+    //     }
+    // }, [username, matchId, socket])
 
     const inputRef = useRef()
     return (
@@ -69,8 +77,7 @@ const Chat = ({isOpen, onClose, onOpen, btnRef, username, matchId}) => {
                 <DrawerFooter>
                     <form id='chat-form' onSubmit={(e) => {
                         e.preventDefault()
-                        console.log('socket', socket)
-                        socket.emit('MESSAGE', inputRef.current.value)
+                        chatSocket.emit('MESSAGE', inputRef.current.value)
                         inputRef.current.value = ''
                     }}
                     >

@@ -22,19 +22,20 @@ import {
   Input
 } from "@chakra-ui/react";
 
-import {gameSocket} from "@/api/socket";
+import {chatSocket, gameSocket} from "@/api/socket";
 import {loginSelectors} from '@/store/login/login.selector'
 import {useSelector, useDispatch} from 'react-redux'
 import {matchServices} from "@/api/match.service";
 import { loggedUserActions } from "@/store/loggedUser/loggedUser.action";
 import {useNavigate} from "react-router-dom";
 import {CustomAlert} from '../components/Utils/CustomAlert'
+import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
 
 export const GameCard = ({ id, name, title, image, description, openLobby, playersOnline, openPrivateLobby }) => {
 
   const token = useSelector(loginSelectors.getAccessToken)
   const userId = useSelector(loginSelectors.getUserId)
-
+  const username = useSelector(loggedUserSelectors.getLoggedUserInfo).username
   const [keyPrivate, setKeyPrivate] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
   const dispatch = useDispatch()
@@ -90,6 +91,7 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
       console.log('matchKey',matchKey);
 
       const socketInstance = gameSocket({token, matchId : matchKey });
+      const chatSocketInstance = chatSocket({username, matchId: matchKey})
       console.log('socketInstance', socketInstance)
       /* Handlers socket */
       socketInstance.on('newState', (message) => {
@@ -126,6 +128,8 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
       }
 
       const socketInstance = gameSocket({token, matchId });
+      const chatSocketInstance = chatSocket({username, matchId})
+
       console.log('socketInstance', socketInstance)
       /* Handlers socket */
       socketInstance.on('newState', (message) => {
