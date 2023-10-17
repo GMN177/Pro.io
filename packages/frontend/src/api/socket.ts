@@ -31,6 +31,5 @@ export const chatSocket = ({username, matchId}): ReturnType<typeof io>=> {
 };
 
 
-
 export const getGameSocketInstance = (): ReturnType<typeof io> | undefined => gameSocketInstance
 export const getChatSocketInstance = (): ReturnType<typeof io> | undefined => chatSocketInstance

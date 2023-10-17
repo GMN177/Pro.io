@@ -35,19 +35,5 @@ export const friendsReducer = {
                 isError: true
             }
         });
-        builder.addCase(friendsActions.acceptOrDeclineFriendRequest.fulfilled, (state, action): FriendsState => {
-            if(action.payload.accept) {
-                return {
-                    ...state,
-                    pending: state.pending.filter(p => p.id !== action.payload.friendId),
-                    friends: [...state.friends, state.pending.find(p => p.id === action.payload.friendId)]
-                }
-            }
-            return {
-                ...state,
-                pending: state.pending.filter(p => p.id !== action.payload.friendId),
-                usersWhoAreNotFriends: [...state.usersWhoAreNotFriends, state.pending.find(p => p.id === action.payload.friendId)]
-            }
-        });
     })
 }

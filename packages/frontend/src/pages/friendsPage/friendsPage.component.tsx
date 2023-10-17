@@ -27,7 +27,7 @@ export const FriendsPage = () => {
         }
     }
 
-    if(!friends || !otherUsers) {
+    if(!friends || !otherUsers || !loggedUser?.id) {
         return null;
     }
     return (
@@ -65,8 +65,8 @@ export const FriendsPage = () => {
                         {pending.map((p, key) => (
                             <li key={key}>
                                 <span>{p.username}</span>
-                                <Button onClick={() => dispatch(friendsActions.acceptOrDeclineFriendRequest({friendId: p, accept: true}))}>Accept</Button>
-                                <Button onClick={() => dispatch(friendsActions.acceptOrDeclineFriendRequest({friendId: p, accept: false}))}>Decline</Button>
+                                <Button onClick={() => dispatch(friendsActions.acceptOrDeclineFriendRequest({friendId: p._id, accept: true, userId: loggedUser.id}))}>Accept</Button>
+                                <Button onClick={() => dispatch(friendsActions.acceptOrDeclineFriendRequest({friendId: p._id, accept: false, userId: loggedUser.id}))}>Decline</Button>
                             </li>
                         ))}
                     </ul>

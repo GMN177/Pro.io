@@ -22,18 +22,20 @@ export const fetchFriendsList = createAsyncThunk(FRIENDS_ACTIONS.fetchFriendsLis
     }
 })
 
-export const sendFriendRequest = createAsyncThunk(FRIENDS_ACTIONS.sendFriendRequest, async(bean: {userId: string, friendId: string}) => {
+export const sendFriendRequest = createAsyncThunk(FRIENDS_ACTIONS.sendFriendRequest, async(bean: {userId: string, friendId: string}, thunkAPI) => {
     try {
         await usersService.addFriend(bean);
+        thunkAPI.dispatch(fetchFriendsList(bean.userId))
         return null
     } catch(e) {
         throw e;
     }
 })
 
-export const acceptOrDeclineFriendRequest = createAsyncThunk(FRIENDS_ACTIONS.acceptOrDeclineFriendRequest, async(bean: {friendId: string, accept: boolean}) => {
+export const acceptOrDeclineFriendRequest = createAsyncThunk(FRIENDS_ACTIONS.acceptOrDeclineFriendRequest, async(bean: {friendId: string, accept: boolean, userId: string}, thunkAPI) => {
     try {
         await usersService.acceptOrDeclineFriendRequest(bean);
+        thunkAPI.dispatch(fetchFriendsList(bean.userId))
         return bean
     } catch(e) {
         throw e;

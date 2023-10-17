@@ -5,6 +5,7 @@ import {authenticationService} from '@/api/authentication.service';
 import jwt_decode from "jwt-decode";
 import {loggedUserActions} from '@/store/loggedUser/loggedUser.action';
 import {RootState} from '@/store/reducer.config';
+import {gameSocket, getChatSocketInstance, getGameSocketInstance} from '@/api/socket';
 const enum LOGIN_ACTIONS {
     userLogin = 'userLogin/',
     userTokenRefresh = 'userTokenRefresh/',

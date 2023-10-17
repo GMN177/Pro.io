@@ -33,8 +33,8 @@ const deleteUser = (id: string): EndpointResponse<User, null> => {
     return axios.delete(baseURL + usersEndpoints.users + id);
 }
 
-const acceptOrDeclineFriendRequest = (bean:{friendId: string, accept: boolean}): EndpointResponse<any, any> => {
-    return axios.post(baseURL + usersEndpoints.users + 'friends/accept', bean)
+const acceptOrDeclineFriendRequest = (bean:{friendId: string, accept: boolean, userId: string}): EndpointResponse<any, any> => {
+    return axios.post(baseURL + usersEndpoints.users + bean.userId + '/friends/accept', {friendId: bean.friendId, accept: bean.accept})
 }
 
 export const usersService = {
