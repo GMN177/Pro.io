@@ -27,6 +27,7 @@ export const RegisterPage = () => {
   const isLoadingLogin = useSelector(loginSelectors.getIsLoading);
   const isErrorRegister = useSelector(registerSelectors.getIsError);
   const messageError = useSelector(registerSelectors.getErrorMessage);
+  const isSuccess = useSelector(registerSelectors.getIsSuccess);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -34,6 +35,8 @@ export const RegisterPage = () => {
       dispatch(registerActions.signUp({ username, email, password, navigate }));
     }
   };
+
+  console.log(isSuccess)
 
 
   return (
@@ -78,6 +81,7 @@ export const RegisterPage = () => {
               borderBottomWidth={2}
               id="email"
               autoComplete="email"
+              type="email"
             />
             <Input
               variant="flushed"

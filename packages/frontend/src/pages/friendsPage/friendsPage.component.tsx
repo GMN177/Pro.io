@@ -1,5 +1,8 @@
 import React, {useEffect} from 'react'
-import {Box, Button, Heading, HStack, VStack} from '@chakra-ui/react';
+import {Box, Button, Heading, HStack, VStack, Tabs, TabList, TabPanels, Tab, TabPanel, List,
+    ListItem,
+    ListIcon} from '@chakra-ui/react';
+import { AddIcon, CheckIcon, CloseIcon, SpinnerIcon, StarIcon } from '@chakra-ui/icons';
 import {useSelector} from 'react-redux';
 import {loggedUserSelectors} from '@/store/loggedUser/loggedUser.selector';
 import {useAppDispatch} from '@/store/store.config';
@@ -31,55 +34,84 @@ export const FriendsPage = () => {
         return null;
     }
     return (
-        <VStack>
-            <HStack width={'100%'} alignItems={'start'} paddingX={20}>
-                <Box width={'50%'} p={10}>
-                    <Heading as={'h1'}>Friends</Heading>
-                    <ul>
-                        {friends.map((f, key) => (
-                            <li key={key}>
-                                {f.username}
-                            </li>
-                        ))}
-                    </ul>
-                </Box>
-                <Box width={'50%'} p={10}>
-                    <Heading as={'h1'}>Users to add as friends</Heading>
-                    <ul>
-                        {otherUsers.map((u, key) => (
-                            <HStack key={key}>
-                                <li>
-                                    <div>{u.username}</div>
-                                </li>
-                                <Button onClick={() => addFriend(u)}>Add</Button>
-                            </HStack>
+        
+            <Tabs variant="soft-rounded" p={5} >
+                <TabList>
+                    <Tab _selected={{color: 'white', bg: 'blue.theme'}} mr={2}>Friends</Tab>
+                    <Tab _selected={{color: 'white', bg: 'blue.theme'}} mx={1}>Add Friends</Tab>
+                    <Tab _selected={{color: 'white', bg: 'blue.theme'}} mx={1}>Pending Requests</Tab>
+                    <Tab _selected={{color: 'white', bg: 'blue.theme'}} ml={2}>Requests Sent</Tab>
+                </TabList>
+            
+            <TabPanels>
+                <TabPanel>
+                    <Box>
+                        <Heading as={'h1'} my={5}>Friends</Heading>
+                        <List spacing={5} p={3}>
+                            {friends.map((f, key) => (
+                                <ListItem key={key} >
+                                    <Box  bgGradient='linear(to-l, blue.theme, blue.200)' display="inline-block" width="30%" p={1} borderRadius={10}>
+                                    <ListIcon as={StarIcon} color='blue.theme' bg="white" borderRadius={10} p={1}/>
+                                    {f.username}
+                                    </Box>
+                                </ListItem>
 
-                        ))}
-                    </ul>
-                </Box>
-            </HStack>
-            <HStack width={'100%'} alignItems={'start'} paddingY={10} paddingX={20}>
-                <Box width={'50%'}>
-                    <Heading as={'h1'}>Pending requests</Heading>
-                    <ul>
-                        {pending.map((p, key) => (
-                            <li key={key}>
-                                <span>{p.username}</span>
-                                <Button onClick={() => dispatch(friendsActions.acceptOrDeclineFriendRequest({friendId: p._id, accept: true, userId: loggedUser.id}))}>Accept</Button>
-                                <Button onClick={() => dispatch(friendsActions.acceptOrDeclineFriendRequest({friendId: p._id, accept: false, userId: loggedUser.id}))}>Decline</Button>
-                            </li>
-                        ))}
-                    </ul>
-                </Box>
-                <Box width={'50%'}>
-                    <Heading as={'h1'}>Requests sent</Heading>
-                    {sent.map((s, key) => (
-                        <li key={key}>
-                            <span>{s.username}</span>
-                        </li>
-                    ))}
-                </Box>
-            </HStack>
-        </VStack>
+                            ))}
+                        </List>
+                    </Box>
+                </TabPanel>
+                <TabPanel>
+                    <Box >
+                        <Heading as={'h1'} my={5}>Users to add as friends</Heading>
+                        <List spacing={5} p={3}>
+                            {otherUsers.map((u, key) => (
+                                <ListItem key={key} >
+                                    <Box  bgGradient='linear(to-l, green.200, green.400)' display="inline-block" width="30%" p={1} borderRadius={10}>
+                                    <ListIcon as={AddIcon} color='green.500' onClick={() => addFriend(u)} bg="white" borderRadius={10} focusable="true" p={1}/>
+                                    {u.username}
+                                    </Box>
+                                </ListItem>
+
+                            ))}
+                        </List>
+                    </Box>
+                </TabPanel>
+                            
+                <TabPanel>
+                    <Box >
+                        <Heading as={'h1'} my={5}>Pending requests</Heading>
+                        <List spacing={5} p={3}>
+                            {pending.map((p, key) => (
+                                <ListItem key={key} >
+                                    <Box  bgGradient='linear(to-l, purple.200, purple.400)' display="inline-block" width="30%" p={1} borderRadius={10}>
+                                    <ListIcon as={CheckIcon} color='green.500' onClick={() => dispatch(friendsActions.acceptOrDeclineFriendRequest({friendId: p._id, accept: true, userId: loggedUser.id}))} bg="white" borderRadius={10} focusable="true" p={1}/>
+                                    <ListIcon as={CloseIcon} color='red.500' onClick={() => dispatch(friendsActions.acceptOrDeclineFriendRequest({friendId: p._id, accept: false, userId: loggedUser.id}))} bg="white" borderRadius={10} focusable="true" p={1}/>
+                                    {p.username}
+                                    </Box>
+                                </ListItem>
+
+                            ))}
+                        </List>
+                    </Box>
+                </TabPanel>
+                <TabPanel>
+                    <Box >
+                        <Heading as={'h1'} my={5}>Requests sent</Heading>
+                        <List spacing={5} p={3}>
+                            {sent.map((s, key) => (
+                                <ListItem key={key} >
+                                    <Box  bgGradient='linear(to-l, yellow.200, yellow.400)' display="inline-block" width="30%" p={1} borderRadius={10}>
+                                    <ListIcon as={SpinnerIcon} color='grey.500' bg="white" borderRadius={10} p={1}/>
+                                    {s.username}
+                                    </Box>
+                                </ListItem>
+
+                            ))}
+                        </List>
+                    </Box>
+                </TabPanel>
+            </TabPanels>
+            </Tabs>
+    
     )
 }
