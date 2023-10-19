@@ -75,7 +75,7 @@ const Navbar = (props) => {
                     <div>
 
                       <Link  as={ReachLink} to={"/settings"} style={{ textDecoration: "none" }}>
-                        <Button color="blue.theme" bg="none" fontWeight={200} p={0} _hover="none">
+                        <Button color="blue.theme" bg="none" fontWeight={200} p={0} _hover={{}}>
                           Settings
                         </Button>
                       </Link>
@@ -83,7 +83,7 @@ const Navbar = (props) => {
                     <div>
 
                       <Link  as={ReachLink} to={"/friends"} style={{ textDecoration: "none" }}>
-                        <Button color="blue.theme" bg="none" fontWeight={200} p={0} _hover="none">
+                        <Button color="blue.theme" bg="none" fontWeight={200} p={0} _hover={{}}>
                           Friends
                         </Button>
                       </Link>

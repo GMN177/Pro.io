@@ -84,7 +84,7 @@ const userLogout = createAsyncThunk(LOGIN_ACTIONS.userLogout, async (params: {re
 
 const setStoredInfo = createAsyncThunk(LOGIN_ACTIONS.setStoredInfo, async (params: {id: string, expiresAt: number, accessToken: string, refreshToken: string}, thunkAPI): Promise<{id: string, expiresAt: number, accessToken: string, refreshToken: string} | undefined> => {
     if(params.expiresAt && (params.expiresAt - (60 * 1000) < Date.now())) {
-        thunkAPI.dispatch(userLogout({refreshToken: params.refreshToken}))
+        sessionStorage.removeItem('PRO_IO_SESSION')
         return undefined
     }
     return {...params}
