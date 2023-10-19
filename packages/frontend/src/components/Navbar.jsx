@@ -75,16 +75,15 @@ const Navbar = (props) => {
                     <div>
 
                       <Link  as={ReachLink} to={"/settings"} style={{ textDecoration: "none" }}>
-                        <Button color="blue.theme" bg="none" fontWeight={200} p={0}>
+                        <Button color="blue.theme" bg="none" fontWeight={200} p={0} _hover="none">
                           Settings
                         </Button>
                       </Link>
                     </div>
                     <div>
-                      <Divider />
 
                       <Link  as={ReachLink} to={"/friends"} style={{ textDecoration: "none" }}>
-                        <Button color="blue.theme" bg="none" fontWeight={200} p={0}>
+                        <Button color="blue.theme" bg="none" fontWeight={200} p={0} _hover="none">
                           Friends
                         </Button>
                       </Link>
