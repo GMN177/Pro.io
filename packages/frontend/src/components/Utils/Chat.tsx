@@ -39,15 +39,6 @@ const Chat = ({isOpen, onClose, onOpen, btnRef, username, matchId}) => {
             }
         }
      }, [])
-    // useEffect(() => {
-    //     if(username && matchId && !socket) {
-    //         const socketInstance = chatSocket({username, matchId})
-    //
-    //         socketInstance.on('NEW_MESSAGE', sendMessage)
-    //         socketInstance.connect()
-    //         setSocket(socketInstance)
-    //     }
-    // }, [username, matchId, socket])
 
     const inputRef = useRef()
     return (

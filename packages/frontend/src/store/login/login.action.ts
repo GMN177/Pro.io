@@ -6,6 +6,7 @@ import jwt_decode from "jwt-decode";
 import {loggedUserActions} from '@/store/loggedUser/loggedUser.action';
 import {RootState} from '@/store/reducer.config';
 import {gameSocket, getChatSocketInstance, getGameSocketInstance} from '@/api/socket';
+import {usersService} from '@/api/users.service';
 const enum LOGIN_ACTIONS {
     userLogin = 'userLogin/',
     userTokenRefresh = 'userTokenRefresh/',
@@ -17,27 +18,30 @@ const userLogin = createAsyncThunk(LOGIN_ACTIONS.userLogin, async (bean:{usernam
     try {
         const {username, password} = bean
         const resp = (await authenticationService.login(username, password)).data.data
-
         const {accessToken, refreshToken} = resp
-
-        if(accessToken) {
-            axios.defaults.headers['Authorization'] = 'Bearer ' + accessToken;
-        }
         const id = jwt_decode<{id: string}>(accessToken).id
-        sessionStorage.setItem('PRO_IO_SESSION', JSON.stringify({
-            accessToken,
-            refreshToken,
-            // 15 minutes
-            expiresAt: (Date.now() + (15 * 60 * 1000)),
-            id
-        }))
-        bean.navigate('/')
+        const loggedUser = (await usersService.findSingleUser(id)).data.data.user
+        if(loggedUser.status === 'INACTIVE' || loggedUser.inactive === true) {
+            alert('User has not confirmed his email')
+        } else {
+            if (accessToken) {
+                axios.defaults.headers['Authorization'] = 'Bearer ' + accessToken;
+            }
+            sessionStorage.setItem('PRO_IO_SESSION', JSON.stringify({
+                accessToken,
+                refreshToken,
+                // 15 minutes
+                expiresAt: (Date.now() + (15 * 60 * 1000)),
+                id
+            }))
+            bean.navigate('/')
 
-        return {
-            id,
-            accessToken,
-            refreshToken,
-            expiresAt: (Date.now() + (15 * 60 * 1000))
+            return {
+                id,
+                accessToken,
+                refreshToken,
+                expiresAt: (Date.now() + (15 * 60 * 1000))
+            }
         }
     } catch(e) {
         console.log('Login request failed', e)

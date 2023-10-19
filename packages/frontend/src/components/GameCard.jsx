@@ -52,6 +52,8 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
       console.log('querySocket', querySocket)
 
       const socketInstance = gameSocket({token, matchId });
+      const chatSocketInstance = chatSocket({username, matchId})
+
       /* Handlers socket */
       socketInstance.off('newState').on('newState', (message) => {
         if(message.stateValue === 'playing') {

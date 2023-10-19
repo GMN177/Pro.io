@@ -10,23 +10,22 @@ export const fetchFriendsList = createAsyncThunk(FRIENDS_ACTIONS.fetchFriendsLis
     try {
         const {friends, sent, pending} = (await usersService.findFriends(userId)).data.data
         const {users} = (await usersService.findUsers()).data.data
-
         return {
             friends,
             users,
             sent,
-            pending
+            pending,
+            myId: userId
         }
     } catch(e) {
         throw e;
     }
 })
 
-export const sendFriendRequest = createAsyncThunk(FRIENDS_ACTIONS.sendFriendRequest, async(bean: {userId: string, friendId: string}, thunkAPI) => {
+export const sendFriendRequest = createAsyncThunk(FRIENDS_ACTIONS.sendFriendRequest, async(bean: {userId: string, friendId: string}, thunkAPI): Promise<{userId: string, friendId: string}>  => {
     try {
         await usersService.addFriend(bean);
-        thunkAPI.dispatch(fetchFriendsList(bean.userId))
-        return null
+        return bean
     } catch(e) {
         throw e;
     }
@@ -35,7 +34,6 @@ export const sendFriendRequest = createAsyncThunk(FRIENDS_ACTIONS.sendFriendRequ
 export const acceptOrDeclineFriendRequest = createAsyncThunk(FRIENDS_ACTIONS.acceptOrDeclineFriendRequest, async(bean: {friendId: string, accept: boolean, userId: string}, thunkAPI) => {
     try {
         await usersService.acceptOrDeclineFriendRequest(bean);
-        thunkAPI.dispatch(fetchFriendsList(bean.userId))
         return bean
     } catch(e) {
         throw e;

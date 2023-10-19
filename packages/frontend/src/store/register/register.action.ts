@@ -14,7 +14,7 @@ const signUp = createAsyncThunk(REGISTER_ACTIONS.signUp, async (bean:{username:s
     try {
         const {username, email, password, navigate} = bean
         const resp = await authenticationService.signUp(username, email, password)
-        thunkAPI.dispatch(loginActions.userLogin({username, password, navigate}))
+        navigate('/login')
         return ;
     } catch(e) {
         // retrieve error message from exception

@@ -6,5 +6,6 @@ export interface User {
     totWins: number,
     friends: User[],
     status: string,
+    inactive?: boolean,
     matchPlayingId: string
 }
