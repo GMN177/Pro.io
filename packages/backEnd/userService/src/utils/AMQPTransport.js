@@ -22,6 +22,7 @@ class AMQPTransport extends Transport {
 async function send(data) {
 	let connection;
 	let error;
+	console.log('data:', data);
 
 	try {
 		connection = await amqp.connect(process.env.RABBITMQ_URI);
@@ -32,7 +33,7 @@ async function send(data) {
 			durable: false
 		});
 
-		channel.sendToQueue(process.env.LOGS_QUEUE, Buffer.from(data));
+		channel.sendToQueue(process.env.LOGS_QUEUE, Buffer.from(JSON.stringify(data)));
 
 		await channel.close();
 	} catch (error_) {
