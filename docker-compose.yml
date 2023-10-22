@@ -15,6 +15,11 @@ services:
             - 5672:5672
             - 15672:15672
         restart: unless-stopped
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:15672"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
     logaggregatorservice:
         container_name: 'LogAggregatorService'
         env_file: .env
@@ -22,7 +27,8 @@ services:
             context: ./packages/backEnd/logAggregatorService
         restart: unless-stopped
         depends_on:
-            - rabbitmq
+            rabbitmq:
+                condition: service_healthy
         command: "npm run start"
     userservice:
         container_name: 'UserService'
@@ -34,7 +40,7 @@ services:
         restart: unless-stopped
         depends_on:
             - mongodb
-            - rabbitmq
+            - logaggregatorservice
         command: "npm run start"
     matchservice:
         container_name: 'MatchService'
@@ -46,7 +52,7 @@ services:
         restart: unless-stopped
         depends_on:
             - mongodb
-            - rabbitmq
+            - logaggregatorservice
         command: "npm run start"
     gameservice:
         container_name: 'GameService'
@@ -58,7 +64,7 @@ services:
         restart: unless-stopped
         depends_on:
             - mongodb
-            - rabbitmq
+            - logaggregatorservice
         command: "npm run start"
     socketservice:
         container_name: 'SocketService'
