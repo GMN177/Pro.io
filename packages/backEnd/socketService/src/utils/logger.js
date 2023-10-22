@@ -26,7 +26,7 @@ winston.addColors(colors);
 
 const format = winston.format.combine(
     winston.format.timestamp({
-        format: 'YYYY-MM-DD HH:mm:ss:ms'
+        format: 'YYYY-MM-DD HH:mm:ss:SS'
     }),
     winston.format.colorize({
         all: true
