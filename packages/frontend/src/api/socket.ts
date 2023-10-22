@@ -1,5 +1,5 @@
 import {io} from 'socket.io-client';
-const URL = "http://52.23.252.196";
+const URL = "http://3.88.104.80";
 
 let gameSocketInstance: ReturnType<typeof io> | undefined;
 let chatSocketInstance: ReturnType<typeof io> | undefined;

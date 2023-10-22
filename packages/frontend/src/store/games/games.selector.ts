@@ -8,7 +8,7 @@ const getIsLoading = (state: RootState): boolean => {
     return state.games.isLoading;
 }
 
-const getGamesList = (state: RootState): [] => {
+const getGamesList = (state: RootState): any[] => {
     return state.games.games
 }
 export const gamesSelectors = {

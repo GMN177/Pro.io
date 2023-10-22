@@ -6,7 +6,7 @@ const enum gamesEndpoints {
     games = "games/"
 }
 
-const getAllGames = (): EndpointResponse<Array<Game>, any> => {
+const getAllGames = (): EndpointResponse<{message:{games:Game[]}}, any> => {
     return axios.get(baseURL + gamesEndpoints.games);
 }
 

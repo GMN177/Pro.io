@@ -68,8 +68,10 @@ const Chat = ({isOpen, onClose, onOpen, btnRef, username, matchId}) => {
                 <DrawerFooter>
                     <form id='chat-form' onSubmit={(e) => {
                         e.preventDefault()
+                        // @ts-ignore
                         chatSocket.emit('MESSAGE', inputRef.current.value)
-                        inputRef.current.value = ''
+                        // @ts-ignore
+                        inputRef!.current!.value = ''
                     }}
                     >
                         <Input placeholder='Type here...' mr={5} ref={inputRef}/>

@@ -22,7 +22,7 @@ const changeUsernamePassword = (oldPassword: string, newPassword: string, id: st
     return axios.patch(baseURL + usersEndpoints.users + id, {"oldPassword": oldPassword, "newUsername": null, "newPassword": newPassword});
 }
 
-const findFriends = (userId: string): EndpointResponse<{friends: string[], sent: string[], pending: string[]}, any> => {
+const findFriends = (userId: string): EndpointResponse<{friends: any[], sent: any[], pending: any[]}, any> => {
     return axios.get(baseURL + usersEndpoints.users + userId + '/friends/')
 }
 

@@ -29,7 +29,7 @@ const changeUsernameUser = createAsyncThunk(LOGGED_USER_ACTIONS.changeUsernameUs
         const {password, username, id} = params
         const resp = await usersService.changeUsernameUser(username, password,id)
         console.log(resp)
-      
+
     } catch(e) {
         console.log("error", e.response.data)
         console.log('changeUsernameUser request failed')
@@ -61,7 +61,7 @@ const addUserToMatch = createAction(LOGGED_USER_ACTIONS.addUserToMatch, (matchId
 });
 
 const resetUserAttributes = createAction(LOGGED_USER_ACTIONS.resetUserAttributes, () => {
-    return {};
+    return {payload: {}};
 });
 
 const deleteUser = createAsyncThunk(LOGGED_USER_ACTIONS.deleteUser, async (params: { id: string} ,thunkAPI) => {

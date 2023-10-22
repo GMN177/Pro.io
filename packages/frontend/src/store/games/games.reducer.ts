@@ -28,7 +28,7 @@ export const gamesReducer = {
 
             const {resp} = action.payload;
 
-            const games = resp.map((game) => {
+            const games = resp.games.map((game) => {
                 return {
                     ...game,
                     activePlayers: ingameMatches.filter((match) => {
