@@ -11,6 +11,7 @@
   "author": "",
   "license": "MIT License",
   "dependencies": {
+    "amqplib": "^0.10.3",
     "dotenv": "^16.0.3",
     "socket.io": "^4.7.2",
     "jsonwebtoken": "^9.0.0",

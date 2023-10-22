@@ -1,4 +1,5 @@
 const winston = require('winston');
+const AMQPTransport = require('./AMQPTransport');
 
 const levels = {
     error: 0,
@@ -24,7 +25,7 @@ const colors = {
 
 winston.addColors(colors);
 
-const format = winston.format.combine(
+const consoleFormat = winston.format.combine(
     winston.format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss:SS'
     }),
@@ -36,14 +37,25 @@ const format = winston.format.combine(
     )
 );
 
+const amqpFormat = winston.format.combine(
+    winston.format.timestamp({
+        format: 'YYYY-MM-DD HH:mm:ss:SS'
+    })
+);
+
 const transports = [
-    new winston.transports.Console()
+    new winston.transports.Console({
+        format: consoleFormat
+    }),
+    new AMQPTransport({
+        serviceName: 'chatService',
+        format: amqpFormat
+    })
 ];
 
 const logger = winston.createLogger({
     level: level(),
     levels,
-    format,
     transports
 });
 

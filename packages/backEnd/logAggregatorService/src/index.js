@@ -16,11 +16,11 @@ const listen = async () => {
         durable: false
     });
 
-    await channel.consume(
+    channel.consume(
         process.env.LOGS_QUEUE,
         (message) => {
             let log = JSON.parse(message.content.toString());
-            let logString = `${log.timestamp} [${log.timestamp}] - ${log.level}: ${log.message}`;
+            let logString = `${log.timestamp} [${log.serviceName}] - ${log.level}: ${log.message}`;
             if (log.level === 'error')
                 logger.error(logString);
             else if (log.level === 'warn')
