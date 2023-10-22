@@ -32,7 +32,7 @@ async function send(data) {
 			durable: false
 		});
 
-		channel.sendToQueue(process.env.LOGS_QUEUE, Buffer.from(message));
+		channel.sendToQueue(process.env.LOGS_QUEUE, Buffer.from(data));
 
 		await channel.close();
 	} catch (error_) {
