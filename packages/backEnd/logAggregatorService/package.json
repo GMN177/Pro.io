@@ -1,5 +1,5 @@
 {
-  "name": "userservice",
+  "name": "logaggregatorservice",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
@@ -7,18 +7,10 @@
     "dev": "nodemon src/index.js",
     "start": "node src/index.js"
   },
-  "keywords": [],
   "author": "",
   "license": "MIT License",
   "dependencies": {
     "amqplib": "^0.10.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "jsend": "^1.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^6.12.1",
-    "morgan": "^1.10.0",
     "winston": "^3.11.0"
   },
   "devDependencies": {

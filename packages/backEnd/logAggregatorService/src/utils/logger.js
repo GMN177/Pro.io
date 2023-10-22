@@ -1,5 +1,4 @@
 const winston = require('winston');
-const AMQPTransport = require('./AMQPTransport');
 
 const levels = {
     error: 0,
@@ -38,8 +37,7 @@ const format = winston.format.combine(
 );
 
 const transports = [
-    new winston.transports.Console(),
-    new AMQPTransport()
+    new winston.transports.Console()
 ];
 
 const logger = winston.createLogger({

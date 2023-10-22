@@ -8,6 +8,22 @@ services:
         volumes: 
             - '${HOME}/data:/data/db'
         restart: unless-stopped
+    rabbitmq:
+        container_name: 'RabbitMQ'
+        image: rabbitmq:alpine
+        ports:
+            - 5672:5672
+            - 15672:15672
+        restart: unless-stopped
+    logaggregatorservice:
+        container_name: 'LogAggregatorService'
+        env_file: .env
+        build:
+            context: ./packages/backEnd/logAggregatorService
+        restart: unless-stopped
+        depends_on:
+            - rabbitmq
+        command: "npm run start"
     userservice:
         container_name: 'UserService'
         env_file: .env
@@ -18,6 +34,7 @@ services:
         restart: unless-stopped
         depends_on:
             - mongodb
+            - rabbitmq
         command: "npm run start"
     matchservice:
         container_name: 'MatchService'
@@ -29,6 +46,7 @@ services:
         restart: unless-stopped
         depends_on:
             - mongodb
+            - rabbitmq
         command: "npm run start"
     gameservice:
         container_name: 'GameService'
@@ -40,6 +58,7 @@ services:
         restart: unless-stopped
         depends_on:
             - mongodb
+            - rabbitmq
         command: "npm run start"
     socketservice:
         container_name: 'SocketService'
@@ -81,3 +100,4 @@ services:
             - matchservice
             - gameservice
             - socketservice
+            - chatservice
