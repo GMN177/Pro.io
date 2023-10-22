@@ -62,6 +62,30 @@ export const loggedUserReducer = {
 
             }
         });
+        builder.addCase(loggedUserActions.changeUsernamePassword.pending, (state): LoggedUserState => {
+            return {
+                ...state,
+                isLoading: true,
+                isError: false
+            }
+        });
+        builder.addCase(loggedUserActions.changeUsernamePassword.fulfilled, (state, action): LoggedUserState => {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+                isSuccess: true,
+            }
+        });
+        builder.addCase(loggedUserActions.changeUsernamePassword.rejected, (state, action): LoggedUserState => {
+            console.log("action", action)
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+
+            }
+        });
         builder.addCase(loggedUserActions.addUserToMatch, (state, action) => {
             const {matchId} = action.payload;
             return {

@@ -82,10 +82,10 @@ export const ProfilePage = () => {
                         isIcon={false}
                     >
                         <VStack>
-                            {isError && <CustomAlert status="error" message="Errore durante il cambio di username"/>}
-                        {isSuccess && <CustomAlert status="success" message="Username cambiato con successo"/> }
+                            {isError && <CustomAlert status="error" message="Something went wrong during the username change"/>}
+                            {isSuccess && <CustomAlert status="success" message="Username succesfully changed"/> }
 
-                        <Input
+                            <Input
                                 variant="flushed"
                                 placeholder="Password"
                                 type="password"
@@ -124,7 +124,9 @@ export const ProfilePage = () => {
                         isIcon={false}
                     >
                         <VStack>
-                        <Input
+                            {isError && <CustomAlert status="error" message="Something went wrong during the password change"/>}
+                            {isSuccess && <CustomAlert status="success" message="Password succesfully changed"/> }
+                            <Input
                                 variant="flushed"
                                 placeholder="Old Password"
                                 type="password"

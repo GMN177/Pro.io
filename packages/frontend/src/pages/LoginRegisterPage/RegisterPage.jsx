@@ -27,7 +27,6 @@ export const RegisterPage = () => {
   const isLoadingLogin = useSelector(loginSelectors.getIsLoading);
   const isErrorRegister = useSelector(registerSelectors.getIsError);
   const messageError = useSelector(registerSelectors.getErrorMessage);
-  const isSuccess = useSelector(registerSelectors.getIsSuccess);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -36,7 +35,6 @@ export const RegisterPage = () => {
     }
   };
 
-  console.log(isSuccess)
 
 
   return (
