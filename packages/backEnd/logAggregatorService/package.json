@@ -11,6 +11,7 @@
   "license": "MIT License",
   "dependencies": {
     "amqplib": "^0.10.3",
+    "dotenv": "^16.3.1",
     "winston": "^3.11.0"
   },
   "devDependencies": {

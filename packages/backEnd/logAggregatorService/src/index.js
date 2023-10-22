@@ -1,8 +1,9 @@
+require('dotenv').config();
 const amqp = require('amqplib');
 const logger = require('./utils/logger');
 
 try {
-    const connection = await amqp.connect("amqp://rabbitmq");
+    const connection = await amqp.connect(process.env.RABBITMQ_URI);
 
     const channel = await connection.createChannel();
 
@@ -11,12 +12,12 @@ try {
         await connection.close();
     });
 
-    await channel.assertQueue("logs", {
+    await channel.assertQueue(process.env.LOGS_QUEUE, {
         durable: false
     });
 
     await channel.consume(
-        queue,
+        process.env.LOGS_QUEUE,
         (message) => {
             logger.log(message.content.toString());
         }, {

@@ -24,15 +24,15 @@ async function send(data) {
 	let error;
 
 	try {
-		connection = await amqp.connect("amqp://rabbitmq");
+		connection = await amqp.connect(process.env.RABBITMQ_URI);
 
 		const channel = await connection.createChannel();
 
-		await channel.assertQueue("logs", {
+		await channel.assertQueue(process.env.LOGS_QUEUE, {
 			durable: false
 		});
 
-		channel.sendToQueue("logs", Buffer.from(message));
+		channel.sendToQueue(process.env.LOGS_QUEUE, Buffer.from(message));
 
 		await channel.close();
 	} catch (error_) {
