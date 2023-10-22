@@ -19,7 +19,20 @@ const listen = async () => {
     await channel.consume(
         process.env.LOGS_QUEUE,
         (message) => {
-            logger.log(message.content.toString());
+            let log = JSON.parse(message.content.toString());
+            let logString = `${log.timestamp} [${log.timestamp}] - ${log.level}: ${log.message}`;
+            if (log.level === 'error')
+                logger.error(logString);
+            else if (log.level === 'warn')
+                logger.warn(logString);
+            else if (log.level === 'info')
+                logger.info(logString);
+            else if (log.level === 'verbose')
+                logger.verbose(logString);
+            else if (log.level === 'debug')
+                logger.debug(logString);
+            else if (log.level === 'silly')
+                logger.silly(logString);
         }, {
             noAck: true
         }
