@@ -3,8 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const logger = require("./utils/logger");
 const morganMiddleware = require("./middlewares/morgan.middleware");
-const userServiceRouter = require('./services/userService');
-const authServiceRouter = require('./services/authService');
+const gameRouter = require('./services/gameService');
 const {
     connectToDatabase
 } = require('./configs/database');
@@ -19,8 +18,7 @@ app.use(express.json());
 
 app.use(morganMiddleware);
 
-app.use('/api/users', userServiceRouter);
-app.use('/api/auth', authServiceRouter);
+app.use('/api/games', gameRouter);
 
 connectToDatabase()
     .then(() => {

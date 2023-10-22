@@ -6,6 +6,6 @@ COPY package.json ./
 
 RUN npm install --omit=dev
 
-COPY . .
+COPY src/ src/
 
 EXPOSE 4000
