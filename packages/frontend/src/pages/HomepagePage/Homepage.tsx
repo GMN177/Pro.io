@@ -19,12 +19,12 @@ import {
 import "./Homepage.css";
 import { useSelector } from "react-redux";
 import { loginSelectors } from "@/store/login/login.selector";
+import { loggedUserSelectors } from "@/store/loggedUser/loggedUser.selector";
 import { getRandomPosition } from "@/lib/helperFunctions";
 import { Link as ReachLink, useNavigate } from "react-router-dom";
 
 const Homepage = () => {
   const accessToken = useSelector(loginSelectors.getAccessToken);
-
   const [isVisible, setIsVisible] = useState(true);
   const [position, setPosition] = useState(getRandomPosition());
   const [count, setCount] = useState(0);
@@ -94,14 +94,26 @@ const Homepage = () => {
         >
           Pro.io is a platform hosting multiple games, try them!
         </Heading>
-        <Link as={ReachLink} to={"/games"} style={{ textDecoration: "none" }}>
+        {
+        accessToken ?
+        <>
+          <Link as={ReachLink} to={"/games"} style={{ textDecoration: "none" }}>
+            <Button color="white" bg="blue.theme">
+              Play Online
+            </Button>
+          </Link>
           <Button color="white" bg="blue.theme">
-            Gioca Online
+            Play By Yourself
+          </Button>
+        </>
+        :
+        <Link as={ReachLink} to={"/login"} style={{ textDecoration: "none" }}>
+          <Button color="white" bg="blue.theme">
+            Play Now
           </Button>
         </Link>
-        <Button color="white" bg="blue.theme">
-          Gioca da solo
-        </Button>
+      }
+
       </VStack>
 
       <Box

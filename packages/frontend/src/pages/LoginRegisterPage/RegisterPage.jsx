@@ -26,6 +26,7 @@ export const RegisterPage = () => {
   const isLoadingRegister = useSelector(registerSelectors.getIsLoading);
   const isLoadingLogin = useSelector(loginSelectors.getIsLoading);
   const isErrorRegister = useSelector(registerSelectors.getIsError);
+  const messageError = useSelector(registerSelectors.getErrorMessage);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -33,6 +34,8 @@ export const RegisterPage = () => {
       dispatch(registerActions.signUp({ username, email, password, navigate }));
     }
   };
+
+
 
   return (
     <Center
@@ -63,6 +66,8 @@ export const RegisterPage = () => {
               mb={10}
               borderBottomColor="#D1D1E9"
               borderBottomWidth={2}
+              id="username"
+              autoComplete="username"
             />
             <Input
               variant="flushed"
@@ -72,6 +77,9 @@ export const RegisterPage = () => {
               mb={10}
               borderBottomColor="#D1D1E9"
               borderBottomWidth={2}
+              id="email"
+              autoComplete="email"
+              type="email"
             />
             <Input
               variant="flushed"
@@ -81,10 +89,12 @@ export const RegisterPage = () => {
               borderBottomColor="#D1D1E9"
               borderBottomWidth={2}
               onChange={(event) => setPassword(event.target.value)}
+              id="password"
+              autoComplete="current-password"
             />
-            {!isErrorRegister && (
+            {isErrorRegister && (
               <Text color="red.theme" mt={2}>
-                error
+                {messageError}
               </Text>
             )}
             <Button
@@ -94,6 +104,7 @@ export const RegisterPage = () => {
               colorScheme="twitter"
               isLoading={isLoadingRegister || isLoadingLogin}
               mt={6}
+              isDisabled={!username || !email || !password}
             >
               Register
             </Button>

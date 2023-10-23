@@ -10,7 +10,10 @@ import { loginActions } from "@/store/login/login.action";
 import { useAppDispatch } from "@/store/store.config";
 import { RegisterPage } from "./pages/LoginRegisterPage/RegisterPage";
 import { GameLibrary } from "./pages/GameLibraryPage/GameLibrary";
-import {SettingsPage} from "./pages/SettingsPage";
+import {ProfilePage} from "./pages/ProfilePage";
+import {Game} from '@/pages/Game';
+import {loggedUserActions} from '@/store/loggedUser/loggedUser.action';
+import {FriendsPage} from '@/pages/friendsPage/friendsPage.component';
 
 let tokenAutoRefresh = null;
 
@@ -18,6 +21,32 @@ function App() {
   const dispatch = useAppDispatch();
   const accessToken = useSelector(loginSelectors.getAccessToken);
   const refreshToken = useSelector(loginSelectors.getRefreshToken);
+  const userId = useSelector(loginSelectors.getUserId)
+  const expiresAt = useSelector(loginSelectors.getExpiresAt)
+
+  useEffect(() => {
+    const storedSessionData = sessionStorage.getItem('PRO_IO_SESSION');
+    if(storedSessionData) {
+      const parsedData = JSON.parse(storedSessionData)
+
+      if (parsedData.accessToken && parsedData.refreshToken && parsedData.expiresAt && parsedData.id) {
+        dispatch(loginActions.setStoredInfo(parsedData))
+      }
+    }
+
+    return () => {
+      if(tokenAutoRefresh) {
+        clearInterval(tokenAutoRefresh)
+        tokenAutoRefresh = null
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if(userId) {
+      dispatch(loggedUserActions.findLoggedUser(userId))
+    }
+  }, [userId])
 
   useEffect(() => {
     if (!accessToken) {
@@ -25,58 +54,80 @@ function App() {
       tokenAutoRefresh = null;
     }
 
-    if (refreshToken) {
-      tokenAutoRefresh = setInterval(() => {
+    if (refreshToken && expiresAt) {
+      clearInterval(tokenAutoRefresh)
+      tokenAutoRefresh = setTimeout(() => {
         dispatch(loginActions.userTokenRefresh({ refreshToken }));
-      }, 840000); // 14 minutes refresh for a 15 minutes access token
+      }, ((expiresAt - Date.now()) - (60 * 1000))); // 14 minutes refresh for a 15 minutes access token
     }
-  }, [accessToken, refreshToken]);
+  }, [accessToken, refreshToken, expiresAt]);
 
   return (
-    <>
-      {!accessToken ? (
-        <Routes>
-          <Route
-            path={"/*"}
-            element={
-              <>
-                <div className="App">
-                  <Navbar isLogged={true} />
-                  <Homepage />
-                </div>
-              </>
-            }
-          />
-          <Route
-            path={"/games"}
-            element={
-              <>
-                <Navbar isLogged={true} />
-                <GameLibrary />
-              </>
-            }
-          />
-          <Route
-            path={"/settings"}
-            element={
-              <>
-                <Navbar isLogged={true} />
-                <SettingsPage />
-              </>
-            }
-          />
-        </Routes>
-      ) : (
-        <>
-          <Navbar isLogged={false} />
-          <Routes>
-            <Route path={"/"} element={<Homepage />} />
-            <Route path={"/login"} element={<LoginPage />} />
-            <Route path={"/signup"} element={<RegisterPage />} />
-          </Routes>
-        </>
-      )}
-    </>
+      <>
+        {accessToken ? (
+            <Routes>
+              <Route
+                  path={"/*"}
+                  element={
+                    <>
+                      <div className="App">
+                        <Navbar isLogged={true} />
+                        <Homepage />
+                      </div>
+                    </>
+                  }
+              />
+              <Route
+                  path={"/games"}
+                  element={
+                    <>
+                      <Navbar isLogged={true} />
+                      <GameLibrary />
+                    </>
+                  }
+              />
+              <Route
+                  path={"/settings"}
+                  element={
+                    <>
+                      <Navbar isLogged={true} />
+                      <ProfilePage />
+                    </>
+                  }
+              />
+              <Route
+                  path={"/friends"}
+                  element={
+                    <>
+                      <Navbar isLogged={true} />
+                      <FriendsPage />
+                    </>
+                  }
+              />
+              <Route
+                  path={"/:game/:matchId"}
+                  element={
+                    <>
+                      <Navbar isLogged={true} />
+                      <Game />
+                    </>
+                  }
+              />
+              <Route path={"*"} element={<Homepage />} />
+            </Routes>
+
+        ) : (
+            <>
+              <Navbar isLogged={false} />
+              <Routes>
+                <Route path={"/"} element={<Homepage />} />
+                <Route path={"/login"} element={<LoginPage />} />
+                <Route path={"/signup"} element={<RegisterPage />} />
+                <Route path={"*"} element={<Homepage />} />
+              </Routes>
+            </>
+        )}
+      </>
   );
 }
 

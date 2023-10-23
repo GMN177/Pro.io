@@ -1,40 +1,93 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Box,
   Grid,
   Heading,
   HStack,
   useMediaQuery,
-  Text,
+  PopoverTrigger,
+  useDisclosure,
+  Popover,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
+  PopoverHeader,
+  PopoverContent,
+  Button,
+  VStack,
+  Text
 } from "@chakra-ui/react";
 import { GameCard } from "@/components/GameCard";
+import {useDispatch, useSelector} from "react-redux";
+import {gamesActions} from "@/store/games/games.action";
+import {gamesSelectors} from "@/store/games/games.selector";
+import { loggedUserActions } from "@/store/loggedUser/loggedUser.action";
+import FilterIcon from "@/assets/Icons/FilterIcon";
+import { loginSelectors } from "@/store/login/login.selector";
+import { Lobby } from "@/components/Lobby";
+import {LobbyPrivate} from "@/components/LobbyPrivate";
 
 export const GameLibrary = () => {
-  const games = [
-    {
-      id: 1,
-      title: "first game",
-      image: "/",
-      description:
-        "descripsasdjsadnjasdsajkcasjbcasjbcsajbd  sjcba,c as asd as dsa dsa ",
-    },
-    { id: 2, title: "second game", image: "/", description: "descr" },
-    { id: 3, title: "third game", image: "/", description: "descr" },
-    { id: 4, title: "fourth game", image: "/", description: "descr" },
-    { id: 5, title: "fifth game", image: "/", description: "descr" },
-    { id: 6, title: "sixth game", image: "/", description: "descr" },
-    { id: 7, title: "seventh game", image: "/", description: "descr" },
-    { id: 8, title: "8 game", image: "/", description: "descr" },
-    { id: 9, title: "9 game", image: "/", description: "descr" },
-    { id: 10, title: "10 game", image: "/", description: "descr" },
-    { id: 11, title: "11 game", image: "/", description: "descr" },
-  ];
+
+    const dispatch = useDispatch();
+    const games = useSelector(gamesSelectors.getGamesList)
+    const [gameChosen, setGameChosen] = useState(null)
+    const {isOpen, onOpen, onClose} = useDisclosure()
+    const privateModal = useDisclosure()
+    const [privateKey, setPrivateKey] = useState("");
+
+  useEffect(() => {
+      dispatch(gamesActions.fetchGamesList())
+
+  }, [])
+
+  const openLobby = (description) => {
+      setGameChosen(description)
+      onOpen()
+  }
+
+  const openPrivate = (description, privateKey) => {
+      const {isOpen, onOpen, onClose} = privateModal
+      setGameChosen(description)
+      setPrivateKey(privateKey)
+      onOpen()
+  }
+
+  const filterGames = (mode) => {
+    switch (mode) {
+      case 'nameAsc':
+        dispatch(gamesActions.filterGamesByNameAsc(games))
+        break;
+
+      default:
+        break;
+
+    }
+  }
 
   return (
     <Box>
       <HStack p={8} justifyContent="space-between">
         <Heading as="h2">Game Library </Heading>
-        <Text>Add filter</Text>
+        <Popover>
+          <PopoverTrigger>
+            <Button>
+              <FilterIcon boxSize={6} />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverHeader>Filter Games</PopoverHeader>
+              <PopoverBody>
+                <VStack>
+                  <Button variant="solid" colorScheme="blue" w="100%"> Filter by number of players playing </Button>
+                  <Button variant="solid" colorScheme="blue" w="100%" onClick={() => filterGames('nameAsc')}> Filter by Name Asc </Button>
+                </VStack>
+              </PopoverBody>
+            </PopoverContent>
+        </Popover>
+
       </HStack>
       <Grid
         templateColumns={{
@@ -43,18 +96,26 @@ export const GameLibrary = () => {
           lg: "repeat(3, 1fr)",
           "2xl": "repeat(4, 1fr)",
         }}
+        alignItems="center"
         gap={20}
         p={10}
       >
-        {games.map((game) => (
+        {games && games.map((game) => (
           <GameCard
-            key={game.id}
+            key={game._id}
+            id={game._id}
             title={game.title}
+            name={game.name}
             image={game.image}
             description={game.description}
+            openLobby={openLobby}
+            playersOnline={game.activePlayers}
+            openPrivateLobby={openPrivate}
           />
         ))}
       </Grid>
+          <Lobby isOpen={isOpen} onClose={onClose} description={gameChosen}></Lobby>
+          <LobbyPrivate isOpen={privateModal.isOpen} onClose={privateModal.onClose} description={gameChosen} privateKey={privateKey}></LobbyPrivate>
     </Box>
   );
 };

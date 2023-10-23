@@ -4,7 +4,9 @@ import {UserLoginState} from '@/store/login/types';
 
 const initialState: UserLoginState = {
     isError: false,
-    isLoading: false
+    isLoading: false,
+    errorMessage: '',
+    isSuccess: false
 }
 
 export const loginReducer = {
@@ -22,20 +24,33 @@ export const loginReducer = {
                 isLoading: false,
                 isError: false,
                 accessToken: action.payload.accessToken,
-                refreshToken: action.payload.refreshToken
+                refreshToken: action.payload.refreshToken,
+                expiresAt: action.payload.expiresAt,
+                id: action.payload.id
             }
         });
-        builder.addCase(loginActions.userLogin.rejected, (state): UserLoginState => {
+        builder.addCase(loginActions.userLogin.rejected, (state, action): UserLoginState => {
+            console.log("action", action)
+            let message: string = "";
+            try{
+                message = action.payload as string
+            }catch(e) {
+                message = "Unexpected error"
+            }
+
             return {
                 ...state,
                 isLoading: false,
-                isError: true
+                isError: true,
+                errorMessage: message
             }
         });
         builder.addCase(loginActions.userTokenRefresh.fulfilled, (state, action): UserLoginState => {
             return {
                 ...state,
-                accessToken: action.payload.accessToken
+                accessToken: action.payload.accessToken,
+                refreshToken: action.payload.refreshToken,
+                expiresAt: action.payload.expiresAt
             }
         });
         builder.addCase(loginActions.userLogout.fulfilled, (state): UserLoginState => {
@@ -45,5 +60,14 @@ export const loginReducer = {
                 refreshToken: undefined
             }
         });
+        builder.addCase(loginActions.setStoredInfo.fulfilled, (state, action): UserLoginState => {
+            if(action.payload) {
+                return {
+                    ...state,
+                    ...action.payload
+                }
+            }
+        });
+
     })
 }
