@@ -92,6 +92,13 @@ services:
             - matchservice
             - gameservice
         command: "npm run start"
+    frontend:
+        container_name: 'FrontEnd'
+        build:
+            context: ./packages/frontEnd
+        ports:
+            - "3000:3000"
+        restart: unless-stopped
     nginx:
         container_name: 'nginx'
         build:
@@ -107,3 +114,4 @@ services:
             - gameservice
             - socketservice
             - chatservice
+            - frontend
