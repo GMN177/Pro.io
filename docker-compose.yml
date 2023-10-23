@@ -93,9 +93,9 @@ services:
             - gameservice
         command: "npm run start"
     frontend:
-        container_name: 'FrontEnd'
+        container_name: 'Frontend'
         build:
-            context: ./packages/frontEnd
+            context: ./packages/frontend
         ports:
             - "3000:3000"
         restart: unless-stopped
