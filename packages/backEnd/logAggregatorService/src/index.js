@@ -27,12 +27,10 @@ const listen = async () => {
                 logger.warn(logString);
             else if (log.level === 'info')
                 logger.info(logString);
-            else if (log.level === 'verbose')
-                logger.verbose(logString);
+            else if (log.level === 'http')
+                logger.http(logString);
             else if (log.level === 'debug')
                 logger.debug(logString);
-            else if (log.level === 'silly')
-                logger.silly(logString);
         }, {
             noAck: true
         }
