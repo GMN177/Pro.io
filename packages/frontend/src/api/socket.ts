@@ -7,7 +7,7 @@ let chatSocketInstance: ReturnType<typeof io> | undefined;
 export const gameSocket = ({token, matchId}): ReturnType<typeof io>=> {
     gameSocketInstance =  io(URL, {
         autoConnect: false,
-        path: '/gameSocket',
+        path: '/ticTacToeSocket',
         auth: {
             token: token
         },
