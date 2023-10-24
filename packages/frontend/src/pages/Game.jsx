@@ -1,6 +1,7 @@
 import React, {useCallback} from 'react';
 import {useLocation, useParams} from "react-router-dom";
 import {TicTacToe} from "@/components/games/TicTacToe";
+import {WhoGetsFirst} from "@/components/games/WhoGetsFirst";
 
 export const Game = () => {
 
@@ -13,6 +14,9 @@ export const Game = () => {
         switch(game) {
             case 'TicTacToe': {
                 return <TicTacToe isFirstPlayer={firstPlayer}/>
+            }
+            case 'WhoGetsFirst': {
+                return <WhoGetsFirst />
             }
             default: {
                 return <>Game not supported</>

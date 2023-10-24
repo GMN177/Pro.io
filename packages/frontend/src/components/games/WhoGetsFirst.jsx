@@ -5,7 +5,7 @@ import {useSelector} from "react-redux";
 import {loginSelectors} from "@/store/login/login.selector";
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
 import {useParams} from "react-router-dom";
-import {getGameSocketInstance} from "@/api/socket";
+import {getWhoGetsFirstSocketInstance} from "@/api/socket";
 
 const getBaseContext = () => {
     const empty = []
@@ -16,9 +16,9 @@ const getBaseContext = () => {
     }
     return empty;
 }
-export const whoGetsFirst = () => {
+export const WhoGetsFirst = () => {
 
-    const socket = useMemo(() => getGameSocketInstance(), [])
+    const socket = useMemo(() => getWhoGetsFirstSocketInstance(), [])
 
     const {matchId} = useParams();
 
