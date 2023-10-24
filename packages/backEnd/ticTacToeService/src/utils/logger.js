@@ -48,7 +48,7 @@ const transports = [
         format: consoleFormat
     }),
     new AMQPTransport({
-        serviceName: 'socketService',
+        serviceName: 'ticTacToeService',
         format: amqpFormat
     })
 ];

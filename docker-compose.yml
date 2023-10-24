@@ -66,11 +66,24 @@ services:
             - mongodb
             - logaggregatorservice
         command: "npm run start"
-    socketservice:
-        container_name: 'SocketService'
+    tictactoeservice:
+        container_name: 'TicTacToeService'
         env_file: .env
         build:
-            context: ./packages/backEnd/socketService
+            context: ./packages/backEnd/ticTacToeService
+        ports:
+            - "4004:4000"
+        restart: unless-stopped
+        depends_on:
+            - userservice
+            - matchservice
+            - gameservice
+        command: "npm run start"
+    whogetsfirstservice:
+        container_name: 'WhoGetsFirstService'
+        env_file: .env
+        build:
+            context: ./packages/backEnd/whoGetsFirstService
         ports:
             - "4004:4000"
         restart: unless-stopped
@@ -112,6 +125,7 @@ services:
             - userservice
             - matchservice
             - gameservice
-            - socketservice
+            - tictactoeservice
+            - whogetsfirstservice
             - chatservice
             - frontend

@@ -13,7 +13,7 @@ const {
 const port = process.env.SERVER_PORT || 4000;
 
 const io = socketio(port, {
-    path: '/gameSocket',
+    path: '/ticTacToeSocket',
     rejectUnauthorized: false,
     cors: {
         origin: '*',
