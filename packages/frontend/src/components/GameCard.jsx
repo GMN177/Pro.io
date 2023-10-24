@@ -22,7 +22,7 @@ import {
   Input
 } from "@chakra-ui/react";
 
-import {chatSocket, gameSocket} from "@/api/socket";
+import {chatSocket, ticTacToeSocket} from "@/api/socket";
 import {loginSelectors} from '@/store/login/login.selector'
 import {useSelector, useDispatch} from 'react-redux'
 import {matchServices} from "@/api/match.service";
@@ -51,7 +51,7 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
 
       console.log('querySocket', querySocket)
 
-      const socketInstance = gameSocket({token, matchId });
+      const socketInstance = ticTacToeSocket({token, matchId });
       const chatSocketInstance = chatSocket({username, matchId})
 
       /* Handlers socket */

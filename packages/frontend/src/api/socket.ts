@@ -1,11 +1,12 @@
 import {io} from 'socket.io-client';
-const URL = "/";
+const URL = "http://3.92.20.47";
 
-let gameSocketInstance: ReturnType<typeof io> | undefined;
+let ticTacToeSocketInstance: ReturnType<typeof io> | undefined;
+let whoGetsFirstSocketInstance: ReturnType<typeof io> | undefined;
 let chatSocketInstance: ReturnType<typeof io> | undefined;
 
-export const gameSocket = ({token, matchId}): ReturnType<typeof io>=> {
-    gameSocketInstance =  io(URL, {
+export const ticTacToeSocket = ({token, matchId}): ReturnType<typeof io>=> {
+    ticTacToeSocketInstance =  io(URL, {
         autoConnect: false,
         path: '/ticTacToeSocket',
         auth: {
@@ -15,7 +16,21 @@ export const gameSocket = ({token, matchId}): ReturnType<typeof io>=> {
             matchId: matchId
         }
     })
-    return gameSocketInstance;
+    return ticTacToeSocketInstance;
+};
+
+export const whoGetsFirstSocket = ({token, matchId}): ReturnType<typeof io>=> {
+    whoGetsFirstSocketInstance =  io(URL, {
+        autoConnect: false,
+        path: '/whoGetsFirstSocket',
+        auth: {
+            token: token
+        },
+        query: {
+            matchId: matchId
+        }
+    })
+    return whoGetsFirstSocketInstance;
 };
 
 
@@ -33,5 +48,6 @@ export const chatSocket = ({username, matchId}): ReturnType<typeof io>=> {
 };
 
 
-export const getGameSocketInstance = (): ReturnType<typeof io> | undefined => gameSocketInstance
+export const getTicTacToeSocketInstance = (): ReturnType<typeof io> | undefined => ticTacToeSocketInstance
+export const getWhoGetsFirstSocketInstance = (): ReturnType<typeof io> | undefined => whoGetsFirstSocketInstance
 export const getChatSocketInstance = (): ReturnType<typeof io> | undefined => chatSocketInstance
