@@ -85,7 +85,7 @@ services:
         build:
             context: ./packages/backEnd/whoGetsFirstService
         ports:
-            - "4004:4000"
+            - "4006:4000"
         restart: unless-stopped
         depends_on:
             - userservice
