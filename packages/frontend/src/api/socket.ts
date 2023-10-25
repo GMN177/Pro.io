@@ -1,5 +1,6 @@
 import {io} from 'socket.io-client';
-import {baseURL} from './axiosConfig';
+
+const baseURL = "/";
 
 let ticTacToeSocketInstance: ReturnType<typeof io> | undefined;
 let whoGetsFirstSocketInstance: ReturnType<typeof io> | undefined;
