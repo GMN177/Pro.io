@@ -94,14 +94,10 @@ export const WhoGetsFirst = () => {
                             fontSize="3xl"
                             boxShadow= "0px 0px 10px rgba(0, 0, 0, 0.2)"
                             borderRadius="5px"
-                            cursor={isMyTurn ? "pointer" : undefined}
-                            _hover={isMyTurn ? {
-                                background: "gray.100", // Adjust the hover color as needed
-                            }: {}}
+                            cursor={"pointer"}
+                            _hover={{background: "gray.100"}}
                         >
-                            <Heading>
-                                {getScreenValue(value)}
-                            </Heading>
+                           o
                         </GridItem>)
 
                 })}

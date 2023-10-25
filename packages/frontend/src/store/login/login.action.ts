@@ -1,11 +1,9 @@
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {NavigateFunction} from 'react-router-dom';
 import {authenticationService} from '@/api/authentication.service';
 import jwt_decode from "jwt-decode";
-import {loggedUserActions} from '@/store/loggedUser/loggedUser.action';
 import {RootState} from '@/store/reducer.config';
-import {gameSocket, getChatSocketInstance, getGameSocketInstance} from '@/api/socket';
 import {usersService} from '@/api/users.service';
 const enum LOGIN_ACTIONS {
     userLogin = 'userLogin/',

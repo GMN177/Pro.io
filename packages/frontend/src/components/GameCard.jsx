@@ -164,7 +164,7 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
 
       if(name === 'TicTacToe') {
 
-        const socketInstance = gameSocket({token, matchId });
+        const socketInstance = ticTacToeSocket({token, matchId });
 
         console.log('socketInstance', socketInstance)
         /* Handlers socket */
