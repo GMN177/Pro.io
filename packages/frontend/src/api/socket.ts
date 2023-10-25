@@ -1,12 +1,12 @@
 import {io} from 'socket.io-client';
-const URL = "http://3.92.20.47";
+import {baseURL} from './axiosConfig';
 
 let ticTacToeSocketInstance: ReturnType<typeof io> | undefined;
 let whoGetsFirstSocketInstance: ReturnType<typeof io> | undefined;
 let chatSocketInstance: ReturnType<typeof io> | undefined;
 
 export const ticTacToeSocket = ({token, matchId}): ReturnType<typeof io>=> {
-    ticTacToeSocketInstance =  io(URL, {
+    ticTacToeSocketInstance =  io(baseURL, {
         autoConnect: false,
         path: '/ticTacToeSocket',
         auth: {
@@ -20,7 +20,7 @@ export const ticTacToeSocket = ({token, matchId}): ReturnType<typeof io>=> {
 };
 
 export const whoGetsFirstSocket = ({token, matchId}): ReturnType<typeof io>=> {
-    whoGetsFirstSocketInstance =  io(URL, {
+    whoGetsFirstSocketInstance =  io(baseURL, {
         autoConnect: false,
         path: '/whoGetsFirstSocket',
         auth: {
@@ -36,7 +36,7 @@ export const whoGetsFirstSocket = ({token, matchId}): ReturnType<typeof io>=> {
 
 
 export const chatSocket = ({username, matchId}): ReturnType<typeof io>=> {
-    chatSocketInstance =  io(URL, {
+    chatSocketInstance =  io(baseURL, {
         autoConnect: false,
         path: '/chatSocket',
         query: {
