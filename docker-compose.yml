@@ -110,15 +110,6 @@ services:
         build:
             context: ./packages/frontend
         ports:
-            - "3000:3000"
-        restart: unless-stopped
-    nginx:
-        container_name: 'nginx'
-        build:
-            context: ./packages/backEnd/nginx
-        volumes:
-            - "./packages/backEnd/nginx:/www/data"
-        ports:
             - "80:80"
         restart: unless-stopped
         depends_on:
@@ -128,4 +119,3 @@ services:
             - tictactoeservice
             - whogetsfirstservice
             - chatservice
-            - frontend
