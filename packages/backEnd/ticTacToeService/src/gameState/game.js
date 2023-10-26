@@ -46,7 +46,8 @@ const gameStates = createMachine({
                     target: 'lobby'
                 },
                 DISCONNECT: {
-                    target: "disconnected"
+                    target: "win",
+                    actions: "setWinnerForDisconnect"
                 }
             }
         },
@@ -68,31 +69,16 @@ const gameStates = createMachine({
                     actions: "updateBoard"
                 },
                 DISCONNECT: {
-                    target: "disconnected"
+                    target: "win",
+                    actions: "setWinnerForDisconnect"
                 }
             }
-        },
-        "disconnected": {
-            always: [{
-                    target: "win",
-                    cond: "checkForfeit",
-                    actions: "setWinnerForDisconnect"
-                },
-                {
-                    target: "cancelled",
-                    cond: "checkCancelled"
-                }
-            ]
         },
         "win": {
             onEntry: "saveGame",
             type: "final",
         },
         "draw": {
-            onEntry: "saveGame",
-            type: "final"
-        },
-        "cancelled": {
             onEntry: "saveGame",
             type: "final"
         }
