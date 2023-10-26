@@ -28,7 +28,8 @@ const updateBoard = assign({
     currentX: () => Math.round(Math.random() * 25),
     currentY: () => Math.round(Math.random() * 25),
     scores: (context, event) => {
-        context.scores[event.player] += 1;
+        let updatedScores = JSON.parse(JSON.stringify(context.scores));
+        updatedScores[event.player] += 1;
         return updatedScores;
     }
 });
