@@ -163,7 +163,7 @@ async function updateStats(id, isWin) {
         user.totWins += 1;
     }
 
-    logger.info("user to update:", user);
+    logger.info("user to update:" + user);
 
     await user.save();
 

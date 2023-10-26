@@ -105,7 +105,7 @@ async function endPlays(matchId, winner, winnerScore, loserScore) {
         }
     });
 
-    logger.info('plays to end:', plays);
+    logger.info('plays to end:' + plays);
 
     await Play.updateMany(plays);
 
