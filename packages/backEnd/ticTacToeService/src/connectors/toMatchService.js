@@ -20,5 +20,6 @@ const endMatch = async (matchId, body) => {
             
 
 module.exports = {
+    getMatch,
     endMatch
 };
