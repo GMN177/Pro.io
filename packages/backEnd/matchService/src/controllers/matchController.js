@@ -189,14 +189,14 @@ async function joinPrivateMatch(matchId, token) {
     }
 }
 
-async function endMatch(id, endTime, winner, winnerScore, loserScore) {
+async function endMatch(id, endTime) {
     if (!mongoose.isValidObjectId(id)) {
         return responses.INVALID_ID;
     }
 
-    let match = Match.findById(id);
+    let match = await Match.findById(id);
 
-    if (match == null) {
+    if (match === null) {
         return responses.INVALID_ID;
     }
 
