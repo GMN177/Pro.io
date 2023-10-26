@@ -152,7 +152,7 @@ router.patch("/:id/endMatch", async (req, res) => {
         );
 
         if (ret1.status === 200) {
-            const ret2 = await playController.updatePlays(
+            const ret2 = await playController.endPlays(
                 req.params.id,
                 req.body.winner,
                 req.body.winnerScore,
