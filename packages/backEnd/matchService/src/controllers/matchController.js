@@ -205,7 +205,7 @@ async function endMatch(id, endTime) {
     }
 
     match.endTime = endTime;
-    match.duration = Math.abs(endTime - new Date(match.startTime)) / (1000 * 60);
+    match.duration = Math.floor(Math.abs(new Date(endTime) - new Date(match.startTime)) / (1000 * 60));
     match.status = "FINISHED";
 
     logger.info('match to end:' + match);
