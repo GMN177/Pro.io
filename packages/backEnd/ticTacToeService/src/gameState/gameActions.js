@@ -26,7 +26,7 @@ const setWinner = assign({
 });
 
 const setWinnerForDisconnect = assign({
-    winner: (context, event) => context.players[0] === event.value ? 0 : 1
+    winner: (context, event) => context.players.indexOf(event.value)
 });
 
 const handleDisconnectWhilePlaying = assign({
