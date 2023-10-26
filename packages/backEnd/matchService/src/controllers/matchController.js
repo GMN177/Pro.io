@@ -1,5 +1,6 @@
 const Match = require("../models/match");
-const {default: mongoose} = require("mongoose");
+const { default: mongoose } = require("mongoose");
+const logger = require("../utils/logger");
 const responses = require("../models/responses");
 const {getByMatch} = require("./playController");
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
@@ -188,6 +189,32 @@ async function joinPrivateMatch(matchId, token) {
     }
 }
 
+async function endMatch(id, endTime, winner, winnerScore, loserScore) {
+    if (!mongoose.isValidObjectId(id)) {
+        return responses.INVALID_ID;
+    }
+
+    let match = Match.findById(id);
+
+    if (match == null) {
+        return responses.INVALID_ID;
+    }
+
+    if (match.status === "FINISHED") {
+        return responses.INVALID_MATCH;
+    }
+
+    match.endTime = endTime;
+    match.duration = Math.abs(endTime - new Date(match.startTime)) / (1000 * 60);
+    match.status = "FINISHED";
+
+    logger.info('match to end:', match);
+
+    await match.save();
+
+    return responses.UPDATE_SUCCESS
+}
+
 async function deleteAllMatches() {
     try {
         await Match.deleteMany({});
@@ -206,5 +233,6 @@ module.exports = {
     matchmaking,
     createPrivateMatch,
     joinPrivateMatch,
+    endMatch,
     deleteAllMatches
 };

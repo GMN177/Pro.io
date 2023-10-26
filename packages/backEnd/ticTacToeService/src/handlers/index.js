@@ -1,6 +1,4 @@
-const {
-    getMatch
-} = require('../connectors/toMatchService');
+const toMatchService = require('../connectors/toMatchService');
 const {
     sendEventAndEmitNewState
 } = require('../utils');
@@ -26,7 +24,7 @@ const onConnection = (io) => {
             if (socket.handshake.query.matchId in matches) {
                 match = matches[socket.handshake.query.matchId];
             } else {
-                match = await getMatch(socket.handshake.query.matchId);
+                match = await toMatchService.getMatch(socket.handshake.query.matchId);
 
                 let state = JSON.parse(JSON.stringify(gameStates.initialState));
                 state.context.matchId = socket.handshake.query.matchId;

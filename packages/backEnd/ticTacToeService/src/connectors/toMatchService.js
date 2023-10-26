@@ -8,23 +8,18 @@ const getMatch = async (matchId) => {
     return data.data.message;
 };
 
-const updateMatch = async (matchId, body) => {
-    const response = await fetch('http://matchservice:4000/api/matches/' + matchId, {
-        method: 'PUT',
-        body: JSON.stringify({
-            game: body.game,
-            duration: body.duration,
-            startTime: body.startTime,
-            endTime: body.endTime,
-            status: body.status
-        }),
-        headers: {'Content-Type': 'application/json'}
+const endMatch = async (matchId, body) => {
+    const response = await fetch('http://matchservice:4000/api/matches/' + matchId + "/endMatch", {
+        method: 'PATCH',
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' }
     });
     const data = await response.json();
     return data.data.message;
 };
+            
 
 module.exports = {
     getMatch,
-    updateMatch
+    endMatch
 };

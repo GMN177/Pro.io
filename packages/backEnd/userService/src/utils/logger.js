@@ -44,14 +44,17 @@ const amqpFormat = winston.format.combine(
 );
 
 const transports = [
-    new winston.transports.Console({
-        format: consoleFormat
-    }),
     new AMQPTransport({
         serviceName: 'userService',
         format: amqpFormat
     })
 ];
+
+if (process.env.LOCAL_CONSOLE) {
+    transports.push(new winston.transports.Console({
+        format: consoleFormat
+    }));
+}
 
 const logger = winston.createLogger({
     level: level(),

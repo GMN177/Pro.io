@@ -1,5 +1,6 @@
 const express = require('express')
 const jsend = require('jsend')
+const logger = require('../utils/logger')
 const userController = require('../controllers/userController')
 const friendController = require('../controllers/friendController')
 
@@ -60,6 +61,19 @@ router.patch('/:id', async (req, res) => {
         }catch(err) {
             return res.status(500).send(jsend.error({message: err.message}))
         } 
+    }
+})
+
+router.patch('/:id/updateStats', async (req, res) => {
+    try {
+        const ret = await userController.updateStats(req.params.id, req.body.isWin);
+        return res.status(ret.status).send(ret.response);
+    } catch (err) {
+        logger.error(err.message);
+
+        return res.status(500).send(jsend.error({
+            message: err.message
+        }));
     }
 })
 
