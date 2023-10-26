@@ -96,7 +96,7 @@ async function endPlays(matchId, winner, winnerScore, loserScore) {
     }
 
     plays.forEach(async (play) => {
-        if (play.user === winner) {
+        if (play.user.toString() === winner) {
             play.points = winnerScore;
             play.isWinner = true;
         } else {
