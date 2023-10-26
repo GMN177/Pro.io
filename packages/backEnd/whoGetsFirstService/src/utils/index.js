@@ -1,6 +1,7 @@
 const {
     interpret
 } = require('xstate');
+const logger = require('../utils/logger');
 const {
     gameStates
 } = require('../gameState/game.js');
@@ -17,7 +18,7 @@ function sendEventAndEmitNewState(io, event, match) {
         gameStateService.send(event);
     }
 
-    console.log('emitting to:', match.id, 'with state:', gameStateService.getSnapshot().value);
+    logger.info("Sending new state : " + gameStateService.getSnapshot().value + " to matchId: " + match.id);
 
     io.to(match.id).emit("newState", {
         state: gameStateService.getSnapshot(),

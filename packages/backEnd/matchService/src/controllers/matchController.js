@@ -169,7 +169,7 @@ async function joinPrivateMatch(matchId, token) {
             return responses.INVALID_MATCH;
         }
 
-        let game = await fetch('http://gameservice:4000/api/games/' + match.game[0], {
+        let game = await fetch('http://gameservice:4000/api/games/' + match.game, {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
@@ -180,7 +180,7 @@ async function joinPrivateMatch(matchId, token) {
         const plays = await getByMatch(match._id)
 
         if(game.data.message.playersNumber === plays.response.data.message.length) {
-            await updateMatch(match._id, match.game[0], match.duration, new Date(), match.endTime, "INGAME")
+            await updateMatch(match._id, match.game, match.duration, new Date(), match.endTime, "INGAME")
         }
 
         return responses.genericSuccessResponse(200, match._id);
@@ -189,14 +189,14 @@ async function joinPrivateMatch(matchId, token) {
     }
 }
 
-async function endMatch(id, endTime, winner, winnerScore, loserScore) {
+async function endMatch(id, endTime) {
     if (!mongoose.isValidObjectId(id)) {
         return responses.INVALID_ID;
     }
 
-    let match = Match.findById(id);
+    let match = await Match.findById(id);
 
-    if (match == null) {
+    if (match === null) {
         return responses.INVALID_ID;
     }
 
@@ -205,10 +205,10 @@ async function endMatch(id, endTime, winner, winnerScore, loserScore) {
     }
 
     match.endTime = endTime;
-    match.duration = Math.abs(endTime - new Date(match.startTime)) / (1000 * 60);
+    match.duration = Math.floor(Math.abs(new Date(endTime) - new Date(match.startTime)) / (1000 * 60));
     match.status = "FINISHED";
 
-    logger.info('match to end:', match);
+    logger.info('match to end:' + match);
 
     await match.save();
 

@@ -1,3 +1,4 @@
+const logger = require('../utils/logger');
 const {
     getMatch
 } = require('../connectors/toMatchService');
@@ -16,9 +17,7 @@ const onConnection = (io) => {
             let playerId = socket.playerId;
             let matchId = socket.handshake.query.matchId;
 
-            console.log("New connection: " + socket.id);
-            console.log('playerId:', playerId);
-            console.log('matchId:', matchId);
+            logger.info("New playerId: " + playerId + " for matchId: " + matchId);
 
             await socket.join(matchId);
 
@@ -38,6 +37,7 @@ const onConnection = (io) => {
             sendEventAndEmitNewState(io, null, matches[matchId]);
 
             socket.on("READY", () => {
+                logger.info("Received event READY for playerId: " + playerId);
                 sendEventAndEmitNewState(io, {
                     type: "READY",
                     value: playerId
@@ -45,6 +45,7 @@ const onConnection = (io) => {
             });
 
             socket.on("PLAY", (msg) => {
+                logger.info("Received event PLAY for playerId: " + playerId + " with x: " + msg.x + " and y: " + msg.y);
                 sendEventAndEmitNewState(io, {
                     type: "PLAY",
                     player: playerId,
@@ -60,7 +61,7 @@ const onConnection = (io) => {
             });
 
             socket.on("disconnect", () => {
-                console.log("Client disconnected");
+                logger.info("Received event DISCONNECT for playerId: " + playerId);
                 sendEventAndEmitNewState(io, {
                     type: "DISCONNECT",
                     value: playerId

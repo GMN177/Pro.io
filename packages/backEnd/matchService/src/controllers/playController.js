@@ -95,7 +95,7 @@ async function endPlays(matchId, winner, winnerScore, loserScore) {
         return responses.PLAY_NOT_FOUND;
     }
 
-    plays.map(play => {
+    plays.forEach(async (play) => {
         if (play.user === winner) {
             play.points = winnerScore;
             play.isWinner = true;
@@ -103,11 +103,11 @@ async function endPlays(matchId, winner, winnerScore, loserScore) {
             play.points = loserScore;
             play.isWinner = false;
         }
+
+        logger.info('play to end:' + play);
+    
+        await play.save();
     });
-
-    logger.info('plays to end:', plays);
-
-    await Play.updateMany(plays);
 
     return responses.UPDATE_SUCCESS;
 }

@@ -17,6 +17,7 @@ const {
     addPlayer,
     updateBoard,
     setWinner,
+    setWinnerForDisconnect,
     handleDisconnectWhilePlaying,
     saveGame
 } = require('./gameActions');
@@ -45,7 +46,8 @@ const gameStates = createMachine({
                     target: 'lobby'
                 },
                 DISCONNECT: {
-                    target: "disconnected"
+                    target: "win",
+                    actions: "setWinnerForDisconnect"
                 }
             }
         },
@@ -67,30 +69,16 @@ const gameStates = createMachine({
                     actions: "updateBoard"
                 },
                 DISCONNECT: {
-                    target: "disconnected"
+                    target: "win",
+                    actions: "setWinnerForDisconnect"
                 }
             }
-        },
-        "disconnected": {
-            always: [{
-                    target: "win",
-                    cond: "checkForfeit"
-                },
-                {
-                    target: "cancelled",
-                    cond: "checkCancelled"
-                }
-            ]
         },
         "win": {
             onEntry: "saveGame",
             type: "final",
         },
         "draw": {
-            onEntry: "saveGame",
-            type: "final"
-        },
-        "cancelled": {
             onEntry: "saveGame",
             type: "final"
         }
@@ -110,6 +98,7 @@ const gameStates = createMachine({
         updateBoard,
         resetGame: assign(initialContext),
         setWinner,
+        setWinnerForDisconnect,
         handleDisconnectWhilePlaying,
         saveGame
     },
