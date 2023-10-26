@@ -14,6 +14,7 @@ const {
 
 const {
     addPlayer,
+    startGame,
     updateBoard,
     setWinner,
     handleDisconnectWhilePlaying,
@@ -36,7 +37,8 @@ const gameStates = createMachine({
         'lobby': {
             always: [{
                 target: 'playing',
-                cond: "checkGameReady"
+                cond: "checkGameReady",
+                actions: "startGame"
             }],
             on: {
                 READY: {
@@ -99,6 +101,7 @@ const gameStates = createMachine({
 }, {
     actions: {
         addPlayer,
+        startGame,
         updateBoard,
         resetGame: assign(initialContext),
         setWinner,

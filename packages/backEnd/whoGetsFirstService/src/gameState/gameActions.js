@@ -13,6 +13,17 @@ const addPlayer = assign({
     }
 });
 
+const startGame = assign({
+    currentX: () => Math.round(Math.random() * 25),
+    currentY: () => Math.round(Math.random() * 25),
+    scores: (context, event) => {
+        let scores = {};
+        scores[context.players[0]] = 0;
+        scores[context.players[1]] = 0;
+        return scores;
+    }
+});
+
 const updateBoard = assign({
     currentX: () => Math.round(Math.random() * 25),
     currentY: () => Math.round(Math.random() * 25),
@@ -52,6 +63,7 @@ const saveGame = async (context) => {
 
 module.exports = {
     addPlayer,
+    startGame,
     updateBoard,
     setWinner,
     handleDisconnectWhilePlaying,
