@@ -134,7 +134,7 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
             navigate('/' + name + '/' + matchKey, {
               state:
                   {
-                    firstPlayer: message.stateContext
+                    firstPlayer: userId === message.stateContext.players[message.stateContext.currentPlayer]
                   }}
             )
           }
@@ -175,7 +175,7 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
             navigate('/' + name + '/' + matchId, {
               state:
                   {
-                    firstPlayer: message.stateContext
+                    firstPlayer: userId === message.stateContext.players[message.stateContext.currentPlayer]
                   }}
             )
           }
