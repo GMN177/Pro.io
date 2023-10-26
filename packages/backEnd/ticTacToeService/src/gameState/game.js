@@ -8,9 +8,7 @@ const {
     checkWin,
     checkDraw,
     isValidMove,
-    playerNotInGame,
-    checkForfeit,
-    checkCancelled
+    playerNotInGame
 } = require('./gameGuards');
 
 const {
@@ -45,7 +43,7 @@ const gameStates = createMachine({
                     actions: "addPlayer",
                     target: 'lobby'
                 },
-                DISCONNECT: {
+                SURRENDER: {
                     target: "win",
                     actions: "setWinnerForDisconnect"
                 }
@@ -68,7 +66,7 @@ const gameStates = createMachine({
                     cond: "isValidMove",
                     actions: "updateBoard"
                 },
-                DISCONNECT: {
+                SURRENDER: {
                     target: "win",
                     actions: "setWinnerForDisconnect"
                 }
@@ -107,9 +105,7 @@ const gameStates = createMachine({
         checkWin,
         checkDraw,
         isValidMove,
-        playerNotInGame,
-        checkForfeit,
-        checkCancelled
+        playerNotInGame
     }
 });
 

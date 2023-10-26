@@ -51,18 +51,16 @@ const onConnection = (io) => {
                 }, matches[matchId]);
             });
 
-            socket.on("RESET", () => {
+            socket.on("SURRENDER", () => {
+                logger.info("Received event SURRENDER for playerId: " + playerId);
                 sendEventAndEmitNewState(io, {
-                    type: "RESET"
+                    type: "SURRENDER",
+                    value: playerId
                 }, matches[matchId]);
             });
 
             socket.on("disconnect", () => {
                 logger.info("Received event DISCONNECT for playerId: " + playerId);
-                sendEventAndEmitNewState(io, {
-                    type: "DISCONNECT",
-                    value: playerId
-                }, matches[matchId]);
             });
         } catch (err) {
             console.log(err);

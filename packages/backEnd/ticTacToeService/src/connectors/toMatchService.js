@@ -25,7 +25,6 @@ const endMatch = async (matchId, body) => {
         return null;
     }
 };
-            
 
 module.exports = {
     getMatch,

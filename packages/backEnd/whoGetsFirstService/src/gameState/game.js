@@ -7,9 +7,7 @@ const {
     checkGameReady,
     checkWin,
     isValidMove,
-    playerNotInGame,
-    checkForfeit,
-    checkCancelled
+    playerNotInGame
 } = require('./gameGuards');
 
 const {
@@ -17,6 +15,7 @@ const {
     startGame,
     updateBoard,
     setWinner,
+    setWinnerForDisconnect,
     handleDisconnectWhilePlaying,
     saveGame
 } = require('./gameActions');
@@ -46,7 +45,7 @@ const gameStates = createMachine({
                     actions: "addPlayer",
                     target: 'lobby'
                 },
-                DISCONNECT: {
+                SURRENDER: {
                     target: "disconnected"
                 }
             }
@@ -64,29 +63,15 @@ const gameStates = createMachine({
                     cond: "isValidMove",
                     actions: "updateBoard"
                 },
-                DISCONNECT: {
-                    target: "disconnected"
+                SURRENDER: {
+                    target: "win",
+                    actions: "setWinnerForDisconnect"
                 }
             }
-        },
-        "disconnected": {
-            always: [{
-                    target: "win",
-                    cond: "checkForfeit"
-                },
-                {
-                    target: "cancelled",
-                    cond: "checkCancelled"
-                }
-            ]
         },
         "win": {
             onEntry: "saveGame",
             type: "final",
-        },
-        "cancelled": {
-            onEntry: "saveGame",
-            type: "final"
         }
     },
     on: {
@@ -105,6 +90,7 @@ const gameStates = createMachine({
         updateBoard,
         resetGame: assign(initialContext),
         setWinner,
+        setWinnerForDisconnect,
         handleDisconnectWhilePlaying,
         saveGame
     },
@@ -112,9 +98,7 @@ const gameStates = createMachine({
         checkGameReady,
         checkWin,
         isValidMove,
-        playerNotInGame,
-        checkForfeit,
-        checkCancelled
+        playerNotInGame
     }
 });
 

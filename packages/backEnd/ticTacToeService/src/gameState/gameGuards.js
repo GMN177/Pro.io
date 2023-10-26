@@ -36,20 +36,10 @@ function playerNotInGame(context, event) {
     return !context.players.includes(event.value);
 };
 
-function checkForfeit(context, event) {
-    return context.players.length === 2;
-}
-
-function checkCancelled(context, event) {
-    return context.players.length === 1;
-}
-
 module.exports = {
     checkGameReady,
     checkWin,
     checkDraw,
     isValidMove,
-    playerNotInGame,
-    checkForfeit,
-    checkCancelled
+    playerNotInGame
 };

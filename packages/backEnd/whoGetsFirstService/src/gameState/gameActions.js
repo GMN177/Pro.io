@@ -2,10 +2,9 @@ const {
     assign
 } = require('xstate');
 
-const {
-    getMatch,
-    updateMatch
-} = require('../connectors/toMatchService');
+const toMatchService = require('../connectors/toMatchService');
+
+const toUserService = require('../connectors/toUserService');
 
 const addPlayer = assign({
     players: (context, event) => {
@@ -38,6 +37,10 @@ const setWinner = assign({
     winner: context => context.scores[context.players[0]] > context.scores[context.players[1]] ? 0 : 1
 });
 
+const setWinnerForDisconnect = assign({
+    winner: (context, event) => context.players[0] === event.value ? 1 : 0
+});
+
 const handleDisconnectWhilePlaying = assign({
     currentPlayer: (context, event) => context.players[0] === event.value ? 0 : 1
 });
@@ -45,21 +48,18 @@ const handleDisconnectWhilePlaying = assign({
 const saveGame = async (context) => {
     console.log('saving game:', context);
 
-    let endTime = new Date();
+    let body = {
+        endTime: new Date().toString(),
+        winner: context.players[context.winner],
+        winnerScore: context.scores[context.players[context.winner]],
+        loserScore: context.scores[context.players[context.winner === 0 ? 1 : 0]]
+    };
 
-    let match = await getMatch(context.matchId);
+    await toMatchService.endMatch(context.matchId, body);
 
-    console.log('match pre-update:', match);
+    await toUserService.updateStats(context.players[0], context.winner === 0);
 
-    match.endTime = endTime.toString();
-    match.duration = new Date(endTime - Date(match.startTime)).getMinutes();
-    match.status = "FINISHED";
-
-    console.log('match post-update:', match);
-
-    let result = await updateMatch(context.matchId, match);
-
-    console.log('save result:', result);
+    await toUserService.updateStats(context.players[1], context.winner === 1);
 }
 
 module.exports = {
@@ -67,6 +67,7 @@ module.exports = {
     startGame,
     updateBoard,
     setWinner,
+    setWinnerForDisconnect,
     handleDisconnectWhilePlaying,
     saveGame
 };
