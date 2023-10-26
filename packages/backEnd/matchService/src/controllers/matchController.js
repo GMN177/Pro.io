@@ -169,7 +169,7 @@ async function joinPrivateMatch(matchId, token) {
             return responses.INVALID_MATCH;
         }
 
-        let game = await fetch('http://gameservice:4000/api/games/' + match.game[0], {
+        let game = await fetch('http://gameservice:4000/api/games/' + match.game, {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
@@ -180,7 +180,7 @@ async function joinPrivateMatch(matchId, token) {
         const plays = await getByMatch(match._id)
 
         if(game.data.message.playersNumber === plays.response.data.message.length) {
-            await updateMatch(match._id, match.game[0], match.duration, new Date(), match.endTime, "INGAME")
+            await updateMatch(match._id, match.game, match.duration, new Date(), match.endTime, "INGAME")
         }
 
         return responses.genericSuccessResponse(200, match._id);
