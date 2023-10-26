@@ -39,7 +39,6 @@ export const TicTacToe = (props) => {
 
         if(socket && userId) {
             socket.off('newState').on('newState', (message) => {
-                console.log('message', message)
                 if((message.stateValue === 'playing' || message.stateValue === 'win') && message.stateContext.cells) {
                     setContext(message.stateContext.cells)
                     if(message.stateValue === 'win' && !gameFinished) {
