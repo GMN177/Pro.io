@@ -23,7 +23,6 @@ const Chat = ({isOpen, onClose, onOpen, btnRef, username, matchId}) => {
     const chatSocket = useMemo(() => getChatSocketInstance(), [])
 
     const sendMessage = useCallback((data) => {
-        console.log('newMessage: ', data)
         setMessages((mess) => [...mess, data])
     }, [])
 

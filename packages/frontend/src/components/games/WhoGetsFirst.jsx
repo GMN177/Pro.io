@@ -1,6 +1,17 @@
-import {AbsoluteCenter, Badge, Button, Grid, GridItem, Heading, Stack, Text, VStack} from "@chakra-ui/react";
+import {
+    AbsoluteCenter,
+    Badge,
+    Button,
+    Grid,
+    GridItem,
+    Heading,
+    Stack,
+    Text,
+    useDisclosure,
+    VStack
+} from "@chakra-ui/react";
 import Chat from "@/components/Utils/Chat";
-import React, {useMemo, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useSelector} from "react-redux";
 import {loginSelectors} from "@/store/login/login.selector";
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
@@ -11,25 +22,67 @@ const getBaseContext = () => {
     const empty = []
     for(let i = 0; i < 25; i++) {
         for(let j = 0; j<25; j++) {
-            empty.push({x: i, y: j})
+            empty.push({x: i, y: j, selected: false})
         }
     }
     return empty;
 }
-export const WhoGetsFirst = () => {
+export const WhoGetsFirst = ({firstY, firstX}) => {
 
     const socket = useMemo(() => getWhoGetsFirstSocketInstance(), [])
 
     const {matchId} = useParams();
-
 
     const [context, setContext] = useState(getBaseContext())
     const [gameFinished, setGameFinished] = useState(false)
     const [showWinAlert, setShowWinAlert] = useState(false)
     const [showLoseAlert, setShowLoseAlert] = useState(false)
 
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const btnRef = useRef()
+
     const userId = useSelector(loginSelectors.getUserId)
     const user = useSelector(loggedUserSelectors.getLoggedUserInfo)
+
+    useEffect(() => {
+
+        if(socket && userId) {
+            socket.off('newState').on('newState', (message) => {
+                console.log('newState', message)
+                if((message.stateValue === 'playing' || message.stateValue === 'win') && message.stateContext.cells) {
+                    setContext(message.stateContext.cells)
+                    if(message.stateValue === 'win' && !gameFinished) {
+                        setGameFinished(true)
+                        if(message.stateContext.players[message.stateContext.winner] === userId) {
+                            setShowWinAlert(true)
+                        } else {
+                            setShowLoseAlert(true)
+                        }
+                        setTimeout(() => {
+                            navigate('/games')
+                        }, 2000)
+                    }
+                }
+            })
+
+        }
+    }, [])
+
+    useEffect(() => {
+        setTimeout(() => {
+            setContext(c => c.map(item => {
+                if (item.x === firstX && item.y === firstY) {
+                    return ({
+                        ...item,
+                        selected: true
+                    })
+                }
+                return item;
+            }))
+        }, 3000)
+    }, [firstX, firstY])
+
     return (
         <>
             <Badge bg="blue.theme" color='white' width="100%" p="1em" display="flex" justifyContent="space-between">
@@ -72,8 +125,8 @@ export const WhoGetsFirst = () => {
 
             <Grid
                 marginTop="2em"
-                templateColumns="repeat(25, 0.1fr)"
-                gap={4}
+                templateColumns="repeat(25, 0.001fr)"
+                gap={1}
                 justifyItems="center" // Center content horizontally
                 alignItems="center"  // Center content vertically
                 borderRadius="10px"
@@ -81,30 +134,33 @@ export const WhoGetsFirst = () => {
                 bg="white"
                 justifyContent="center"
             >
-                {context.map((value, i) => {
+                {context.map((item, i) => {
                     return (
                         <GridItem
                             display="flex"
                             justifyContent="center"
                             alignItems="center"
                             key={i}
-                            width="5em"
-                            onClick={() => {if(isMyTurn) makeMove(i)}}
-                            height="5em"
+                            width="1em"
+                            onClick={() => {
+                                if(item.selected) {
+                                    socket.emit('PLAY', {x: item.x, y: item.y})
+                                }
+                            }}
+                            height="1em"
                             fontSize="3xl"
-                            boxShadow= "0px 0px 10px rgba(0, 0, 0, 0.2)"
+                            boxShadow= "0px 0px 10px rgba(0, 0, 0, 0.4)"
                             borderRadius="5px"
                             cursor={"pointer"}
+                            bgColor={item.selected ? 'red' : null}
                             _hover={{background: "gray.100"}}
-                        >
-                           o
-                        </GridItem>)
+                        />)
 
                 })}
             </Grid>
             <Chat isOpen={isOpen} onClose={onClose} btnRef={btnRef} username={user?.username} onOpen={onOpen} matchId={matchId}/>
             <Stack spacing={3} my={5} justifyContent='center' alignItems='center' direction='row' >
-                <Button colorScheme="blue" variant="solid" width='10%' isDisabled={!isMyTurn}>Surrender</Button>
+                <Button colorScheme="blue" variant="solid" width='10%'>Surrender</Button>
                 <Button colorScheme="blue" variant="solid" width='10%' ref={btnRef} onClick={onOpen}>Chat</Button>
             </Stack>
         </>

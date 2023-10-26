@@ -87,9 +87,15 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
 
         /* Handlers socket */
         socketInstance.off('newState').on('newState', (message) => {
+          console.log('newState', message)
           if(message.stateValue === 'playing') {
             dispatch(loggedUserActions.addUserToMatch(matchId))
-            navigate('/' + name + '/' + matchId)
+            navigate('/' + name + '/' + matchId, {
+              state: {
+                firstX: message.stateContext.currentX,
+                firstY: message.stateContext.currentY
+              }
+            })
           }
         })
 

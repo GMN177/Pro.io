@@ -32,7 +32,7 @@ export const gamesReducer = {
                 return {
                     ...game,
                     activePlayers: ingameMatches.filter((match) => {
-                        return match.game[0] === game._id
+                        return match.game === game._id
                     }).length
                 }
             })

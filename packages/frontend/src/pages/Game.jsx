@@ -6,7 +6,7 @@ import {WhoGetsFirst} from "@/components/games/WhoGetsFirst";
 export const Game = () => {
 
     const {game, matchId} = useParams();
-    const {firstPlayer} = useLocation().state
+    const {firstPlayer, firstX, firstY} = useLocation().state || {}
     const renderGame = useCallback(() => {
         if(!game) {
             return null
@@ -16,7 +16,7 @@ export const Game = () => {
                 return <TicTacToe isFirstPlayer={firstPlayer}/>
             }
             case 'WhoGetsFirst': {
-                return <WhoGetsFirst />
+                return <WhoGetsFirst firstX={firstX} firstY={firstY}/>
             }
             default: {
                 return <>Game not supported</>
