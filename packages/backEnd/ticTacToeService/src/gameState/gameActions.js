@@ -2,10 +2,9 @@ const {
     assign
 } = require('xstate');
 
-const {
-    getMatch,
-    updateMatch
-} = require('../connectors/toMatchService');
+const toMatchService = require('../connectors/toMatchService');
+
+const toUserService = require('../connectors/toUserService');
 
 const addPlayer = assign({
     players: (context, event) => {
@@ -33,21 +32,18 @@ const handleDisconnectWhilePlaying = assign({
 const saveGame = async (context) => {
     console.log('saving game:', context);
 
-    let endTime = new Date();
+    let body = {
+        endTime: new Date().toString(),
+        winner: constext.players[context.winner],
+        winnerScore: 1,
+        loserScore: 0
+    };
 
-    let match = await getMatch(context.matchId);
+    await toMatchService.endMatch(context.matchId, body);
 
-    console.log('match pre-update:', match);
+    await toUserService.updateStats(context.players[0], context.winner === 0);
 
-    match.endTime = endTime.toString();
-    match.duration = new Date(endTime - Date(match.startTime)).getMinutes();
-    match.status = "FINISHED";
-
-    console.log('match post-update:', match);
-
-    let result = await updateMatch(context.matchId, match);
-
-    console.log('save result:', result);
+    await toUserService.updateStats(context.players[1], context.winner === 1);
 }
 
 module.exports = {

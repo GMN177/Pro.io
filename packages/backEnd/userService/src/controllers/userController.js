@@ -1,6 +1,7 @@
 const User = require('../models/user')
 const crypto = require('crypto')
 const { default: mongoose } = require('mongoose')
+const logger = require('../utils/logger');
 const responses = require('../models/responses')
 
 function checkUserPw(pwToCheck, hash, salt) {
@@ -142,6 +143,33 @@ async function updatePassword(oldPassword, newPassword, id){
     }
 }
 
+async function updateStats(id, isWin) {
+    if (!mongoose.isValidObjectId(id)) {
+        return responses.INVALID_ID;
+    }
+
+    let user = await User.findById({
+        _id: id,
+        status: 'ACTIVE'
+    });
+
+    if (user == null) {
+        return responses.INVALID_ID;
+    }
+
+    user.totMatches += 1;
+
+    if (isWin) {
+        user.totWins += 1;
+    }
+
+    logger.info("user to update:", user);
+
+    await user.save();
+
+    return responses.UPDATE_SUCCESS
+}
+
 async function deleteAccountV2(id) {
     if(!mongoose.isValidObjectId(id)){
         return responses.INVALID_ID
@@ -166,4 +194,4 @@ async function deleteAllUsers() {
     }
 }
 
-module.exports = {signup, login, searchUserById, getAllUsers, updatePassword, updateUsername, deleteAccountV2, deleteAllUsers}
+module.exports = {signup, login, searchUserById, getAllUsers, updatePassword, updateUsername, updateStats, deleteAccountV2, deleteAllUsers}
