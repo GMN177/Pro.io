@@ -34,7 +34,7 @@ const saveGame = async (context) => {
 
     let body = {
         endTime: new Date().toString(),
-        winner: constext.players[context.winner],
+        winner: context.players[context.winner],
         winnerScore: 1,
         loserScore: 0
     };
