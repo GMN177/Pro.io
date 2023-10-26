@@ -17,6 +17,7 @@ const {
     addPlayer,
     updateBoard,
     setWinner,
+    setWinnerForDisconnect,
     handleDisconnectWhilePlaying,
     saveGame
 } = require('./gameActions');
@@ -74,7 +75,8 @@ const gameStates = createMachine({
         "disconnected": {
             always: [{
                     target: "win",
-                    cond: "checkForfeit"
+                    cond: "checkForfeit",
+                    actions: "setWinnerForDisconnect"
                 },
                 {
                     target: "cancelled",
@@ -110,6 +112,7 @@ const gameStates = createMachine({
         updateBoard,
         resetGame: assign(initialContext),
         setWinner,
+        setWinnerForDisconnect,
         handleDisconnectWhilePlaying,
         saveGame
     },
