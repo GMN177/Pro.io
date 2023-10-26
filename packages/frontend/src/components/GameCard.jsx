@@ -32,7 +32,7 @@ import {CustomAlert} from '../components/Utils/CustomAlert'
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
 import {loginActions} from "@/store/login/login.action";
 
-export const GameCard = ({ id, name, title, image, description, openLobby, playersOnline, openPrivateLobby }) => {
+export const GameCard = ({ id, name, image, description, openLobby, playersOnline, openPrivateLobby }) => {
 
   const token = useSelector(loginSelectors.getAccessToken)
   const userId = useSelector(loginSelectors.getUserId)
@@ -206,7 +206,7 @@ export const GameCard = ({ id, name, title, image, description, openLobby, playe
               borderRadius="lg"
           />
           <Stack mt="6" spacing="3">
-            <Heading size="md">{title}</Heading>
+            <Heading size="md">{name}</Heading>
             <Text>{description}</Text>
             <Text color="blue.600" fontSize="xl">
               {playersOnline} Players online now

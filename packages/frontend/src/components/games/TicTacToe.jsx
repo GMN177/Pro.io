@@ -28,6 +28,7 @@ export const TicTacToe = (props) => {
     const [gameFinished, setGameFinished] = useState(false)
     const [showWinAlert, setShowWinAlert] = useState(false)
     const [showLoseAlert, setShowLoseAlert] = useState(false)
+    const [showDrawAlert , setShowDrawAlert] = useState(false)
     const {matchId} = useParams();
 
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -39,7 +40,9 @@ export const TicTacToe = (props) => {
 
         if(socket && userId) {
             socket.off('newState').on('newState', (message) => {
-                if((message.stateValue === 'playing' || message.stateValue === 'win') && message.stateContext.cells) {
+                console.log('message', message)
+                console.log('userId', userId)
+                if((message.stateValue === 'playing' || message.stateValue === 'win' || message.stateValue === 'draw') && message.stateContext.cells) {
                     setContext(message.stateContext.cells)
                     if(message.stateValue === 'win' && !gameFinished) {
                         setGameFinished(true)
@@ -50,7 +53,14 @@ export const TicTacToe = (props) => {
                         }
                         setTimeout(() => {
                             navigate('/games')
-                        }, 2000)
+                        }, 3000)
+                    }
+                    if(message.stateValue === 'draw' && !gameFinished) {
+                        setGameFinished(true)
+                        setShowDrawAlert(true)
+                        setTimeout(() => {
+                            navigate('/games')
+                        }, 3000)
                     }
                 }
                 if(!isUndefined(message.stateContext.currentPlayer) && message.stateContext.players) {
@@ -60,6 +70,10 @@ export const TicTacToe = (props) => {
                         setIsMyTurn(false)
                     }
                 }
+            })
+            socket.on('disconnect', (message) => { 
+                console.log('disconnect', message)
+                navigate('/games')
             })
 
         }
@@ -94,7 +108,7 @@ export const TicTacToe = (props) => {
         </VStack>}
         {showLoseAlert && <VStack
           padding= '2em'
-          bg='green.300'
+          bg='red.300'
           textAlign='center'
           borderRadius='1em'
           color='black.theme'
@@ -106,6 +120,18 @@ export const TicTacToe = (props) => {
             </Heading>
             <Text>Uscendo dal gioco..</Text>
         </VStack>}
+        {showDrawAlert && <VStack
+            padding='2em'
+            bg='blue.300'
+            textAlign='center'
+            borderRadius='1em'
+            color='black.theme'
+            >
+                <Heading as='h3'> Pareggio ! </Heading>
+
+                <Text>Uscendo dal gioco..</Text>
+            </VStack>
+            }
 
 
 
@@ -149,7 +175,7 @@ export const TicTacToe = (props) => {
     </Grid>
     <Chat isOpen={isOpen} onClose={onClose} btnRef={btnRef} username={user?.username} onOpen={onOpen} matchId={matchId}/>
     <Stack spacing={3} my={5} justifyContent='center' alignItems='center' direction='row' >
-        <Button colorScheme="blue" variant="solid" width='10%' isDisabled={!isMyTurn}>Surrender</Button>
+        <Button colorScheme="blue" variant="solid" width='10%' isDisabled={!isMyTurn} onClick={() => socket.disconnect()}>Surrender</Button>
         <Button colorScheme="blue" variant="solid" width='10%' ref={btnRef} onClick={onOpen}>Chat</Button>
     </Stack>
     </>

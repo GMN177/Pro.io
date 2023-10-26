@@ -35,6 +35,7 @@ export const GameLibrary = () => {
     const {isOpen, onOpen, onClose} = useDisclosure()
     const privateModal = useDisclosure()
     const [privateKey, setPrivateKey] = useState("");
+    console.log(games)
 
   useEffect(() => {
       dispatch(gamesActions.fetchGamesList())
@@ -104,7 +105,6 @@ export const GameLibrary = () => {
           <GameCard
             key={game._id}
             id={game._id}
-            title={game.title}
             name={game.name}
             image={game.image}
             description={game.description}
