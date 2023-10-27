@@ -29,10 +29,6 @@ const setWinnerForDisconnect = assign({
     winner: (context, event) => context.players[0] === event.value ? 1 : 0
 });
 
-const handleDisconnectWhilePlaying = assign({
-    currentPlayer: (context, event) => context.players[0] === event.value ? 0 : 1
-});
-
 const saveGame = async (context) => {
     console.log('saving game:', context);
 
@@ -55,6 +51,5 @@ module.exports = {
     updateBoard,
     setWinner,
     setWinnerForDisconnect,
-    handleDisconnectWhilePlaying,
     saveGame
 };

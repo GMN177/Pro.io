@@ -16,7 +16,6 @@ const {
     updateBoard,
     setWinner,
     setWinnerForDisconnect,
-    handleDisconnectWhilePlaying,
     saveGame
 } = require('./gameActions');
 
@@ -97,7 +96,6 @@ const gameStates = createMachine({
         resetGame: assign(initialContext),
         setWinner,
         setWinnerForDisconnect,
-        handleDisconnectWhilePlaying,
         saveGame
     },
     guards: {
