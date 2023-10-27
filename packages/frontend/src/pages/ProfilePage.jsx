@@ -23,13 +23,11 @@ export const ProfilePage = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-
-        if(isSuccess) {
-            console.log(loggedUser.id)
+        if(loggedUser?.id) {
             dispatch(loggedUserActions.findLoggedUser(loggedUser.id))
-
         }
-
+    }, [loggedUser?.id])
+    useEffect(() => {
         setTimeout(() => {
             dispatch(loggedUserActions.resetUserAttributes())
         }, 3000)
@@ -58,11 +56,12 @@ export const ProfilePage = () => {
 
     const deleteUser = () => {
         const id = loggedUser.id
-       
+
         dispatch(loggedUserActions.deleteUser({id}))
         dispatch(loginActions.logout('', navigate))
     }
 
+    if(!loggedUser) { return null;}
 
     return (
         <VStack p={4} justifyContent="flex-start" alignItems="flex-start">

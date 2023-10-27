@@ -15,7 +15,7 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useSelector} from "react-redux";
 import {loginSelectors} from "@/store/login/login.selector";
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {getWhoGetsFirstSocketInstance} from "@/api/socket";
 
 const getBaseContext = () => {
@@ -41,6 +41,7 @@ export const WhoGetsFirst = ({firstY, firstX}) => {
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = useRef()
+    const navigate = useNavigate()
 
     const userId = useSelector(loginSelectors.getUserId)
     const user = useSelector(loggedUserSelectors.getLoggedUserInfo)
@@ -49,9 +50,21 @@ export const WhoGetsFirst = ({firstY, firstX}) => {
 
         if(socket && userId) {
             socket.off('newState').on('newState', (message) => {
-                console.log('newState', message)
-                if((message.stateValue === 'playing' || message.stateValue === 'win') && message.stateContext.cells) {
-                    setContext(message.stateContext.cells)
+                console.log('newState', message.stateValue)
+                if((message.stateValue === 'playing' || message.stateValue === 'win')) {
+                    setContext(getBaseContext())
+                    setTimeout(() => setContext(c => c.map(item => {
+                        if(item.x ===  message.stateContext.currentX && item.y === message.stateContext.currentY) {
+                            return {
+                                ...item,
+                                selected: true
+                            }
+                        }
+                        return {
+                            ...item,
+                            selected: false
+                        }
+                    })), 3000)
                     if(message.stateValue === 'win' && !gameFinished) {
                         setGameFinished(true)
                         if(message.stateContext.players[message.stateContext.winner] === userId) {

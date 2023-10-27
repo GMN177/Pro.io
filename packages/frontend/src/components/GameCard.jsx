@@ -151,6 +151,39 @@ export const GameCard = ({ id, name, image, description, openLobby, playersOnlin
         setTimeout(() => {
           openPrivateLobby(description, matchKey)
         }, 1000)
+      } else if (name === 'WhoGetsFirst') {
+        const socketInstance = whoGetsFirstSocket({token, matchKey });
+
+        /* Handlers socket */
+        socketInstance.off('newState').on('newState', (message) => {
+          console.log('newState', message)
+          if(message.stateValue === 'playing') {
+            dispatch(loggedUserActions.addUserToMatch(matchKey))
+            navigate('/' + name + '/' + matchKey, {
+              state: {
+                firstX: message.stateContext.currentX,
+                firstY: message.stateContext.currentY
+              }
+            })
+          }
+        })
+
+        socketInstance.on("connect_error", (err) => {
+          dispatch(loginActions.userTokenRefresh({ refreshToken }));
+
+          console.log('err',err instanceof Error); // true
+          console.log(err.message); // not authorized
+          console.log(err.data); // { content: "Please retry later" }
+        });
+
+        socketInstance.connect();
+
+        // wait 1 second
+        setTimeout(() => {
+          openPrivateLobby(description)
+        }, 1000)
+
+        socketInstance.emit('READY')
       }
 
     }catch(e) {
@@ -187,6 +220,34 @@ export const GameCard = ({ id, name, image, description, openLobby, playersOnlin
           }
         })
         socketInstance.connect();
+        socketInstance.emit('READY')
+      } else if (name === 'WhoGetsFirst') {
+        const socketInstance = whoGetsFirstSocket({token, matchId });
+
+        /* Handlers socket */
+        socketInstance.off('newState').on('newState', (message) => {
+          console.log('newState', message)
+          if(message.stateValue === 'playing') {
+            dispatch(loggedUserActions.addUserToMatch(matchId))
+            navigate('/' + name + '/' + matchId, {
+              state: {
+                firstX: message.stateContext.currentX,
+                firstY: message.stateContext.currentY
+              }
+            })
+          }
+        })
+
+        socketInstance.on("connect_error", (err) => {
+          dispatch(loginActions.userTokenRefresh({ refreshToken }));
+
+          console.log('err',err instanceof Error); // true
+          console.log(err.message); // not authorized
+          console.log(err.data); // { content: "Please retry later" }
+        });
+
+        socketInstance.connect();
+
         socketInstance.emit('READY')
       }
     }
