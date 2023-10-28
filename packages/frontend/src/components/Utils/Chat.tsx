@@ -23,7 +23,7 @@ const Chat = ({isOpen, onClose, onOpen, btnRef, username, matchId}) => {
     const chatSocket = useMemo(() => getChatSocketInstance(), [])
 
     const sendMessage = useCallback((data) => {
-        setMessages((mess) => [...mess, data])
+        setMessages((mess) => [data, ...mess])
     }, [])
 
     useEffect(() => {
@@ -56,7 +56,7 @@ const Chat = ({isOpen, onClose, onOpen, btnRef, username, matchId}) => {
 
                 <DrawerBody >
                     <Flex flexDirection='column-reverse' h='100%'>
-                        {messages.reverse().map((message, index) => (
+                        {messages.map((message, index) => (
                             <Box key={message + index} alignSelf={message.sender ===  username ? 'flex-end' : 'flex-start'} mb={2} borderRadius='lg' bg={message.sender ===  username ? 'blue.500' : 'gray.300'}  p={2} color='white'>
                                 {message.message}
                             </Box>

@@ -102,9 +102,6 @@ const Homepage = () => {
               Play Online
             </Button>
           </Link>
-          <Button color="white" bg="blue.theme">
-            Play By Yourself
-          </Button>
         </>
         :
         <Link as={ReachLink} to={"/login"} style={{ textDecoration: "none" }}>

@@ -166,14 +166,13 @@ export const WhoGetsFirst = ({firstY, firstX}) => {
                             borderRadius="5px"
                             cursor={"pointer"}
                             bgColor={item.selected ? 'red' : null}
-                            _hover={{background: "gray.100"}}
                         />)
 
                 })}
             </Grid>
             <Chat isOpen={isOpen} onClose={onClose} btnRef={btnRef} username={user?.username} onOpen={onOpen} matchId={matchId}/>
             <Stack spacing={3} my={5} justifyContent='center' alignItems='center' direction='row' >
-                <Button colorScheme="blue" variant="solid" width='10%'>Surrender</Button>
+                <Button colorScheme="blue" variant="solid" width='10%' onClick={() => socket.emit('SURRENDER')}>Surrender</Button>
                 <Button colorScheme="blue" variant="solid" width='10%' ref={btnRef} onClick={onOpen}>Chat</Button>
             </Stack>
         </>
