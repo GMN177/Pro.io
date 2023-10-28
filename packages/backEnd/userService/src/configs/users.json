@@ -1,0 +1,26 @@
+[
+    {
+        "username": "test1",
+        "email": "test1@test.com",
+        "password": "hE9WnByibRNIBv0l8eyrzkLTKJu/bCSpOg76Wfzboqs=",
+        "salt": "Hmu93bZ0NdxORYuA",
+        "friends": [],
+        "pending": [],
+        "sent": [],
+        "totMatches": 0,
+        "totWins": 0,
+        "status": "ACTIVE"
+    },
+    {
+        "username": "test2",
+        "email": "test2@test.com",
+        "password": "hE9WnByibRNIBv0l8eyrzkLTKJu/bCSpOg76Wfzboqs=",
+        "salt": "Hmu93bZ0NdxORYuA",
+        "friends": [],
+        "pending": [],
+        "sent": [],
+        "totMatches": 0,
+        "totWins": 0,
+        "status": "ACTIVE"
+    }
+]

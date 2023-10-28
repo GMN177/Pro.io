@@ -18,9 +18,14 @@ app.use(morganMiddleware);
 
 app.use('/api/games', gameRouter);
 
-db.connectToDatabase()
-    .then(() => {
-        let port = process.env.SERVER_PORT || 4000
-        app.listen(port, () => logger.info(`SYSTEM UP AND RUNNING ON PORT ${port}!`))
-    })
-    .catch((err) => logger.error(err));
+try {
+    await db.connectToDatabase();
+
+    await db.seedDatabase();
+
+    let port = process.env.SERVER_PORT || 4000;
+
+    app.listen(port, () => logger.info(`SYSTEM UP AND RUNNING ON PORT ${port}!`));
+} catch (err) {
+    logger.error(err.message);
+}
