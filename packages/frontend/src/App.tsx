@@ -113,6 +113,7 @@ function App() {
                     </>
                   }
               />
+              <Route path={'/leaderboard'} element={<><Navbar isLogged={true} /></>} />
               <Route path={"*"} element={<Homepage />} />
             </Routes>
 

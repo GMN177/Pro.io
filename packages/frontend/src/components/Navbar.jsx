@@ -53,7 +53,7 @@ const Navbar = (props) => {
         <Spacer />
         {props.isLogged && user ? (
             <>
-              <Link href="#" w="120px" fontWeight={700}>
+              <Link href="#" w="120px" fontWeight={700} as={ReachLink} to={"/leaderboard"}>
                 LeaderBoard
               </Link>
 
