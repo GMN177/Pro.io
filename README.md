@@ -9,6 +9,7 @@ The idea came from the fact that we all love to play games, and we wanted to cre
 - [Installation](#installation)
 - [Usage](#usage)
 - [Architecture](#architecture)
+- [Documentation](#documentation)
 - [Team](#team)
 
 ## Installation
@@ -32,6 +33,10 @@ docker compose up --build
 ## Architecture
 
 ![schema](docs/assets/architecture_schema.png)
+
+## Documentation
+
+- [Scrum and User Stories](docs/Pro.io_Scrum_and_User_Stories.xlsx)
 
 ## Team
 
