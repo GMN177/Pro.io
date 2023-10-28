@@ -6,7 +6,7 @@ services:
         ports:
             - 27017:27017
         volumes: 
-            - '${HOME}/data:/data/db'
+            - './packages/backEnd/db:/data/db'
         restart: unless-stopped
     rabbitmq:
         container_name: 'RabbitMQ'
