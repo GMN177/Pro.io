@@ -77,7 +77,7 @@ export const GameLibrary = () => {
         <Popover>
           <PopoverTrigger>
             <Button bg="none">
-              <FaFilter boxSize={6} />
+              <FaFilter />
             </Button>
           </PopoverTrigger>
           <PopoverContent>

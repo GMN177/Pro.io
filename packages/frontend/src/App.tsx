@@ -14,6 +14,7 @@ import {ProfilePage} from "./pages/ProfilePage";
 import {Game} from '@/pages/Game';
 import {loggedUserActions} from '@/store/loggedUser/loggedUser.action';
 import {FriendsPage} from '@/pages/friendsPage/friendsPage.component';
+import {Leaderboard} from '@/pages/Leaderboard';
 
 let tokenAutoRefresh = null;
 
@@ -113,7 +114,7 @@ function App() {
                     </>
                   }
               />
-              <Route path={'/leaderboard'} element={<><Navbar isLogged={true} /></>} />
+              <Route path={'/leaderboard'} element={<><Navbar isLogged={true} /><Leaderboard /></>} />
               <Route path={"*"} element={<Homepage />} />
             </Routes>
 
