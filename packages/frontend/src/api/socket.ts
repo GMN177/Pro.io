@@ -1,6 +1,6 @@
 import {io} from 'socket.io-client';
 
-const baseURL = "http://44.212.3.204/";
+const baseURL = "/";
 
 let ticTacToeSocketInstance: ReturnType<typeof io> | undefined;
 let whoGetsFirstSocketInstance: ReturnType<typeof io> | undefined;
