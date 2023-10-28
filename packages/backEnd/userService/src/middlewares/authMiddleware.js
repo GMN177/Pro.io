@@ -1,32 +1,25 @@
-const jwt = require('jsonwebtoken')
-require('dotenv').config()
+const jwt = require('jsonwebtoken');
+const logger = require('../utils/logger');
 
 function authenticateToken(req, res, next) {
-    const token = req.headers.authorization && req.headers.authorization.split(' ')[1]
-    if(token == undefined) {
-        console.log("UNAUTHORIZED")
-        return res.sendStatus(401)
+    const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+    if (token == undefined) {
+        logger.error("UNAUTHORIZED");
+        return res.sendStatus(401);
     } 
     
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, data) => {
-        if(err) {
-            console.log("FORBIDDEN")
-            return res.sendStatus(403)
+        if (err) {
+            logger.error("FORBIDDEN");
+            return res.sendStatus(403);
         }
-        req.body.tokenData = data
-        console.log("ACCESS GRANTED")
-        next()
+        req.body.tokenData = data;
+        logger.info("ACCESS GRANTED");
+        next();
     })
 }
 
-function testMiddleware(req,res,next) {
-    const token = req.headers.authorization && req.headers.authorization.split(' ')[1]
-    if(token == undefined) {
-        console.log("UNAUTHORIZED")
-        return res.sendStatus(401)
-    }
-    req.body.tokenData = token
-    next()
+module.exports = {
+    authenticateToken
 }
-
-module.exports = {authenticateToken, testMiddleware}

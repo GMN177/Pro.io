@@ -130,14 +130,10 @@ async function updateMatch(id, gameId, duration, startTime, endTime, status) {
             status: status
         };
 
-        console.log('matchUpdated:', matchUpdated)
-
         let result = await Match.findByIdAndUpdate({ _id: id }, matchUpdated, {
             new: true,
             overwrite: true,
         });
-
-        console.log('result:', result)
         
         return responses.UPDATE_SUCCESS;
     } catch (err) {
@@ -158,8 +154,6 @@ async function createPrivateMatch(gameId, userId) {
 async function joinPrivateMatch(matchId, token) {
     try {
         const match = await Match.findById(matchId);
-
-        console.log('trying to join match: ', match)
 
         if (match == null) {
             return responses.INVALID_ID;
