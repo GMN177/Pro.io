@@ -37,7 +37,7 @@ export const GameCard = ({ id, name, image, description, openLobby, playersOnlin
 
   const token = useSelector(loginSelectors.getAccessToken)
   const userId = useSelector(loginSelectors.getUserId)
-  const username = useSelector(loggedUserSelectors.getLoggedUserInfo).usernamec
+  const username = useSelector(loggedUserSelectors.getLoggedUserInfo).username
   const refreshToken = useSelector(loginSelectors.getRefreshToken)
   const [keyPrivate, setKeyPrivate] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
@@ -155,7 +155,8 @@ export const GameCard = ({ id, name, image, description, openLobby, playersOnlin
           openPrivateLobby(description, matchKey)
         }, 1000)
       } else if (name === 'WhoGetsFirst') {
-        const socketInstance = whoGetsFirstSocket({token, matchKey });
+        console.log('matchKey', matchKey)
+        const socketInstance = whoGetsFirstSocket({token, matchId: matchKey });
 
         /* Handlers socket */
         socketInstance.off('newState').on('newState', (message) => {
@@ -165,7 +166,8 @@ export const GameCard = ({ id, name, image, description, openLobby, playersOnlin
             navigate('/' + name + '/' + matchKey, {
               state: {
                 firstX: message.stateContext.currentX,
-                firstY: message.stateContext.currentY
+                firstY: message.stateContext.currentY,
+                enemyId: message.stateContext.players.find(p => p !== userId)
               }
             })
           }
@@ -180,13 +182,13 @@ export const GameCard = ({ id, name, image, description, openLobby, playersOnlin
         });
 
         socketInstance.connect();
+        socketInstance.emit('READY')
 
         // wait 1 second
         setTimeout(() => {
-          openPrivateLobby(description)
+          openPrivateLobby(description, matchKey)
         }, 1000)
 
-        socketInstance.emit('READY')
       }
 
     }catch(e) {
@@ -235,7 +237,8 @@ export const GameCard = ({ id, name, image, description, openLobby, playersOnlin
             navigate('/' + name + '/' + matchId, {
               state: {
                 firstX: message.stateContext.currentX,
-                firstY: message.stateContext.currentY
+                firstY: message.stateContext.currentY,
+                enemyId: message.stateContext.players.find(p => p !== userId)
               }
             })
           }

@@ -137,7 +137,7 @@ if(!user || !enemyUsername) { return null}
                 </VStack>}
                 {showLoseAlert && <VStack
                     padding= '2em'
-                    bg='green.300'
+                    bg='red.300'
                     textAlign='center'
                     borderRadius='1em'
                     color='black.theme'
