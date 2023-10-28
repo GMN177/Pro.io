@@ -211,9 +211,10 @@ async function getTopPlayers() {
                 winsRatio: user.totMatches == 0 ? 0 : Math.round(user.totWins / user.totMatches * 100) / 100
             }
         })
+        .filter(user => user.winsRatio > 0)
         .toSorted((a, b) => (a.winsRatio < b.winsRatio ? 1 : -1))
         .slice(0, 10);
-    
+
     logger.info("top players:" + JSON.stringify(usersDTO));
 
     return responses.genericSuccessResponse(200, {
