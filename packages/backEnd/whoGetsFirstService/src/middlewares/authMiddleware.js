@@ -1,18 +1,16 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const logger = require('../utils/logger');
 
 const verifyToken = (socket, next) => {
     try {
         const token = socket.handshake.auth.token;
-        console.log('token: ', token);
 
         let decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-        console.log('decoded: ', decoded);
 
         socket.playerId = decoded.id;
         next();
     } catch (err) {
-        console.log(err);
+        logger.error(err.message);
         next(new Error('Authentication error'));
     }
 };

@@ -5,6 +5,7 @@ const {
 const toMatchService = require('../connectors/toMatchService');
 
 const toUserService = require('../connectors/toUserService');
+const logger = require('../utils/logger');
 
 const addPlayer = assign({
     players: (context, event) => {
@@ -42,7 +43,7 @@ const setWinnerForDisconnect = assign({
 });
 
 const saveGame = async (context) => {
-    console.log('saving game:', context);
+    logger.info("saving game:" + JSON.stringify(context));
 
     let body = {
         endTime: new Date().toString(),

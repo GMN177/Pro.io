@@ -214,7 +214,7 @@ async function getTopPlayers() {
         .toSorted((a, b) => (a.winsRatio < b.winsRatio ? 1 : -1))
         .slice(0, 10);
     
-    logger.info("top players:" + usersDTO);
+    logger.info("top players:" + JSON.stringify(usersDTO));
 
     return responses.genericSuccessResponse(200, {
         users: usersDTO

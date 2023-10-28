@@ -64,13 +64,13 @@ const onConnection = (io) => {
                 logger.info("Received event DISCONNECT for playerId: " + playerId);
             });
         } catch (err) {
-            console.log(err);
+            logger.error(err.message);
         }
     }
 };
 
 const onConnectionError = (err) => {
-    console.log(`connect_error due to ${err.message}`);
+    logger.error(`connect_error due to ${err.message}`);
 };
 
 module.exports = {
