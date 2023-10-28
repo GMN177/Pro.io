@@ -11,12 +11,13 @@ import {
     VStack
 } from "@chakra-ui/react";
 import Chat from "@/components/Utils/Chat";
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useSelector} from "react-redux";
 import {loginSelectors} from "@/store/login/login.selector";
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
 import {useNavigate, useParams} from "react-router-dom";
 import {getWhoGetsFirstSocketInstance} from "@/api/socket";
+import {usersService} from "@/api/users.service";
 
 const getBaseContext = () => {
     const empty = []
@@ -27,7 +28,7 @@ const getBaseContext = () => {
     }
     return empty;
 }
-export const WhoGetsFirst = ({firstY, firstX}) => {
+export const WhoGetsFirst = ({firstY, firstX, enemyId}) => {
 
     const socket = useMemo(() => getWhoGetsFirstSocketInstance(), [])
 
@@ -37,7 +38,9 @@ export const WhoGetsFirst = ({firstY, firstX}) => {
     const [gameFinished, setGameFinished] = useState(false)
     const [showWinAlert, setShowWinAlert] = useState(false)
     const [showLoseAlert, setShowLoseAlert] = useState(false)
-
+    const [myScore, setMyScore] = useState(0)
+    const [enemyUsername, setEnemyUsername] = useState()
+    const [enemyScore, setEnemyScore] = useState(0)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = useRef()
@@ -46,11 +49,26 @@ export const WhoGetsFirst = ({firstY, firstX}) => {
     const userId = useSelector(loginSelectors.getUserId)
     const user = useSelector(loggedUserSelectors.getLoggedUserInfo)
 
+    const updateScores = useCallback((scores) => {
+        setMyScore(scores[userId])
+        setEnemyScore(scores[Object.keys(scores).find(k => k !== userId)])
+    }, [userId])
+
+    useEffect( () => {
+        const updateEnemyUsername = async () => {
+            setEnemyUsername((await usersService.findSingleUser(enemyId)).data.data.user.username)
+        }
+        updateEnemyUsername()
+    }, [enemyId])
+
     useEffect(() => {
 
         if(socket && userId) {
             socket.off('newState').on('newState', (message) => {
-                console.log('newState', message.stateValue)
+                if(message.stateContext?.scores) {
+                    updateScores(message.stateContext.scores)
+                }
+                console.log('newStateWhoGets', message.stateValue)
                 if((message.stateValue === 'playing' || message.stateValue === 'win')) {
                     setContext(getBaseContext())
                     setTimeout(() => setContext(c => c.map(item => {
@@ -95,12 +113,12 @@ export const WhoGetsFirst = ({firstY, firstX}) => {
             }))
         }, 3000)
     }, [firstX, firstY])
-
+if(!user || !enemyUsername) { return null}
     return (
         <>
             <Badge bg="blue.theme" color='white' width="100%" p="1em" display="flex" justifyContent="space-between">
                 <Text>Who Gets First</Text>
-                <Text>Score 0 - 0</Text>
+                <Text>{user.username} {myScore} - {enemyScore} {enemyUsername}</Text>
             </Badge>
             <AbsoluteCenter alignItems="center" justifyContent="center">
                 {showWinAlert && <VStack

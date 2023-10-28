@@ -31,12 +31,14 @@ import {useNavigate} from "react-router-dom";
 import {CustomAlert} from '../components/Utils/CustomAlert'
 import {loggedUserSelectors} from "@/store/loggedUser/loggedUser.selector";
 import {loginActions} from "@/store/login/login.action";
+import {usersService} from "@/api/users.service";
 
 export const GameCard = ({ id, name, image, description, openLobby, playersOnline, openPrivateLobby }) => {
 
   const token = useSelector(loginSelectors.getAccessToken)
   const userId = useSelector(loginSelectors.getUserId)
-  const username = useSelector(loggedUserSelectors.getLoggedUserInfo).username
+  const username = useSelector(loggedUserSelectors.getLoggedUserInfo).usernamec
+  const refreshToken = useSelector(loginSelectors.getRefreshToken)
   const [keyPrivate, setKeyPrivate] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
   const dispatch = useDispatch()
@@ -93,7 +95,8 @@ export const GameCard = ({ id, name, image, description, openLobby, playersOnlin
             navigate('/' + name + '/' + matchId, {
               state: {
                 firstX: message.stateContext.currentX,
-                firstY: message.stateContext.currentY
+                firstY: message.stateContext.currentY,
+                enemyId: message.stateContext.players.find(p => p !== userId)
               }
             })
           }
