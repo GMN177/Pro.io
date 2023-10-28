@@ -31,7 +31,7 @@ docker compose up --build
 
 ## Architecture
 
-![schema](docs/assets/schema_lab.png)
+![schema](docs/assets/architecture_schema.png)
 
 ## Team
 
