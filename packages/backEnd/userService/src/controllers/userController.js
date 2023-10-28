@@ -1,25 +1,32 @@
 const User = require('../models/user')
 const crypto = require('crypto')
-const { default: mongoose } = require('mongoose')
+const {
+    default: mongoose
+} = require('mongoose')
 const logger = require('../utils/logger');
 const responses = require('../models/responses')
 
 function checkUserPw(pwToCheck, hash, salt) {
-    if(crypto.createHash('sha256').update(pwToCheck + salt).digest('base64') == hash){
+    if (crypto.createHash('sha256').update(pwToCheck + salt).digest('base64') == hash) {
         return true
     }
     return false
 }
 
 async function getUserPassword(id) {
-    if(!mongoose.isValidObjectId(id)){
+    if (!mongoose.isValidObjectId(id)) {
         return null
     }
     try {
         const u = await User.findById(id).where('status').equals('ACTIVE')
-        if(u == null) { return null }
-        return {hash: u.password, salt: u.salt}
-    }catch (err) {
+        if (u == null) {
+            return null
+        }
+        return {
+            hash: u.password,
+            salt: u.salt
+        }
+    } catch (err) {
         throw new Error(err.message)
     }
 }
@@ -43,39 +50,43 @@ async function signup(username, email, password) {
         })
         let response = responses.genericSuccessResponse(200, {})
         return response
-    }catch (err) {
-        if(err.code == 11000) throw new Error(err.code)
-        else{
+    } catch (err) {
+        if (err.code == 11000) throw new Error(err.code)
+        else {
             throw new Error(err.message)
         }
     }
 }
 
-async function login(username, password){
+async function login(username, password) {
     try {
-        const u = await User.findOne({username: username}).where('status').equals('ACTIVE')
-        if(u == null){
+        const u = await User.findOne({
+            username: username
+        }).where('status').equals('ACTIVE')
+        if (u == null) {
             return responses.INVALID_USERNAME_OR_PW
         }
         const userSalt = u.salt
-        if(checkUserPw(password, u.password, userSalt)){
-            let response = responses.genericSuccessResponse(200,{id:u._id})
+        if (checkUserPw(password, u.password, userSalt)) {
+            let response = responses.genericSuccessResponse(200, {
+                id: u._id
+            })
             return response
-        }else{
+        } else {
             return responses.INVALID_USERNAME_OR_PW
         }
-    }catch (err) {
+    } catch (err) {
         throw new Error(err.message)
     }
 }
 
 async function searchUserById(id) {
-    if(!mongoose.isValidObjectId(id)){
+    if (!mongoose.isValidObjectId(id)) {
         return responses.INVALID_ID
     }
     try {
         const u = await User.findById(id).where('status').equals('ACTIVE')
-        if(u == null) {
+        if (u == null) {
             return responses.INVALID_ID
         }
         let data = {
@@ -87,9 +98,11 @@ async function searchUserById(id) {
             friends: u.friends,
             status: u.status
         }
-        let response = responses.genericSuccessResponse(200, {user:data})
+        let response = responses.genericSuccessResponse(200, {
+            user: data
+        })
         return response
-    }catch (err) {
+    } catch (err) {
         throw new Error(err.message)
     }
 }
@@ -103,42 +116,56 @@ async function getAllUsers() {
             updatedAt: 0,
             __v: 0
         })
-        let response = responses.genericSuccessResponse(200, {users:l})
+        let response = responses.genericSuccessResponse(200, {
+            users: l
+        })
         return response
     } catch (err) {
         throw new Error(err.message)
     }
 }
 
-async function updateUsername(newUsername, oldPassword, id){
-    if(!mongoose.isValidObjectId(id)){
+async function updateUsername(newUsername, oldPassword, id) {
+    if (!mongoose.isValidObjectId(id)) {
         return responses.INVALID_ID
     }
     try {
         const data = await getUserPassword(id)
-        if(data == null || !checkUserPw(oldPassword, data.hash, data.salt)){
+        if (data == null || !checkUserPw(oldPassword, data.hash, data.salt)) {
             return responses.GENERIC_ERROR
         }
-        let ret = await User.findOneAndUpdate({_id: id}, {username: newUsername}, {new: true})
+        let ret = await User.findOneAndUpdate({
+            _id: id
+        }, {
+            username: newUsername
+        }, {
+            new: true
+        })
         return responses.UPDATE_SUCCESS
-    }catch(err){
+    } catch (err) {
         throw new Error(err.message)
     }
 }
 
-async function updatePassword(oldPassword, newPassword, id){
-    if(!mongoose.isValidObjectId(id)){
-        return responses.INVALID_ID 
+async function updatePassword(oldPassword, newPassword, id) {
+    if (!mongoose.isValidObjectId(id)) {
+        return responses.INVALID_ID
     }
     try {
         const data = await getUserPassword(id)
-        if(data == null || !checkUserPw(oldPassword, data.hash, data.salt)) { 
+        if (data == null || !checkUserPw(oldPassword, data.hash, data.salt)) {
             return responses.GENERIC_ERROR
         }
-        let update = {password: crypto.createHash('sha256').update(newPassword + data.salt).digest('base64')}
-        let ret = await User.findOneAndUpdate({_id: id}, update, {new: true})
+        let update = {
+            password: crypto.createHash('sha256').update(newPassword + data.salt).digest('base64')
+        }
+        let ret = await User.findOneAndUpdate({
+            _id: id
+        }, update, {
+            new: true
+        })
         return responses.UPDATE_SUCCESS
-    }catch(err) {
+    } catch (err) {
         throw new Error(err.message)
     }
 }
@@ -170,28 +197,65 @@ async function updateStats(id, isWin) {
     return responses.UPDATE_SUCCESS
 }
 
+async function getTopPlayers() {
+    const users = await User.findAll({
+        status: 'ACTIVE'
+    });
+
+    let usersDTO = users.map(user => {
+            return {
+                id: user._id,
+                username: user.username,
+                totMatches: user.totMatches,
+                totWins: user.totWins,
+                winsRatio: user.totMatches == 0 ? 0 : Math.round(user.totWins / user.totMatches * 100) / 100
+            }
+        })
+        .toSorted((a, b) => (a.winsRatio < b.winsRatio ? 1 : -1))
+        .slice(0, 10);
+
+    return responses.genericSuccessResponse(200, {
+        users: usersDTO
+    })
+}
+
 async function deleteAccountV2(id) {
-    if(!mongoose.isValidObjectId(id)){
+    if (!mongoose.isValidObjectId(id)) {
         return responses.INVALID_ID
     }
-    try{
-        let ret = await User.findOneAndUpdate({_id: id}, {status: 'DELETED'})
-        if(ret == null){
-            return responses.INVALID_ID 
+    try {
+        let ret = await User.findOneAndUpdate({
+            _id: id
+        }, {
+            status: 'DELETED'
+        })
+        if (ret == null) {
+            return responses.INVALID_ID
         }
         return responses.DELETE_SUCCESS
-    }catch(err){
+    } catch (err) {
         throw new Error(err.message)
     }
 }
 
 async function deleteAllUsers() {
-    try{
+    try {
         let ret = await User.collection.drop()
         return responses.DELETE_SUCCESS
-    }catch(err){
+    } catch (err) {
         throw new Error(err.message)
     }
 }
 
-module.exports = {signup, login, searchUserById, getAllUsers, updatePassword, updateUsername, updateStats, deleteAccountV2, deleteAllUsers}
+module.exports = {
+    signup,
+    login,
+    searchUserById,
+    getAllUsers,
+    updatePassword,
+    updateUsername,
+    updateStats,
+    getTopPlayers,
+    deleteAccountV2,
+    deleteAllUsers
+}
