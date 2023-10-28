@@ -35,8 +35,8 @@ docker compose up --build
 
 ## Team
 
-Gian Marco Nobile 1836319
-Lorenzo Quinti 1869011
-Alfredo Lipari 2084986
-Antonio Marco D'Addetta 2088804
-Giovanni Buracci 2097143
+- Gian Marco Nobile 1836319
+- Lorenzo Quinti 1869011
+- Alfredo Lipari 2084986
+- Antonio Marco D'Addetta 2088804
+- Giovanni Buracci 2097143
