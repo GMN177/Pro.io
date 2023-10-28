@@ -198,7 +198,7 @@ async function updateStats(id, isWin) {
 }
 
 async function getTopPlayers() {
-    const users = await User.findAll({
+    const users = await User.find({
         status: 'ACTIVE'
     });
 
@@ -213,10 +213,12 @@ async function getTopPlayers() {
         })
         .toSorted((a, b) => (a.winsRatio < b.winsRatio ? 1 : -1))
         .slice(0, 10);
+    
+    logger.info("top players:" + usersDTO);
 
     return responses.genericSuccessResponse(200, {
         users: usersDTO
-    })
+    });
 }
 
 async function deleteAccountV2(id) {
