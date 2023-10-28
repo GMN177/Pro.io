@@ -4,12 +4,17 @@ The project consists of a web based game platform, where users can select one of
 
 The idea came from the fact that we all love to play games, and we wanted to create an online experience where users could play together and interact while having fun.
 
+---
+
 ## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
 - [Architecture](#architecture)
+- [Documentation](#documentation)
 - [Team](#team)
+
+---
 
 ## Installation
 
@@ -24,14 +29,26 @@ The idea came from the fact that we all love to play games, and we wanted to cre
 docker compose up --build
 ```
 
+---
+
 ## Usage
 
-1. After completing the [Installation](#installation) steps, open your browser and go to `http://localhost`
+1. After completing the [Installation](#installation) steps, open your browser and go to [localhost](http://localhost)
 2. Enjoy!
+
+---
 
 ## Architecture
 
-![schema](docs/assets/architecture_schema.png)
+![architecture_schema](docs/assets/architecture_schema.png)
+
+---
+
+## Documentation
+
+- [SCRUM and User Stories](docs/Pro.io_Scrum_and_User_Stories.xlsx)
+
+---
 
 ## Team
 
