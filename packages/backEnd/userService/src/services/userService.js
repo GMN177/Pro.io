@@ -30,6 +30,19 @@ router.get('/', async (req, res) => {
     }
 })
 
+router.get('/topPlayers', async (req, res) => {
+    try {
+        let ret = await userController.getTopPlayers();
+        return res.status(ret.status).send(ret.response);
+    } catch (err) {
+        logger.error(err.message);
+
+        return res.status(500).send(jsend.error({
+            message: err.message
+        }));
+    }
+})
+
 // get single user from database.
 router.get('/:id', async (req, res) => {
     try {
@@ -139,19 +152,6 @@ router.post('/:id/friends/accept', async (req, res) => {
         return res.status(500).send(jsend.error({
             message: err.message
         }))
-    }
-})
-
-router.get('/topPlayers', async (req, res) => {
-    try {
-        let ret = await userController.getTopPlayers();
-        return res.status(ret.status).send(ret.response);
-    } catch (err) {
-        logger.error(err.message);
-
-        return res.status(500).send(jsend.error({
-            message: err.message
-        }));
     }
 })
 
