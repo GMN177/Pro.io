@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState, useRef} from 'react'
 import {getChatSocketInstance, getTicTacToeSocketInstance} from "@/api/socket";
-import { Badge, Button, Grid,GridItem, Heading, Stack, VStack, AbsoluteCenter, useDisclosure, Text  } from '@chakra-ui/react';
+import { Badge, Button, Grid,GridItem, Heading, Stack, VStack, AbsoluteCenter, useDisclosure, Text, Alert  } from '@chakra-ui/react';
 import {isUndefined} from "lodash";
 import {useSelector} from "react-redux";
 import {loginSelectors} from "@/store/login/login.selector";
@@ -90,45 +90,39 @@ export const TicTacToe = (props) => {
             <Text>{isMyTurn ? 'Is your Turn!' : 'Is Enemy Turn!'}</Text>
         </Badge>
         <AbsoluteCenter alignItems="center" justifyContent="center">
-       {showWinAlert && <VStack
+       {showWinAlert && <Alert
           padding= '2em'
           bg='green.300'
           textAlign='center'
           borderRadius='1em'
           color='black.theme'
+          fontSize="2xl"
         >
-          <Heading
-            as='h3'
-          >
-            Hai vinto!
-            </Heading>
-            <Text>Uscendo dal gioco..</Text>
-        </VStack>}
-        {showLoseAlert && <VStack
+          
+            Hai vinto! Uscendo dal gioco..
+            </Alert>
+  }
+        {showLoseAlert && <Alert
           padding= '2em'
           bg='red.300'
           textAlign='center'
           borderRadius='1em'
           color='black.theme'
+          fontSize="2xl"
         >
-          <Heading
-            as='h3'
-          >
-            Hai perso!
-            </Heading>
-            <Text>Uscendo dal gioco..</Text>
-        </VStack>}
-        {showDrawAlert && <VStack
+            Hai perso! Uscendo dal gioco..
+
+        </Alert>}
+        {showDrawAlert && <Alert
             padding='2em'
             bg='blue.300'
             textAlign='center'
             borderRadius='1em'
             color='black.theme'
+            fontSize="2xl"
             >
-                <Heading as='h3'> Pareggio ! </Heading>
-
-                <Text>Uscendo dal gioco..</Text>
-            </VStack>
+                Pareggio ! Uscendo dal gioco...
+            </Alert>
             }
 
 

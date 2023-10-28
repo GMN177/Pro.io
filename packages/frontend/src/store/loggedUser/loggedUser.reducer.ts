@@ -19,7 +19,6 @@ export const loggedUserReducer = {
         });
         builder.addCase(loggedUserActions.findLoggedUser.fulfilled, (state, action): LoggedUserState => {
             const loggedUser = action.payload.user;
-            console.log('loggedUser', loggedUser)
             return {
                 ...state,
                 isLoading: false,
@@ -54,7 +53,6 @@ export const loggedUserReducer = {
             }
         });
         builder.addCase(loggedUserActions.changeUsernameUser.rejected, (state, action): LoggedUserState => {
-            console.log("action", action)
             return {
                 ...state,
                 isLoading: false,
@@ -78,7 +76,6 @@ export const loggedUserReducer = {
             }
         });
         builder.addCase(loggedUserActions.changeUsernamePassword.rejected, (state, action): LoggedUserState => {
-            console.log("action", action)
             return {
                 ...state,
                 isLoading: false,

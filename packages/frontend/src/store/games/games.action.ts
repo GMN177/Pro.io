@@ -4,7 +4,8 @@ import { matchServices } from '@/api/match.service';
 
 const enum GAMES_ACTIONS {
     fetchGamesList = 'fetchGamesList/',
-    filterGamesByNameAsc = 'filterGamesByNameAsc/'
+    filterGamesByNameAsc = 'filterGamesByNameAsc/',
+    filterGamesByPlayersNumber = 'filterGamesByPlayersNumber/'
 }
 export const fetchGamesList = createAsyncThunk(GAMES_ACTIONS.fetchGamesList, async() => {
     try {
@@ -22,7 +23,14 @@ export const fetchGamesList = createAsyncThunk(GAMES_ACTIONS.fetchGamesList, asy
 })
 
 export const filterGamesByNameAsc = createAction(GAMES_ACTIONS.filterGamesByNameAsc, (games) => {
-    console.log('payload', games)
+    return {
+        payload: {
+            games: games
+        }
+    }
+});
+
+export const filterGamesByActivePlayers = createAction(GAMES_ACTIONS.filterGamesByPlayersNumber, (games) => {
     return {
         payload: {
             games: games
@@ -32,5 +40,6 @@ export const filterGamesByNameAsc = createAction(GAMES_ACTIONS.filterGamesByName
 
 export const gamesActions = {
     fetchGamesList,
-    filterGamesByNameAsc
+    filterGamesByNameAsc,
+    filterGamesByActivePlayers
 }

@@ -22,7 +22,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {gamesActions} from "@/store/games/games.action";
 import {gamesSelectors} from "@/store/games/games.selector";
 import { loggedUserActions } from "@/store/loggedUser/loggedUser.action";
-import FilterIcon from "@/assets/Icons/FilterIcon";
+import {FaFilter} from "react-icons/fa";
 import { loginSelectors } from "@/store/login/login.selector";
 import { Lobby } from "@/components/Lobby";
 import {LobbyPrivate} from "@/components/LobbyPrivate";
@@ -60,6 +60,8 @@ export const GameLibrary = () => {
     switch (mode) {
       case 'nameAsc':
         dispatch(gamesActions.filterGamesByNameAsc(games))
+      case 'activePlayers':
+        dispatch(gamesActions.filterGamesByActivePlayers(games))
         break;
 
       default:
@@ -74,8 +76,8 @@ export const GameLibrary = () => {
         <Heading as="h2">Game Library </Heading>
         <Popover>
           <PopoverTrigger>
-            <Button>
-              <FilterIcon boxSize={6} />
+            <Button bg="none">
+              <FaFilter boxSize={6} />
             </Button>
           </PopoverTrigger>
           <PopoverContent>
@@ -84,7 +86,7 @@ export const GameLibrary = () => {
               <PopoverHeader>Filter Games</PopoverHeader>
               <PopoverBody>
                 <VStack>
-                  <Button variant="solid" colorScheme="blue" w="100%"> Filter by number of players playing </Button>
+                  <Button variant="solid" colorScheme="blue" w="100%" onClick={() => filterGames('activePlayers')}> Filter by number of players playing </Button>
                   <Button variant="solid" colorScheme="blue" w="100%" onClick={() => filterGames('nameAsc')}> Filter by Name Asc </Button>
                 </VStack>
               </PopoverBody>
