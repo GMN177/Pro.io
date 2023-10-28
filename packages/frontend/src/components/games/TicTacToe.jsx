@@ -73,10 +73,6 @@ export const TicTacToe = (props) => {
                     }
                 }
             })
-            socket.on('disconnect', (message) => { 
-                console.log('disconnect', message)
-                navigate('/games')
-            })
 
         }
     }, [])
@@ -177,7 +173,7 @@ export const TicTacToe = (props) => {
     </Grid>
     <Chat isOpen={isOpen} onClose={onClose} btnRef={btnRef} username={user?.username} onOpen={onOpen} matchId={matchId}/>
     <Stack spacing={3} my={5} justifyContent='center' alignItems='center' direction='row' >
-        <Button colorScheme="blue" variant="solid" width='10%' isDisabled={!isMyTurn} onClick={() => socket.disconnect()}>Surrender</Button>
+        <Button colorScheme="blue" variant="solid" width='10%' isDisabled={!isMyTurn} onClick={() => socket.emit("SURRENDER")}>Surrender</Button>
         <Button colorScheme="blue" variant="solid" width='10%' ref={btnRef} onClick={onOpen}>Chat</Button>
     </Stack>
     </>

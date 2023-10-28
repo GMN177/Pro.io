@@ -26,6 +26,8 @@ import FilterIcon from "@/assets/Icons/FilterIcon";
 import { loginSelectors } from "@/store/login/login.selector";
 import { Lobby } from "@/components/Lobby";
 import {LobbyPrivate} from "@/components/LobbyPrivate";
+import WhoGetsFirst from "../../assets/WhoGetsFirst.png"
+import TicTacToe from "../../assets/TicTacToe.png"
 
 export const GameLibrary = () => {
 
@@ -106,7 +108,7 @@ export const GameLibrary = () => {
             key={game._id}
             id={game._id}
             name={game.name}
-            image={game.image}
+            image={game.name === 'TicTacToe' ? TicTacToe: WhoGetsFirst}
             description={game.description}
             openLobby={openLobby}
             playersOnline={game.activePlayers}
