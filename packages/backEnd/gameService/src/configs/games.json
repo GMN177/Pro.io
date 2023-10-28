@@ -1,0 +1,12 @@
+[
+    {
+        "name": "TicTacToe",
+        "description": "The classic Tic Tac Toe game",
+        "playersNumber": 2
+    },
+    {
+        "name": "WhoGetsFirst",
+        "description": "A game to test who is the fastest",
+        "playersNumber": 2
+    }
+]
