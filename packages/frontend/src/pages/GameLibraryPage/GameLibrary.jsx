@@ -37,7 +37,6 @@ export const GameLibrary = () => {
     const {isOpen, onOpen, onClose} = useDisclosure()
     const privateModal = useDisclosure()
     const [privateKey, setPrivateKey] = useState("");
-    console.log(games)
 
   useEffect(() => {
       dispatch(gamesActions.fetchGamesList())
@@ -60,6 +59,7 @@ export const GameLibrary = () => {
     switch (mode) {
       case 'nameAsc':
         dispatch(gamesActions.filterGamesByNameAsc(games))
+        break;
       case 'activePlayers':
         dispatch(gamesActions.filterGamesByActivePlayers(games))
         break;
