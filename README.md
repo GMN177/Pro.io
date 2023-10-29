@@ -46,7 +46,9 @@ docker compose up --build
 
 ## Documentation
 
-- [SCRUM and User Stories](docs/Pro.io_Scrum_and_User_Stories.xlsx)
+- [SCRUM and User Stories](docs/Pro.io_SCRUM_and_User_Stories.xlsx)
+- [Booklet](docs/Pro.io_Booklet.pdf)
+- [Presentation](docs/Pro.io_Presentation.pptx)
 
 ---
 
