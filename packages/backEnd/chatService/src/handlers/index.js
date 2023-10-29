@@ -1,12 +1,11 @@
+const logger = require('../utils/logger');
 const onConnection = (io) => {
     return async (socket) => {
         try {
             let username = socket.handshake.query.username;
             let matchId = socket.handshake.query.matchId;
 
-            console.log("New connection: " + socket.id);
-            console.log('username:', username);
-            console.log('matchId:', matchId);
+            logger.info("New username: " + username + " for matchId: " + matchId);
 
             await socket.join(matchId);
 
@@ -16,6 +15,7 @@ const onConnection = (io) => {
             });
 
             socket.on("MESSAGE", (message) => {
+                logger.info("Received event MESSAGE for username: " + username + " with value: " + message);
                 io.to(matchId).emit("NEW_MESSAGE", {
                     sender: username,
                     message: message
@@ -24,19 +24,20 @@ const onConnection = (io) => {
 
 
             socket.on("disconnect", () => {
+                logger.info("Received event DISCONNECT for username: " + username);
                 socket.to(matchId).emit("NEW_MESSAGE", {
                     sender: username,
                     message: username + ' has left the chat.'
                 });
             });
         } catch (err) {
-            console.log(err);
+            logger.error(err.message);
         }
     }
 };
 
 const onConnectionError = (err) => {
-    console.log(`connect_error due to ${err.message}`);
+    logger.error(`connect_error due to ${err.message}`);
 };
 
 module.exports = {

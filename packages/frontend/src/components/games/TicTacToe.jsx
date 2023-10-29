@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState, useRef} from 'react'
-import {getChatSocketInstance, getGameSocketInstance} from "@/api/socket";
-import { Badge, Button, Grid,GridItem, Heading, Stack, VStack, AbsoluteCenter, useDisclosure, Text  } from '@chakra-ui/react';
+import {getChatSocketInstance, getTicTacToeSocketInstance} from "@/api/socket";
+import { Badge, Button, Grid,GridItem, Heading, Stack, VStack, AbsoluteCenter, useDisclosure, Text, Alert  } from '@chakra-ui/react';
 import {isUndefined} from "lodash";
 import {useSelector} from "react-redux";
 import {loginSelectors} from "@/store/login/login.selector";
@@ -21,15 +21,15 @@ const getScreenValue = (value) => {
 export const TicTacToe = (props) => {
 
     const [context, setContext] = useState([null,null,null,null,null,null,null,null,null,])
-    // todo set as false when we know who is the first
     const [isMyTurn, setIsMyTurn] = useState(props.isFirstPlayer)
-    const socket = useMemo(() => getGameSocketInstance(), [])
+    const socket = useMemo(() => getTicTacToeSocketInstance(), [])
     const userId = useSelector(loginSelectors.getUserId)
     const user = useSelector(loggedUserSelectors.getLoggedUserInfo)
     const [gameFinished, setGameFinished] = useState(false)
     const [showWinAlert, setShowWinAlert] = useState(false)
     const [showLoseAlert, setShowLoseAlert] = useState(false)
-    const {game, matchId} = useParams();
+    const [showDrawAlert , setShowDrawAlert] = useState(false)
+    const {matchId} = useParams();
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = useRef()
@@ -41,10 +41,13 @@ export const TicTacToe = (props) => {
         if(socket && userId) {
             socket.off('newState').on('newState', (message) => {
                 console.log('message', message)
-                if((message.stateValue === 'playing' || message.stateValue === 'win') && message.stateContext.cells) {
+                console.log('userId', userId)
+                if((message.stateValue === 'playing' || message.stateValue === 'win' || message.stateValue === 'draw') && message.stateContext.cells) {
                     setContext(message.stateContext.cells)
                     if(message.stateValue === 'win' && !gameFinished) {
                         setGameFinished(true)
+                        socket.off('newState')
+                        socket.disconnect()
                         if(message.stateContext.players[message.stateContext.winner] === userId) {
                             setShowWinAlert(true)
                         } else {
@@ -52,7 +55,14 @@ export const TicTacToe = (props) => {
                         }
                         setTimeout(() => {
                             navigate('/games')
-                        }, 2000)
+                        }, 3000)
+                    }
+                    if(message.stateValue === 'draw' && !gameFinished) {
+                        setGameFinished(true)
+                        setShowDrawAlert(true)
+                        setTimeout(() => {
+                            navigate('/games')
+                        }, 3000)
                     }
                 }
                 if(!isUndefined(message.stateContext.currentPlayer) && message.stateContext.players) {
@@ -78,37 +88,42 @@ export const TicTacToe = (props) => {
         <Badge bg="blue.theme" color='white' width="100%" p="1em" display="flex" justifyContent="space-between">
             <Text>TicTacToe</Text>
             <Text>{isMyTurn ? 'Is your Turn!' : 'Is Enemy Turn!'}</Text>
-            <Text>Score 0 - 0</Text>
         </Badge>
         <AbsoluteCenter alignItems="center" justifyContent="center">
-       {showWinAlert && <VStack
+       {showWinAlert && <Alert
           padding= '2em'
           bg='green.300'
           textAlign='center'
           borderRadius='1em'
           color='black.theme'
+          fontSize="2xl"
         >
-          <Heading
-            as='h3'
-          >
-            Hai vinto!
-            </Heading>
-            <Text>Uscendo dal gioco..</Text>
-        </VStack>}
-        {showLoseAlert && <VStack
+          
+            Hai vinto! Uscendo dal gioco..
+            </Alert>
+  }
+        {showLoseAlert && <Alert
           padding= '2em'
-          bg='green.300'
+          bg='red.300'
           textAlign='center'
           borderRadius='1em'
           color='black.theme'
+          fontSize="2xl"
         >
-          <Heading
-            as='h3'
-          >
-            Hai perso!
-            </Heading>
-            <Text>Uscendo dal gioco..</Text>
-        </VStack>}
+            Hai perso! Uscendo dal gioco..
+
+        </Alert>}
+        {showDrawAlert && <Alert
+            padding='2em'
+            bg='blue.300'
+            textAlign='center'
+            borderRadius='1em'
+            color='black.theme'
+            fontSize="2xl"
+            >
+                Pareggio ! Uscendo dal gioco...
+            </Alert>
+            }
 
 
 
@@ -152,7 +167,7 @@ export const TicTacToe = (props) => {
     </Grid>
     <Chat isOpen={isOpen} onClose={onClose} btnRef={btnRef} username={user?.username} onOpen={onOpen} matchId={matchId}/>
     <Stack spacing={3} my={5} justifyContent='center' alignItems='center' direction='row' >
-        <Button colorScheme="blue" variant="solid" width='10%' isDisabled={!isMyTurn}>Surrender</Button>
+        <Button colorScheme="blue" variant="solid" width='10%' isDisabled={!isMyTurn} onClick={() => socket.emit("SURRENDER")}>Surrender</Button>
         <Button colorScheme="blue" variant="solid" width='10%' ref={btnRef} onClick={onOpen}>Chat</Button>
     </Stack>
     </>

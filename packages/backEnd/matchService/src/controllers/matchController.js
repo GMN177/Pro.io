@@ -1,5 +1,6 @@
 const Match = require("../models/match");
-const {default: mongoose} = require("mongoose");
+const { default: mongoose } = require("mongoose");
+const logger = require("../utils/logger");
 const responses = require("../models/responses");
 const {getByMatch} = require("./playController");
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
@@ -129,14 +130,10 @@ async function updateMatch(id, gameId, duration, startTime, endTime, status) {
             status: status
         };
 
-        console.log('matchUpdated:', matchUpdated)
-
         let result = await Match.findByIdAndUpdate({ _id: id }, matchUpdated, {
             new: true,
             overwrite: true,
         });
-
-        console.log('result:', result)
         
         return responses.UPDATE_SUCCESS;
     } catch (err) {
@@ -158,8 +155,6 @@ async function joinPrivateMatch(matchId, token) {
     try {
         const match = await Match.findById(matchId);
 
-        console.log('trying to join match: ', match)
-
         if (match == null) {
             return responses.INVALID_ID;
         }
@@ -168,7 +163,7 @@ async function joinPrivateMatch(matchId, token) {
             return responses.INVALID_MATCH;
         }
 
-        let game = await fetch('http://gameservice:4000/api/games/' + match.game[0], {
+        let game = await fetch('http://gameservice:4000/api/games/' + match.game, {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
@@ -179,13 +174,39 @@ async function joinPrivateMatch(matchId, token) {
         const plays = await getByMatch(match._id)
 
         if(game.data.message.playersNumber === plays.response.data.message.length) {
-            await updateMatch(match._id, match.game[0], match.duration, new Date(), match.endTime, "INGAME")
+            await updateMatch(match._id, match.game, match.duration, new Date(), match.endTime, "INGAME")
         }
 
         return responses.genericSuccessResponse(200, match._id);
     } catch (err) {
         throw new Error(err.message);
     }
+}
+
+async function endMatch(id, endTime) {
+    if (!mongoose.isValidObjectId(id)) {
+        return responses.INVALID_ID;
+    }
+
+    let match = await Match.findById(id);
+
+    if (match === null) {
+        return responses.INVALID_ID;
+    }
+
+    if (match.status === "FINISHED") {
+        return responses.INVALID_MATCH;
+    }
+
+    match.endTime = endTime;
+    match.duration = Math.floor(Math.abs(new Date(endTime) - new Date(match.startTime)) / (1000 * 60));
+    match.status = "FINISHED";
+
+    logger.info('match to end:' + match);
+
+    await match.save();
+
+    return responses.UPDATE_SUCCESS
 }
 
 async function deleteAllMatches() {
@@ -206,5 +227,6 @@ module.exports = {
     matchmaking,
     createPrivateMatch,
     joinPrivateMatch,
+    endMatch,
     deleteAllMatches
 };

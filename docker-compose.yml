@@ -6,7 +6,7 @@ services:
         ports:
             - 27017:27017
         volumes: 
-            - '${HOME}/data:/data/db'
+            - './packages/backEnd/db:/data/db'
         restart: unless-stopped
     rabbitmq:
         container_name: 'RabbitMQ'
@@ -17,9 +17,9 @@ services:
         restart: unless-stopped
         healthcheck:
             test: rabbitmq-diagnostics -q ping
-            interval: 30s
+            interval: 5s
             timeout: 10s
-            retries: 3
+            retries: 10
     logaggregatorservice:
         container_name: 'LogAggregatorService'
         env_file: .env
@@ -66,13 +66,26 @@ services:
             - mongodb
             - logaggregatorservice
         command: "npm run start"
-    socketservice:
-        container_name: 'SocketService'
+    tictactoeservice:
+        container_name: 'TicTacToeService'
         env_file: .env
         build:
-            context: ./packages/backEnd/socketService
+            context: ./packages/backEnd/ticTacToeService
         ports:
             - "4004:4000"
+        restart: unless-stopped
+        depends_on:
+            - userservice
+            - matchservice
+            - gameservice
+        command: "npm run start"
+    whogetsfirstservice:
+        container_name: 'WhoGetsFirstService'
+        env_file: .env
+        build:
+            context: ./packages/backEnd/whoGetsFirstService
+        ports:
+            - "4006:4000"
         restart: unless-stopped
         depends_on:
             - userservice
@@ -97,21 +110,12 @@ services:
         build:
             context: ./packages/frontend
         ports:
-            - "3000:3000"
-        restart: unless-stopped
-    nginx:
-        container_name: 'nginx'
-        build:
-            context: ./packages/backEnd/nginx
-        volumes:
-            - "./packages/backEnd/nginx:/www/data"
-        ports:
             - "80:80"
         restart: unless-stopped
         depends_on:
             - userservice
             - matchservice
             - gameservice
-            - socketservice
+            - tictactoeservice
+            - whogetsfirstservice
             - chatservice
-            - frontend

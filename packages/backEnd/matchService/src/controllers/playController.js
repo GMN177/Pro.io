@@ -1,5 +1,6 @@
 const Play = require("../models/play");
-const {default: mongoose} = require("mongoose");
+const { default: mongoose } = require("mongoose");
+const logger = require("../utils/logger");
 const responses = require("../models/responses");
 
 async function getByUser(userId) {
@@ -81,6 +82,36 @@ async function updatePlay(id, userId, matchId, isWinner, points) {
     }
 }
 
+async function endPlays(matchId, winner, winnerScore, loserScore) {
+    if (!mongoose.isValidObjectId(matchId)) {
+        return responses.INVALID_ID;
+    }
+    
+    let plays = await Play.find({
+        match: matchId
+    });
+
+    if (plays == null || plays.length == 0) {
+        return responses.PLAY_NOT_FOUND;
+    }
+
+    plays.forEach(async (play) => {
+        if (play.user.toString() === winner) {
+            play.points = winnerScore;
+            play.isWinner = true;
+        } else {
+            play.points = loserScore;
+            play.isWinner = false;
+        }
+
+        logger.info('play to end:' + play);
+    
+        await play.save();
+    });
+
+    return responses.UPDATE_SUCCESS;
+}
+
 async function deleteAllPlays() {
     try {
         await Play.deleteMany({});
@@ -96,5 +127,6 @@ module.exports = {
     getByMatchAndUser,
     createPlay,
     updatePlay,
+    endPlays,
     deleteAllPlays
 };

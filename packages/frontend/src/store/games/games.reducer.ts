@@ -32,7 +32,7 @@ export const gamesReducer = {
                 return {
                     ...game,
                     activePlayers: ingameMatches.filter((match) => {
-                        return match.game[0] === game._id
+                        return match.game === game._id
                     }).length
                 }
             })
@@ -53,10 +53,8 @@ export const gamesReducer = {
         });
         builder.addCase(gamesActions.filterGamesByNameAsc, (state, action) => {
             const {games} = action.payload;
-            console.log(games)
             // filter games by name asc
             const gamesFiltered = [...games].sort((a, b) => {
-                console.log(a.name, b.name)
                 if(a.name > b.name) {
                     return 1
                 }
@@ -65,7 +63,24 @@ export const gamesReducer = {
                 }
                 return 0
             })
-            console.log(gamesFiltered)
+            return {
+                ...state,
+                games: gamesFiltered
+            }
+
+        });
+        builder.addCase(gamesActions.filterGamesByActivePlayers, (state, action) => {
+            const {games} = action.payload;
+            // filter games by name asc
+            const gamesFiltered = [...games].sort((a, b) => {
+                if(a.activePlayers < b.activePlayers) {
+                    return 1
+                }
+                if(a.activePlayers > b.activePlayers) {
+                    return -1
+                }
+                return 0
+            })
             return {
                 ...state,
                 games: gamesFiltered

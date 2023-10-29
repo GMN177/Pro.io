@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import "./App.css";
-import { useDispatch, useSelector } from "react-redux";
+import {useSelector} from "react-redux";
 import Navbar from "./components/Navbar";
 import Homepage from "./pages/HomepagePage/Homepage";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { LoginPage } from "./pages/LoginRegisterPage/LoginPage";
 import { loginSelectors } from "@/store/login/login.selector";
 import { loginActions } from "@/store/login/login.action";
@@ -14,6 +14,7 @@ import {ProfilePage} from "./pages/ProfilePage";
 import {Game} from '@/pages/Game';
 import {loggedUserActions} from '@/store/loggedUser/loggedUser.action';
 import {FriendsPage} from '@/pages/friendsPage/friendsPage.component';
+import {Leaderboard} from '@/pages/Leaderboard';
 
 let tokenAutoRefresh = null;
 
@@ -113,6 +114,7 @@ function App() {
                     </>
                   }
               />
+              <Route path={'/leaderboard'} element={<><Navbar isLogged={true} /><Leaderboard /></>} />
               <Route path={"*"} element={<Homepage />} />
             </Routes>
 

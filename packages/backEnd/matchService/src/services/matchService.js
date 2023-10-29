@@ -1,5 +1,6 @@
 const express = require("express");
 const jsend = require("jsend");
+const logger = require("../utils/logger");
 const matchController = require("../controllers/matchController");
 const playController = require("../controllers/playController");
 
@@ -142,6 +143,32 @@ router.post("/joinPrivateMatch", async(req, res) => {
         }
     }
 })
+
+router.patch("/:id/endMatch", async (req, res) => {
+    try {
+        const ret1 = await matchController.endMatch(
+            req.params.id,
+            req.body.endTime
+        );
+
+        if (ret1.status === 200) {
+            const ret2 = await playController.endPlays(
+                req.params.id,
+                req.body.winner,
+                req.body.winnerScore,
+                req.body.loserScore
+            );
+        }
+
+        return res.status(ret1.status).send(ret1.response);
+    } catch (err) {
+        logger.error(err.message);
+
+        return res.status(500).send(jsend.error({
+            message: err.message
+        }));
+    }
+});
 
 router.delete("/", async (req, res) => {
     try {

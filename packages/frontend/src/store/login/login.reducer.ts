@@ -30,7 +30,6 @@ export const loginReducer = {
             }
         });
         builder.addCase(loginActions.userLogin.rejected, (state, action): UserLoginState => {
-            console.log("action", action)
             let message: string = "";
             try{
                 message = action.payload as string

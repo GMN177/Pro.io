@@ -2,8 +2,9 @@ import axios from 'axios';
 import {baseURL, EndpointResponse} from '../api/axiosConfig';
 import {User} from '@/models/user';
 
-const enum usersEndpoints {
-    users = "users/"
+export const enum usersEndpoints {
+    users = "users/",
+    leaderboard = "users/topPlayers/"
 }
 
 const findSingleUser = (id: string): EndpointResponse<{user: User}, null> => {

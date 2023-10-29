@@ -48,7 +48,6 @@ const Homepage = () => {
         return (
           <BsEmojiDizzy
             color="white"
-            transform="translate(50%, -50%)"
             size="2em"
           />
         );
@@ -57,7 +56,6 @@ const Homepage = () => {
         return (
           <BsEmojiFrown
             color="white"
-            transform="translate(50%, -50%)"
             size="2em"
           />
         );
@@ -67,7 +65,6 @@ const Homepage = () => {
         return (
           <BsEmojiExpressionless
             color="white"
-            transform="translate(50%, -50%)"
             size="2em"
           />
         );
@@ -76,7 +73,6 @@ const Homepage = () => {
         return (
           <BsEmojiLaughing
             color="white"
-            transform="translate(50%, -50%)"
             size="2em"
           />
         );
@@ -102,9 +98,6 @@ const Homepage = () => {
               Play Online
             </Button>
           </Link>
-          <Button color="white" bg="blue.theme">
-            Play By Yourself
-          </Button>
         </>
         :
         <Link as={ReachLink} to={"/login"} style={{ textDecoration: "none" }}>
