@@ -40,7 +40,7 @@ docker compose up --build
 
 ## Architecture
 
-![architecture_schema](docs/assets/architecture_schema.png)
+![architecture_schema](docs/assets/Pro.io_Architecture_Schema.png)
 
 ---
 
